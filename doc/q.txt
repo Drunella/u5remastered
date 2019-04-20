@@ -1,0 +1,115 @@
+size: 255 bytes
+--------------------------------------------------------------------------
+        |   0x0000a700      fee6fe         inc 0xfee6,x                ; increment memory by one
+       ,==< 0x0000a703      d002           bne 0x47f108                ; branch on result not zero
+       ||   0x0000a705      e6ff           inc 0xff                    ; increment memory by one
+       `--> 0x0000a707      ae0ba7         ldx 0xa70b                  ; load index x with memory
+        |   0x0000a70a      60             rts                         ; return from subroutine
+        |   0x0000a70b      00             brk                         ; force break
+        |   0x0000a70c      8e2aa7         stx 0xa72a                  ; store index x in memory
+        |   0x0000a70f      a200           ldx #0x00                   ; load index x with memory
+        |   0x0000a711      81fc           sta (0xfc,x)                ; store accumulator in memory
+        |   0x0000a713      e6fc           inc 0xfc                    ; increment memory by one
+       ,==< 0x0000a715      d002           bne 0x47f108                ; branch on result not zero
+       ||   0x0000a717      e6fd           inc 0xfd                    ; increment memory by one
+       `--> 0x0000a719      ae2aa7         ldx 0xa72a                  ; load index x with memory
+        |   0x0000a71c      48             pha                         ; push accumulator on stack
+        |   0x0000a71d      adf6a6         lda 0xa6f6                  ; load accumulator with memory
+       ,==< 0x0000a720      d003           bne 0x47f108                ; branch on result not zero
+       ||   0x0000a722      cef7a6         dec 0xa6f7                  ; decrement memory by one
+       `--> 0x0000a725      cef6a6         dec 0xa6f6                  ; decrement memory by one
+        |   0x0000a728      68             pla                         ; pull accumulator from stack
+        |   0x0000a729      60             rts                         ; return from subroutine
+        |   0x0000a72a      00             brk                         ; force break
+        |   0x0000a72b      a000           ldy #0x00                   ; load index y with memory
+        |   0x0000a72d      8cf8a6         sty 0xa6f8                  ; store index y in memory
+        |   0x0000a730      a900           lda #0x00                   ; load accumulator with memory
+       .--> 0x0000a732      99007e         sta 0x7e00,y                ; store accumulator in memory
+       ||   0x0000a735      c8             iny                         ; increment index y by one
+       ||   0x0000a736      c080           cpy #0x80                   ; compare memory and index y
+       `==< 0x0000a738      d0f8           bne 0x47f108                ; branch on result not zero
+       .--> 0x0000a73a      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
+       ||   0x0000a73d      48             pha                         ; push accumulator on stack
+       ||   0x0000a73e      200ca7         jsr 0xa70c                  ; jump to new location saving return address
+       ||   0x0000a741      68             pla                         ; pull accumulator from stack
+       ||   0x0000a742      99007e         sta 0x7e00,y                ; store accumulator in memory
+       ||   0x0000a745      c8             iny                         ; increment index y by one
+       `==< 0x0000a746      d0f2           bne 0x47f108                ; branch on result not zero
+        |   0x0000a748      60             rts                         ; return from subroutine
+        |   0x0000a749      acf8a6         ldy 0xa6f8                  ; load index y with memory
+        |   0x0000a74c      99007e         sta 0x7e00,y                ; store accumulator in memory
+        |   0x0000a74f      c8             iny                         ; increment index y by one
+        |   0x0000a750      8cf8a6         sty 0xa6f8                  ; store index y in memory
+        |   0x0000a753      60             rts                         ; return from subroutine
+        |   0x0000a754      a900           lda #0x00                   ; load accumulator with memory
+        |   0x0000a756      8df9a6         sta 0xa6f9                  ; store accumulator in memory
+        |   0x0000a759      60             rts                         ; return from subroutine
+        |   0x0000a75a      8e6ba7         stx 0xa76b                  ; store index x in memory
+        |   0x0000a75d      aef9a6         ldx 0xa6f9                  ; load index x with memory
+        |   0x0000a760      9d007f         sta 0x7f00,x                ; store accumulator in memory
+        |   0x0000a763      e8             inx                         ; increment index x by one
+        |   0x0000a764      8ef9a6         stx 0xa6f9                  ; store index x in memory
+        |   0x0000a767      ae6ba7         ldx 0xa76b                  ; load index x with memory
+        |   0x0000a76a      60             rts                         ; return from subroutine
+        |   0x0000a76b      00             brk                         ; force break
+        |   0x0000a76c      a200           ldx #0x00                   ; load index x with memory
+       .--> 0x0000a76e      bd007f         lda 0x7f00,x                ; load accumulator with memory
+       ||   0x0000a771      200ca7         jsr 0xa70c                  ; jump to new location saving return address
+       ||   0x0000a774      2049a7         jsr 0xa749                  ; jump to new location saving return address
+       ||   0x0000a777      e8             inx                         ; increment index x by one
+       ||   0x0000a778      ecf9a6         cpx 0xa6f9                  ; compare memory and index x
+       `==< 0x0000a77b      d0f1           bne 0x47f108                ; branch on result not zero
+        |   0x0000a77d      a200           ldx #0x00                   ; load index x with memory
+        |   0x0000a77f      8ef9a6         stx 0xa6f9                  ; store index x in memory
+       .--> 0x0000a782      60             rts                         ; return from subroutine
+       ||   0x0000a783      a900           lda #0x00                   ; load accumulator with memory
+       ||   0x0000a785      85fc           sta 0xfc                    ; store accumulator in memory
+       ||   0x0000a787      84fd           sty 0xfd                    ; store index y in memory
+       ||   0x0000a789      20066c         jsr 0x6c06                  ; jump to new location saving return address
+       ||   0x0000a78c      a900           lda #0x00                   ; load accumulator with memory
+       ||   0x0000a78e      85fe           sta 0xfe                    ; store accumulator in memory
+       ||   0x0000a790      a9b0           lda #0xb0                   ; load accumulator with memory
+       ||   0x0000a792      85ff           sta 0xff                    ; store accumulator in memory
+       ||   0x0000a794      202ba7         jsr 0xa72b                  ; jump to new location saving return address
+       ||   0x0000a797      2054a7         jsr 0xa754                  ; jump to new location saving return address
+     ..---> 0x0000a79a      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
+     ||||   0x0000a79d      aa             tax                         ; transfer accumulator to index x
+    ,=====< 0x0000a79e      f011           beq 0x47f108                ; branch on result zero
+    |||||   0x0000a7a0      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
+    |||||   0x0000a7a3      a8             tay                         ; transfer accumulator to index y
+   .------> 0x0000a7a4      b9007e         lda 0x7e00,y                ; load accumulator with memory
+   ||||||   0x0000a7a7      205aa7         jsr 0xa75a                  ; jump to new location saving return address
+   ||||||   0x0000a7aa      c8             iny                         ; increment index y by one
+   ||||||   0x0000a7ab      ca             dex                         ; decrement index x by one
+   `======< 0x0000a7ac      d0f6           bne 0x47f108                ; branch on result not zero
+   ,======< 0x0000a7ae      4cb7a7         jmp 0xa7b7                  ; jump to new location
+   |`-----> 0x0000a7b1      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
+   | ||||   0x0000a7b4      205aa7         jsr 0xa75a                  ; jump to new location saving return address
+   `------> 0x0000a7b7      206ca7         jsr 0xa76c                  ; jump to new location saving return address
+     ||||   0x0000a7ba      adf7a6         lda 0xa6f7                  ; load accumulator with memory
+    ,=====< 0x0000a7bd      3007           bmi 0x47f108                ; branch on result minus
+    |`====< 0x0000a7bf      d0d9           bne 0x47f108                ; branch on result not zero
+    | |||   0x0000a7c1      adf6a6         lda 0xa6f6                  ; load accumulator with memory
+    | `===< 0x0000a7c4      d0d4           bne 0x47f108                ; branch on result not zero
+    `---`=< 0x0000a7c6      4c036c         jmp 0x6c03                  ; jump to new location
+       |    0x0000a7c9      a5c8           lda 0xc8                    ; load accumulator with memory
+       `==< 0x0000a7cb      10b5           bpl 0x47f108                ; branch on result plus
+            0x0000a7cd      a2fa           ldx #0xfa                   ; load index x with memory
+            0x0000a7cf      a0a7           ldy #0xa7                   ; load index y with memory
+            0x0000a7d1      a905           lda #0x05                   ; load accumulator with memory
+            0x0000a7d3      20bdff         jsr 0xffbd       ; SETNAM. Set file name parameters. ("M-R[c6][e5]") memory read @ e5c6
+            0x0000a7d6      a90f           lda #0x0f                   ; load accumulator with memory
+            0x0000a7d8      ae336c         ldx 0x6c33                  ; load index x with memory
+            0x0000a7db      a00f           ldy #0x0f                   ; load index y with memory
+            0x0000a7dd      20baff         jsr 0xffba       ; SETLFS. Set file parameters.
+            0x0000a7e0      20c0ff         jsr 0xffc0       ; OPEN. Open file.
+            0x0000a7e3      a20f           ldx #0x0f                   ; load index x with memory
+            0x0000a7e5      20c6ff         jsr 0xffc6       ; CHKIN. Define file as default input.
+            0x0000a7e8      20cfff         jsr 0xffcf       ; CHRIN. Read byte from default input
+            0x0000a7eb      c937           cmp #0x37                   ; compare memory and accumulator
+        ,=< 0x0000a7ed      f003           beq 0x47f108                ; branch on result zero
+        |   0x0000a7ef      cee4a6         dec 0xa6e4                  ; decrement memory by one
+        `-> 0x0000a7f2      a90f           lda #0x0f                   ; load accumulator with memory
+            0x0000a7f4      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
+        ,=< 0x0000a7f7      4ce7ff         jmp 0xffe7       ; CLALL. Clear file table; call CLRCHN.
+        |   0x0000a7fa      4d 2d 52 c6 e5                  ; "M-R[c6][e5]"

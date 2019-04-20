@@ -1,0 +1,206 @@
+Ultima V Remastered
+
+Mission: Put the complete original game for the C64 on an EasyFlash cartdridge
+Variants:
+- Do not change anything
+- Allow Bugfixes
+- No trainer or similar, no demo or other
+==============================================================================
+
+ToDo
+- Identify relevant code and files
+- Learn about u5 structure
+- Identify all kernal calls
+- identify saved location for current disk
+- identify the meaning of list, slist and tlist saving
+- make tool to create bin file: address
+
+
+
+General Plan
+- EasyFlash on load: exchange load function with load function from easyflash
+  + bank in directory and code
+  + initialize eapi / fast initialize eapi
+  + get file information from directory
+  + bank out
+  + if need to load from disk, leave and load from disk
+  + load file byte wise to destination (with bank in / bank out)
+  + bank in
+  + initialize decrunch
+  + bank out
+  + execute decrunch
+  + return
+on save: save data on disk first?
+  + if enough banks to save, save to flash
+  + all files must be saved all the time!
+
+File Locator:
+- assume 200 files, each file has: (compatible to EasyFS)
+  + 16 bytes name
+  +  1 byte flags 0b01100001 (not hidden, type 0x01, normal prg files)
+  +  1 byte bank
+  +  1 byte reserved, -> use as disk id
+  +  2 byte start offset in bank, 
+  +  3 byte file size
+  4800 bytes, appr 3300 bytes of code, enough for inventory and code in one 8k page
+  saveable files simply point to the correct block
+- blocks:
+  dungeon: 19 + 11*16 = 195 blocks
+  britannia: 256 blocks
+  underworld: 256 blocks
+  towne: 192 blocks
+  dwelling: 192 blocks
+  castle: 192 blocks
+  keep: 192 blocks
+  -> assume 1536 blocks
+  block location: 4 byte address: 6144
+  simple address resolution disk*256 + x*16 + y 
+  or: disk start address fixed + x*16 + y
+  about 1024 bytes code
+  -> put as large files in efs, and load block with special method (name x)
+- saving
+  must be redesign at the source:
+  first erase and then save all files
+  list saving is a problem :(
+
+Files that load other files or do file operations
+- Load call
+Program/meow.prg (1x) -> startup program, will be replaced
+Program/xyzzy.prg (4x) -> loader, will be changed
+Program/temp.subs.prg (1x) -> main loading function, will be changed
+Program/scratch.prg (3x) -> unknown
+
+- Open call
+Britannia/q.prg  (1x) -> unknown
+Dungeon/main.dng.prg  (1x) -> unknown
+Program/scratch.prg (1x) -> unknown
+Program/startup.prg (2x) -> will be changed, device 9 related
+Program/temp.subs.prg (3x) -> load, save, load block, will be changed
+Program/xyzzy.prg (1x) -> loader, will be changed
+
+- Save call
+ToDo
+
+- Replace functions
+0x6c24: (0x6c49) load file from disk
+  size: 96 bytes
+  bank in, jump to locator and find bank and address, bank out
+  load file, bank in for every byte and bank out (necessary to copy to eg 0x8000)
+  jump to exomizer to decrunch
+  
+  
+0x6c24: (0x6eae) read disk block
+  size: 147 bytes
+  
+0x6c2d: (0x6de0): save file
+  size: 142 bytes
+
+
+
+Build
+=====
+
+- cc65 command to make prg
+  + cl65 -o out.prg -t c64 -C config.cfg in.s (config must have startaddress definition)
+FEATURES {
+    STARTADDRESS:    default = $ff00;
+}
+SYMBOLS {
+    __LOADADDR__:    type = import;
+}
+MEMORY {
+    LOADADDR: file = %O, start = %S - 2, size = $0002;
+}
+
+SEGMENTS {
+    LOADADDR: load = LOADADDR, type = ro;
+}
+
+
+
+Loading
+=======
+
+1. meow.prg
+   loads xyzzy.prg ($2000)
+   
+2. xyzzy.prg
+   drive selection
+   many operations, purpose unclear
+   loads U5SIZ.O.PRG ($7700)
+   loads TEMP.SUBS ($6c00)
+
+3. jumps to TEMP.SUBS
+   many operations, purpose unclear
+   loads STARTUP
+   jumps to STARTUP
+   
+4. loads PRINT.PRG ($c000)
+   loads OSI.LOGOS ($c000)
+   loads FLIPPER ($1000)
+   loads HTXT ($1580)
+   loads INTRO.VIEW ($9500)
+   loads U5.PTHTBL ($4000)
+   loads S3 ($c000)
+   loads S2 ($c000)
+   loads S1 ($c000)
+   loads UPDATE.HIMEM ($1d80)
+   loads COLORS ($b000)
+   loads FLAMES ($4000)
+   loads U5.LOGO ($c000)
+   loads S0 ($c000)
+   loads LOGO.COLORS ($1000)
+   loads MAIN.SUBS ($4c00)
+
+5. on journey onward: (new game)
+   loads ENTER.PLAY ($8000)
+   (change disk BRITANNIA)
+   loads PRTY.DATA ($bc00)
+   loads SLIST ($4a00)
+   loads LIST ($4a00)
+   loads ROSTER ($1000)
+   (change disk DWELLING)
+   loads MAIN.T* ($8000)
+
+
+
+Calculation
+===========
+
+- 1 5 1/4 disk: 174848 bytes (minus directory): 169984 bytes
+- U5 has 8 disks: 1.359.872 bytes
+  => we need to find appr 400kB of empty or duplicate blocks
+
+- Disk1: Program
+  free: appr 19968 bytes
+  
+- Disk 2 Dungeon:
+  2x 20 empty: 10240 bytes
+
+- Disk 3 Britannia:
+  4x 20 empty: 20480 bytes
+
+- Disk 4 Underworld
+  4x 20 empty: 20480 bytes
+
+- Disk 5 Towne
+  4x 20 empty: 20480 bytes
+
+- Disk 6 Dwelling
+  full
+
+- Disk 7: Castle
+  3x20 + 11 empty: 19712 bytes
+
+- Disk 8: Keep
+  23 blocks: 5888 bytes
+
+=> Free: 117248 bytes
+
+=> Duplicates 360860 bytes
+
+=> sound can be removed on c64 (or maybe can run?)
+
+Overall uncompressed size: 881764 
+=> should fit
+

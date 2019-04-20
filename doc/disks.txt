@@ -1,0 +1,284 @@
+Program: (id 0x41)
+0 "osi             " aa 2a
+1     "meow"              prg (code, loader, $032c)
+5     "u5siz.o"           prg (code, $7700)
+5     "subs.128"          prg (code, $7700)
+1     "dconfig"           prg (saved drive config, $b000)
+17    "s0"                prg (data, $c000)
+12    "u5.pthtbl"         prg (data, $4000)
+5     "enter.play"        prg (data, $8000)
+33    "main.subs"         prg (?, $4c00)
+11    "intro.view"        prg (?, $9500)
+4     "update.himem"      prg (?, $1d80)
+9     "colors"            prg (data, $b000)
+4     "qs"                prg (data, $8000) quickstart
+17    "s1"                prg (data, $c000)
+12    "temp.subs"         prg (data, $6c00)
+20    "startup"           prg (?, $8000)
+9     "htxt"              prg (data, $1580)
+17    "s2"                prg (data, $c000)
+17    "s3"                prg (data, $c000)
+1     "m9"                prg (data, $0801)
+3     "logo.colors"       prg ($1000)
+29    "create"            prg (data, $8000)
+4     "xyzzy"             prg (code, data, sets drive information, $2000)
+14    "transfer"          prg ($8000)
+5     "blank.roster"      prg ($bc00)
+1     "blank.prty"        prg ($bc00)
+47    "m"                 prg ($7200) music (c128 only, probably in other memory bank)
+5     "font3.shptbl"      prg ($9c00)
+16    "osi.logos"         prg ($c000)
+5     "u5.logo"           prg ($c000)
+7     "c3"                prg ($a100)
+8     "c1"                prg ($a100)
+21    "c2"                prg ($a100)
+22    "about"             prg ($aa00)
+5     "scratch"           prg ($2000)
+4     "flipper"           prg ($1000)
+9     "print"             prg ($c000)
+4     "create1.txt"       prg ($0b00)
+36    "muff"              prg ($7ca0) (unclear)
+20    "flames"            prg ($4000)
+
+Dungeon: (id 0x47)
+0 "dungeon         " g
+41    "main.dng"          prg
+6     "dng.precom"        prg
+11    "dng1a"             prg
+7     "dng2a"             prg
+4     "dng2b"             prg
+7     "dng1b"             prg
+10    "dng2c"             prg
+5     "dng3b"             prg
+10    "dng1c"             prg
+10    "dng3a"             prg
+11    "dng3c"             prg
+9     "colors"            prg
+17    "s0"                prg
+46    "main.combat"       prg
+17    "s1"                prg
+7     "ms0"               prg
+3     "gem.dng"           prg
+13    "cmd.dng"           prg
+17    "s2"                prg
+20    "c"                 prg
+11    "r"                 prg
+19    "u"                 prg
+17    "s3"                prg
+8     "m"                 prg
+20    "s"                 prg
+15    "z"                 prg
+14    "items"             prg
+7     "ms1"               prg
+7     "ms2"               prg
+7     "ms3"               prg
+7     "ms4"               prg
+7     "ms5"               prg
+7     "ms6"               prg
+7     "ms7"               prg
+
+Britannia:  (id 0x42)
+0 "britannia       " b
+3     "list"              prg
+3     "tlist"             prg
+3     "slist"             prg ($4a00)
+46    "main.combat"       prg
+4     "p"                 prg
+5     "roster"            prg ($1000)
+1     "prty.data"         prg ($bc00)
+4     "v"                 prg
+5     "l"                 prg (Looks)
+19    "u"                 prg
+11    "r"                 prg
+20    "s"                 prg
+15    "shrine"            prg
+8     "m"                 prg
+19    "t"                 prg
+15    "bsub"              prg
+6     "w"                 prg
+17    "i"                 prg
+20    "c"                 prg
+2     "wzero"             prg
+7     "e"                 prg
+37    "main.out"          prg
+2     "q"                 prg
+15    "z"                 prg
+Britannia/bsub.prg: $A700 (3687)
+Britannia/c.prg: $A700 (4863)
+Britannia/e.prg: $A700 (1722)
+Britannia/i.prg: $A700 (4068)
+Britannia/list.prg: $4A00 (514)
+Britannia/l.prg: $A700 (1194)
+Britannia/main.combat.prg: $8000 (11517)
+Britannia/main.out.prg: $8000 (9340)
+Britannia/m.prg: $A700 (1924)
+Britannia/p.prg: $A700 (1008)
+Britannia/prty.data.prg: $BC00 (50)
+Britannia/q.prg: $A700 (257)
+Britannia/roster.prg: $1000 (1027)
+Britannia/r.prg: $A700 (2769)
+Britannia/shrine.prg: $A700 (3798)
+Britannia/slist.prg: $4A00 (514)
+Britannia/s.prg: $A700 (4835)
+Britannia/tlist.prg: $4A00 (514)
+Britannia/t.prg: $A700 (4738)
+Britannia/u.prg: $A700 (4791)
+Britannia/v.prg: $A700 (835)
+Britannia/w.prg: $A700 (1483)
+Britannia/wzero.prg: $00 (258)
+Britannia/z.prg: $A700 (3690)
+
+
+Underworld: (id 0x48)
+0 "underworld      " h
+46    "main.combat"       prg
+3     "tlist"             prg
+37    "startup"           prg
+4     "p"                 prg
+11    "r"                 prg
+7     "e"                 prg
+17    "i"                 prg
+19    "u"                 prg
+20    "s"                 prg
+8     "m"                 prg
+4     "v"                 prg
+6     "l"                 prg
+20    "oc"                prg
+15    "z"                 prg
+37    "main.out"          prg
+15    "shrine"            prg
+5     "blank.roster"      prg
+1     "blank.party"       prg
+3     "blank.ulist"       prg
+6     "w"                 prg
+20    "c"                 prg
+
+Towne: (id 0x43)
+0 "towne           " cc 2a
+38    "main.twn"          prg
+19    "t"                 prg
+11    "r"                 prg
+20    "s"                 prg
+19    "u"                 prg
+4     "v"                 prg
+20    "talk.ar"           prg
+15    "sell.arms"         prg
+23    "talk.ba"           prg
+11    "talk.he"           prg
+10    "talk.sh"           prg
+19    "talk.in"           prg
+12    "talk.re"           prg
+7     "talk.ho"           prg
+9     "talk.gu"           prg
+4     "p"                 prg
+46    "main.combat"       prg
+8     "m"                 prg
+15    "z"                 prg
+18    "l"                 prg
+20    "oc"                prg
+17    "i"                 prg
+20    "c"                 prg
+
+Dwelling (id 0x44)
+0 "dwelling        " m  2a
+38    "main.twn"          prg
+7     "i4"                prg
+17    "i"                 prg
+4     "l"                 prg
+11    "r"                 prg
+19    "u"                 prg
+20    "s"                 prg
+19    "t"                 prg
+8     "m"                 prg
+4     "v"                 prg
+15    "z"                 prg
+4     "p"                 prg
+20    "c"                 prg
+46    "main.combat"       prg
+16    "story"             prg
+7     "story1.txt"        prg
+13    "p1"                prg
+9     "p2a"               prg
+11    "p3"                prg
+9     "p2"                prg
+10    "p4"                prg
+7     "i1"                prg
+7     "i2"                prg
+7     "i6"                prg
+7     "i5"                prg
+7     "i3"                prg
+7     "p5a"               prg
+7     "p5b"               prg
+12    "p6"                prg
+10    "p7b"               prg
+11    "p7c"               prg
+13    "p7d"               prg
+13    "p7e"               prg
+12    "p7f"               prg
+7     "p8"                prg
+9     "p9"                prg
+7     "story2.txt"        prg
+7     "story3.txt"        prg
+8     "story4.txt"        prg
+
+Castle: (id 0x45)
+0 "castle          " m
+38    "main.twn"          prg
+19    "t"                 prg
+11    "r"                 prg
+20    "s"                 prg
+19    "u"                 prg
+4     "v"                 prg
+20    "talk.ar"           prg
+15    "sell.arms"         prg
+23    "talk.ba"           prg
+11    "talk.he"           prg
+10    "talk.sh"           prg
+19    "talk.in"           prg
+12    "talk.re"           prg
+7     "talk.ho"           prg
+9     "talk.gu"           prg
+4     "p"                 prg
+46    "main.combat"       prg
+8     "m"                 prg
+20    "oc"                prg
+8     "l"                 prg
+8     "death"             prg
+15    "z"                 prg
+15    "blackthorn"        prg
+17    "i"                 prg
+20    "c"                 prg
+
+Keep: (id 0x46)
+0 "keep            " m
+38    "main.twn"          prg
+19    "t"                 prg
+11    "r"                 prg
+20    "s"                 prg
+19    "u"                 prg
+4     "v"                 prg
+20    "talk.ar"           prg
+15    "sell.arms"         prg
+23    "talk.ba"           prg
+11    "talk.he"           prg
+4     "l"                 prg
+2     "y"                 prg
+12    "talk.re"           prg
+8     "v1"                prg
+8     "v2"                prg
+4     "p"                 prg
+46    "main.combat"       prg
+8     "m"                 prg
+20    "oc"                prg
+6     "v3"                prg
+9     "v4"                prg
+28    "qwerty"            prg
+6     "v5"                prg
+17    "i"                 prg
+8     "v6"                prg
+6     "v7"                prg
+5     "font3.shptbl"      prg
+26    "victory"           prg
+10    "end"               prg
+20    "c"                 prg
+15    "z"                 prg

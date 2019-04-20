@@ -1,0 +1,189 @@
+Main Memory Map
+===============
+
+0x0000
+0x1000    roster
+   1      roster
+   2      roster
+   3      roster
+   4
+   5
+   6
+   7
+   8
+   9
+   A
+   B
+   C
+   D
+   E
+   F
+0x2000
+0x3000
+0x4000
+   1
+   2
+   3
+   4
+   5
+   6
+   7
+   8
+   9
+   A      list, slist, tlist, blank.ulist
+   B      list, slist, tlist, blank.ulist
+   C      main.subs
+   D      main.subs
+   E      main.subs
+   F      main.subs
+0x5000    main.subs
+0x6000    main.subs
+   1      main.subs
+   2      main.subs
+   3      main.subs
+   4      main.subs
+   5      main.subs
+   6      main.subs
+   7      main.subs
+   8      main.subs
+   9      main.subs
+   A      main.subs
+   B      main.subs
+   C      temp.subs
+   D      temp.subs
+   E      temp.subs
+   F      temp.subs
+0x7000    temp.subs
+   1      temp.subs
+   2      temp.subs
+   3      temp.subs
+   4      temp.subs
+   5      temp.subs
+   6      temp.subs
+   7      u5siz.o (necessary?) / keep free for subs.128 jump table
+   8      u5siz.o (necessary?) / eapi
+   9      u5siz.o (necessary?) / eapi
+   A      u5siz.o (necessary?) / eapi
+   B      u5siz.o (necessary?) / exomizer
+   C      (256 free)
+   D      (256 free)
+   E      (ram, probably also temp)
+   F      (ram, temporary storage for disk checking) / exomizer table
+0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
+0x9000      ( " )
+   1        ( " )
+   2        ( " )
+   3        ( " )
+   4        ( " )
+   5      intro*, i*, p*
+   6        ( " )
+   7        ( " )
+   8        ( " )
+   9        ( " )
+   A        ( " )
+   B        ( " )
+   C        ( " )
+   D        ( " )
+   E        ( " )
+   F        ( " )
+0xA000      ( " )
+   1      c*, v*
+   2
+   3
+   4
+   5
+   6
+   7      all A7 programs 
+   8
+   9      sell*, talk*
+   A      about
+   B
+   C
+   D
+   E
+   F
+0xB000    colors, dng*
+0xC000    osi, print, s*, u5.logo*
+0xD000    [i/o] / [ram]
+   1
+   2
+   3
+   4
+   5
+   6
+   7
+   8
+   9
+   A
+   B
+   C
+   D
+   E      [Cartridge Registers] / [ram]
+   F      [Cartridge RAM: EAPI Jumptable, exomizer tables, variables] / [ram]
+0xE000    [kernel] / [ram] / [banked code]
+0xF000    [kernel] / [ram] / [banked code]
+
+
+
+Cartridge Memory Map
+====================
+
+00:0:0000      (file map)
+00:1:0000      (code)
+     0100      (code)
+     0200      (code)
+     0300      (code)
+     0400      (code)
+     0500      (code)
+     0600      (code)
+     0700      (code)
+     0800      (code)
+     0900      (code)
+     0A00      (code)
+     0B00      (code)
+     0C00      (code)
+     0D00      (code)
+     0E00      (code)
+     0F00      (code)
+     1000      (code)
+     1100      (code)
+     1200      (code)
+     1300      (code)
+     1400      (code)
+     1500      (code)
+     1600      (code)
+     1700      (code)
+     1800      EAPI
+     1900      EAPI       
+     1A00      EAPI
+     1B00      EAPI
+     1C00      Application Loader
+     1D00      Application Loader
+     1E00      Application Loader
+     1F00      Startup Code & Reset Vector
+01:0:0000
+01:1:0000
+02:0:0000
+02:1:0000
+03:0:0000
+03:1:0000
+
+...
+...
+
+56:0:0000      (save game)
+56:1:0000
+57:0:0000      (save game)
+57:1:0000
+58:0:0000      (save game)
+58:1:0000
+59:0:0000      (save game)
+59:1:0000
+60:0:0000      (save game)
+60:1:0000
+61:0:0000      (save game)
+61:1:0000
+62:0:0000      (save game)
+62:1:0000
+63:0:0000      (save game)
+63:1:0000

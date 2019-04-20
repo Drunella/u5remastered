@@ -1,0 +1,299 @@
+does some checks
+probably checks if c128 or c64
+drive select
+loads files U5SIZ.O TEMP.SUBS 
+loads M if other drive selected
+jumps to TEMP.SUBS (0x6c24) and load ST* (STARTUP)
+jumps to 0x8000
+size: 992 bytes
+--------------------------------------------------------------------------
+            0x00002000      a904           lda #0x04                   ; load accumulator with memory
+            0x00002002      8d8902         sta 0x0289       ; Maximum length of keyboard buffer. Values: 4: buffer size
+            0x00002005      8d200a         sta 0x0a20                  ; store accumulator in memory
+            0x00002008      a960           lda #0x60                   ; load accumulator with memory
+            0x0000200a      8d2601         sta 0x0126                  ; store accumulator in memory
+            0x0000200d      8d2901         sta 0x0129                  ; store accumulator in memory
+            0x00002010      a9eb           lda #0xeb                   ; load accumulator with memory
+            0x00002012      8d8a02         sta 0x028a       ; Keyboard repeat switch. Bits: 11101011
+            0x00002015      a90e           lda #0x0e                   ; load accumulator with memory
+            0x00002017      8d00ff         sta 0xff00       ; c128 mmu 0b00001110, IO, kernal, RAM0. 48K RAM
+            0x0000201a      a900           lda #0x00                   ; load accumulator with memory
+            0x0000201c      8537           sta 0x37                    ; store accumulator in memory
+            0x0000201e      85c8           sta 0xc8                    ; store accumulator in memory
+            0x00002020      8579           sta 0x79                    ; store accumulator in memory
+            0x00002022      8571           sta 0x71                    ; store accumulator in memory
+            0x00002024      38             sec                         ; set carry flag
+            0x00002025      6678           ror 0x78                    ; rotate one bit right (memory or accumulator)
+            0x00002027      a900           lda #0x00                   ; load accumulator with memory
+            0x00002029      8d20d0         sta 0xd020       ; Border Color black
+            0x0000202c      a220           ldx #0x20                   ; load index x with memory
+        .-> 0x0000202e      bdb523         lda 0x23b5,x                ; load accumulator with memory
+        |   0x00002031      9d8003         sta 0x0380,x                ; store accumulator in memory
+        |   0x00002034      ca             dex                         ; decrement index x by one
+        `=< 0x00002035      10f7           bpl 0x202e                  ; branch on result plus
+            0x00002037      a99e           lda #0x9e                   ; load accumulator with memory
+            0x00002039      8d1803         sta 0x0318                  ; store accumulator in memory
+            0x0000203c      a903           lda #0x03                   ; load accumulator with memory
+            0x0000203e      8d1903         sta 0x0319      ; Execution address of non-maskable interrupt service routine to 039e (single rti)
+            0x00002041      a94c           lda #0x4c                   ; load accumulator with memory
+            0x00002043      cd24c0         cmp 0xc024                  ; compare memory and accumulator
+        ,=< 0x00002046      d01a           bne 0x2062                  ; branch on result not zero
+        |   0x00002048      a980           lda #0x80                   ; load accumulator with memory
+        |   0x0000204a      85c8           sta 0xc8                    ; store accumulator in memory
+        |   0x0000204c      8579           sta 0x79                    ; store accumulator in memory
+        |   0x0000204e      a995           lda #0x95                   ; load accumulator with memory
+        |   0x00002050      8d1803         sta 0x0318                  ; store accumulator in memory
+        |   0x00002053      a900           lda #0x00                   ; load accumulator with memory
+        |   0x00002055      8500           sta 0x00                    ; store accumulator in memory
+        |   0x00002057      859d           sta 0x9d                    ; store accumulator in memory
+        |   0x00002059      a9ff           lda #0xff                   ; load accumulator with memory
+        |   0x0000205b      85d8           sta 0xd8                    ; store accumulator in memory
+        |   0x0000205d      a90b           lda #0x0b                   ; load accumulator with memory
+        |   0x0000205f      8d11d0         sta 0xd011      ;VIC Control Register 1
+        `-> 0x00002062      a906           lda #0x06                   ; load accumulator with memory
+            0x00002064      8501           sta 0x01        ; memory mapping 0b00000110, io visible, no basic, kernal
+            0x00002066      a5c8           lda 0xc8                    ; load accumulator with memory
+        ,=< 0x00002068      1003           bpl 0x206d                  ; branch on result plus
+       ,==< 0x0000206a      4cd520         jmp 0x20d5                  ; jump to new location
+       |`-> 0x0000206d      78             sei                         ; set interrupt disable status
+       |    0x0000206e      a983           lda #0x83                   ; load accumulator with memory
+       |    0x00002070      8d0203         sta 0x0302                  ; store accumulator in memory
+       |    0x00002073      a9a4           lda #0xa4                   ; load accumulator with memory
+       |    0x00002075      8d0303         sta 0x0303                  ; store accumulator in memory
+       |    0x00002078      a948           lda #0x48                   ; load accumulator with memory
+       |    0x0000207a      8d8f02         sta 0x028f                  ; store accumulator in memory
+       |    0x0000207d      a9eb           lda #0xeb                   ; load accumulator with memory
+       |    0x0000207f      8d9002         sta 0x0290                  ; store accumulator in memory
+       |    0x00002082      a9a5           lda #0xa5                   ; load accumulator with memory
+       |    0x00002084      8d3003         sta 0x0330                  ; store accumulator in memory
+       |    0x00002087      a9f4           lda #0xf4                   ; load accumulator with memory
+       |    0x00002089      8d3103         sta 0x0331                  ; store accumulator in memory
+       |    0x0000208c      58             cli                         ; clear interrupt disable bit
+       |    0x0000208d      203321         jsr 0x2133      ; display text and wait for input
+       |    0x00002090      a2d9           ldx #0xd9                   ; load index x with memory
+       |    0x00002092      a021           ldy #0x21                   ; load index y with memory
+       |    0x00002094      a902           lda #0x02                   ; load accumulator with memory
+       |    0x00002096      20bdff         jsr 0xffbd      ;$FFBD - set file name  (UJ)  -> reset disk drive               
+       |    0x00002099      a90f           lda #0x0f                   ; load accumulator with memory
+       |    0x0000209b      a8             tay                         ; transfer accumulator to index y
+       |    0x0000209c      a208           ldx #0x08                   ; load index x with memory
+       |    0x0000209e      20baff         jsr 0xffba      ;$FFBA - set file parameters  15,8,15
+       |    0x000020a1      20c0ff         jsr 0xffc0      ;$FFC0 - open file after SETLFS,SETNAM
+       |    0x000020a4      a211           ldx #0x11                   ; load index x with memory
+       |.-> 0x000020a6      a9ff           lda #0xff                   ; load accumulator with memory
+       ||   0x000020a8      38             sec                         ; set carry flag
+      .---> 0x000020a9      48             pha                         ; push accumulator on stack
+     .----> 0x000020aa      e901           sbc #0x01                   ; subtract memory from accumulator with borrow
+     `====< 0x000020ac      d0fc           bne 0x20aa                  ; branch on result not zero
+      |||   0x000020ae      68             pla                         ; pull accumulator from stack
+      |||   0x000020af      e901           sbc #0x01                   ; subtract memory from accumulator with borrow
+      `===< 0x000020b1      d0f6           bne 0x20a9                  ; branch on result not zero
+       ||   0x000020b3      ca             dex                         ; decrement index x by one
+       |`=< 0x000020b4      d0f0           bne 0x20a6                ; branch on result not zero
+       |    0x000020b6      a90f           lda #0x0f                   ; load accumulator with memory
+       |    0x000020b8      20c3ff         jsr 0xffc3      ;$FFC3 - close a logical file             
+       
+
+loading file starts?
+       |    0x000020bb      a907           lda #0x07                   ; load accumulator with memory
+       |    0x000020bd      a2dc           ldx #0xdc                   ; load index x with memory
+       |    0x000020bf      a021           ldy #0x21                   ; load index y with memory
+       |    0x000020c1      20d423         jsr 0x23d4      ; set filename, 8,8,1 (U5S*TEMP) -> U5SIZ.O
+       |    0x000020c4      a900           lda #0x00                   ; load accumulator with memory
+       |    0x000020c6      20d5ff         jsr 0xffd5                  ; jump to new location saving return address
+       |    0x000020c9      ad00b0         lda 0xb000      ; load file decision
+       |    0x000020cc      c902           cmp #0x02       ; compare drive selection
+       |,=< 0x000020ce      f005           beq 0x20d5                  ; branch on result zero
+       ||   0x000020d0      78             sei                         ; set interrupt disable status
+       ||   0x000020d1      2c0077         bit 0x7700                  ; test bits in memory with accumulator
+       ||   0x000020d4      58             cli                         ; clear interrupt disable bit
+       ``-> 0x000020d5      a5c8           lda 0xc8                    ; load accumulator with memory
+        ,=< 0x000020d7      1024           bpl 0x20fd                  ; branch on result plus
+        |   0x000020d9      a901           lda #0x01                   ; load accumulator with memory
+        |   0x000020db      a2e5           ldx #0xe5                   ; load index x with memory
+        |   0x000020dd      a021           ldy #0x21                   ; load index y with memory
+        |   0x000020df      20d423         jsr 0x23d4      ; set filename, 8,8,1 (M)
+        |   0x000020e2      a900           lda #0x00                   ; load accumulator with memory
+        |   0x000020e4      20d5ff         jsr 0xffd5      ; ROM_LOAD - load after call SETLFS,SETNAM    
+        |   0x000020e7      200f72         jsr 0x720f                  ; jump to new location saving return address
+        |   0x000020ea      a904           lda #0x04                   ; load accumulator with memory
+        |   0x000020ec      a2e6           ldx #0xe6                   ; load index x with memory
+        |   0x000020ee      a021           ldy #0x21       
+        |   0x000020f0      20d423         jsr 0x23d4      ; set filename, 8,8,1 (SUB.*)  -> C128
+        |   0x000020f3      a900           lda #0x00                   ; load accumulator with memory
+        |   0x000020f5      20d5ff         jsr 0xffd5      ; ROM_LOAD ;$FFD5 - load after call SETLFS,SETNAM
+        |   0x000020f8      a5d5           lda 0xd5                    ; load accumulator with memory
+       ,==< 0x000020fa      4c0b21         jmp 0x210b                  ; jump to new location
+       |`-> 0x000020fd      78             sei                         ; set interrupt disable status
+       |    0x000020fe      a980           lda #0x80                   ; load accumulator with memory
+       |    0x00002100      8dfeff         sta 0xfffe                  ; store accumulator in memory
+       |    0x00002103      a903           lda #0x03                   ; load accumulator with memory
+       |    0x00002105      8dffff         sta 0xffff                  ; store accumulator in memory
+       |    0x00002108      58             cli                         ; clear interrupt disable bit
+       |    0x00002109      a5c5           lda 0xc5                    ; load accumulator with memory
+       `--> 0x0000210b      48             pha                         ; push accumulator on stack
+            0x0000210c      a905           lda #0x05                   ; load accumulator with memory
+            0x0000210e      a2e0           ldx #0xe0                   ; load index x with memory
+            0x00002110      a021           ldy #0x21                   ; load index y with memory
+            0x00002112      20d423         jsr 0x23d4      ; set filename, 8,8,1 (TEMP*) TEMP.SUBS
+            0x00002115      a900           lda #0x00                   ; load accumulator with memory
+            0x00002117      20d5ff         jsr 0xffd5                  ; jump to new location saving return address
+            0x0000211a      68             pla                         ; pull accumulator from stack
+            0x0000211b      c922           cmp #0x22                   ; compare memory and accumulator
+        ,=< 0x0000211d      d008           bne 0x2127                  ; branch on result not zero
+        |   0x0000211f      a201           ldx #0x01                   ; load index x with memory
+        |   0x00002121      20246c         jsr 0x6c24      ; load file with filename after call, null terminated string, return address is set to after params
+        |   0x00002124      51 53 00                       ; QS
+        `-> 0x00002127      a200           ldx #0x00       ; return after load
+            0x00002129      20246c         jsr 0x6c24      ; load file with filename after call, null terminated string, return address is set to after params
+            0x0000212c      53 54 2a 00                    ; ST*
+            0x00002130      4c0080         jmp 0x8000                  ; jump to new location
+
+display text and wait for key
+            0x00002133      a9ea           lda #0xea                   ; load accumulator with memory
+            0x00002135      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002137      a921           lda #0x21                   ; load accumulator with memory
+            0x00002139      85ff           sta 0xff                    ; store accumulator in memory
+            0x0000213b      209c23         jsr 0x239c       ; write partial line
+            0x0000213e      a9f4           lda #0xf4                   ; load accumulator with memory
+            0x00002140      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002142      a921           lda #0x21                   ; load accumulator with memory
+            0x00002144      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002146      209c23         jsr 0x239c       ; write partial line
+            0x00002149      a91b           lda #0x1b                   ; load accumulator with memory
+            0x0000214b      85fe           sta 0xfe                    ; store accumulator in memory
+            0x0000214d      a922           lda #0x22                   ; load accumulator with memory
+            0x0000214f      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002151      209c23         jsr 0x239c       ; write partial line
+            0x00002154      a941           lda #0x41                   ; load accumulator with memory
+            0x00002156      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002158      a922           lda #0x22                   ; load accumulator with memory
+            0x0000215a      85ff           sta 0xff                    ; store accumulator in memory
+            0x0000215c      209c23         jsr 0x239c       ; write partial line
+            0x0000215f      a964           lda #0x64                   ; load accumulator with memory
+            0x00002161      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002163      a922           lda #0x22                   ; load accumulator with memory
+            0x00002165      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002167      209c23         jsr 0x239c       ; write partial line
+            0x0000216a      a988           lda #0x88                   ; load accumulator with memory
+            0x0000216c      85fe           sta 0xfe                    ; store accumulator in memory
+            0x0000216e      a922           lda #0x22                   ; load accumulator with memory
+            0x00002170      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002172      209c23         jsr 0x239c       ; write partial line
+            0x00002175      a9b0           lda #0xb0                   ; load accumulator with memory
+            0x00002177      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002179      a922           lda #0x22                   ; load accumulator with memory
+            0x0000217b      85ff           sta 0xff                    ; store accumulator in memory
+            0x0000217d      209c23         jsr 0x239c       ; write partial line
+            0x00002180      a9c7           lda #0xc7                   ; load accumulator with memory
+            0x00002182      85fe           sta 0xfe                    ; store accumulator in memory
+            0x00002184      a922           lda #0x22                   ; load accumulator with memory
+            0x00002186      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002188      209c23         jsr 0x239c       ; write partial line
+            0x0000218b      a9e3           lda #0xe3                   ; load accumulator with memory
+            0x0000218d      85fe           sta 0xfe                    ; store accumulator in memory
+            0x0000218f      a922           lda #0x22                   ; load accumulator with memory
+            0x00002191      85ff           sta 0xff                    ; store accumulator in memory
+            0x00002193      209c23         jsr 0x239c       ; write partial line
+            0x00002196      a908           lda #0x08                   ; load accumulator with memory
+            0x00002198      85fe           sta 0xfe                    ; store accumulator in memory
+            0x0000219a      a923           lda #0x23                   ; load accumulator with memory
+            0x0000219c      85ff           sta 0xff                    ; store accumulator in memory
+            0x0000219e      209c23         jsr 0x239c       ; write partial line
+            0x000021a1      a92f           lda #0x2f                   ; load accumulator with memory
+            0x000021a3      85fe           sta 0xfe                    ; store accumulator in memory
+            0x000021a5      a923           lda #0x23                   ; load accumulator with memory
+            0x000021a7      85ff           sta 0xff                    ; store accumulator in memory
+            0x000021a9      209c23         jsr 0x239c       ; write partial line
+            0x000021ac      a956           lda #0x56                   ; load accumulator with memory
+            0x000021ae      85fe           sta 0xfe                    ; store accumulator in memory
+            0x000021b0      a923           lda #0x23                   ; load accumulator with memory
+            0x000021b2      85ff           sta 0xff                    ; store accumulator in memory
+            0x000021b4      209c23         jsr 0x239c       ; write partial line
+            0x000021b7      a97a           lda #0x7a                   ; load accumulator with memory
+            0x000021b9      85fe           sta 0xfe                    ; store accumulator in memory
+            0x000021bb      a923           lda #0x23                   ; load accumulator with memory
+            0x000021bd      85ff           sta 0xff                    ; store accumulator in memory
+            0x000021bf      209c23         jsr 0x239c       ; write partial line
+       ..-> 0x000021c2      20e4ff         jsr 0xffe4       ; GETIN. Read byte from default input. (If not keyboard, must call OPEN and CHKIN beforehands.)
+       ||   0x000021c5      c931           cmp #0x31        ; key '1'
+       `==< 0x000021c7      90f9           bcc 0x21c2                  ; branch on carry clear
+        |   0x000021c9      c933           cmp #0x33        ; key '2'
+        `=< 0x000021cb      b0f5           bcs 0x21c2                  ; branch on carry set
+            0x000021cd      38             sec                         ; set carry flag
+            0x000021ce      e930           sbc #0x30        ; value 1 or 2 dependent on key input
+            0x000021d0      8d00b0         sta 0xb000       ; store selection at this memory address
+            0x000021d3      a993           lda #0x93                   ; load accumulator with memory
+            0x000021d5      20d2ff         jsr 0xffd2       ; CHROUT. Write byte to default output. (If not screen, must call OPEN and CHKOUT beforehands.) 0x93 -> CLEAR
+            0x000021d8      60             rts                         ; return from subroutine
+
+            0x000021d9                               55 4a 00 55 35 53 2a  |         UJ.U5S*|
+            0x000021e0   54 45 4d 50 2a 4d 53 55  42 2a 08 05 0e 13 0d 0d  |TEMP*MSUB*......|
+            0x000021f0   0d 0d 0d 00 50 6c 65 61  73 65 20 65 6e 74 65 72  |....Please enter|
+            0x00002200   20 77 68 69 63 68 20 74  79 70 65 20 6f 66 20 64  | which type of d|
+            0x00002210   69 73 6b 20 64 72 69 76  65 0d 00 79 6f 75 20 77  |isk drive..you w|
+            0x00002220   69 6c 6c 20 62 65 20 75  73 69 6e 67 2e 20 20 59  |ill be using.  Y|
+            0x00002230   6f 75 72 20 63 68 6f 69  63 65 20 77 69 6c 6c 0d  |our choice will.|
+            0x00002240   00 62 65 20 73 61 76 65  64 20 74 6f 20 64 69 73  |.be saved to dis|
+            0x00002250   6b 2e 20 20 49 66 20 79  6f 75 20 6e 65 65 64 20  |k.  If you need |
+            0x00002260   74 6f 0d 00 63 68 61 6e  67 65 20 64 72 69 76 65  |to..change drive|
+            0x00002270   73 20 6c 61 74 65 72 2c  20 68 6f 6c 64 20 64 6f  |s later, hold do|
+            0x00002280   77 6e 20 74 68 65 0d 00  73 70 61 63 65 20 62 61  |wn the..space ba|
+            0x00002290   72 20 77 68 69 6c 65 20  55 6c 74 69 6d 61 20 56  |r while Ultima V|
+            0x000022a0   20 69 73 20 6c 6f 61 64  69 6e 67 20 74 6f 0d 00  | is loading to..|
+            0x000022b0   72 65 74 75 72 6e 20 74  6f 20 74 68 69 73 20 6d  |return to this m|
+            0x000022c0   65 6e 75 2e 0d 0d 00 20  20 20 20 20 31 2e 20 31  |enu....     1. 1|
+            0x000022d0   35 34 31 20 6f 72 20 31  35 37 31 20 64 72 69 76  |541 or 1571 driv|
+            0x000022e0   65 0d 00 20 20 20 20 20  32 2e 20 45 6e 68 61 6e  |e..     2. Enhan|
+            0x000022f0   63 65 72 20 32 30 30 30  20 6f 72 20 4d 53 44 20  |cer 2000 or MSD |
+            0x00002300   64 72 69 76 65 0d 0d 00  4e 6f 74 65 3a 20 57 69  |drive...Note: Wi|
+            0x00002310   74 68 20 73 6f 6d 65 20  31 35 37 31 20 64 72 69  |th some 1571 dri|
+            0x00002320   76 65 73 2c 20 55 6c 74  69 6d 61 20 56 0d 00 77  |ves, Ultima V..w|
+            0x00002330   69 6c 6c 20 6e 6f 74 20  6c 6f 61 64 20 63 6f 72  |ill not load cor|
+            0x00002340   72 65 63 74 6c 79 20 69  66 20 79 6f 75 20 73 65  |rectly if you se|
+            0x00002350   6c 65 63 74 0d 00 6f 70  74 69 6f 6e 20 31 2e 20  |lect..option 1. |
+            0x00002360   20 49 66 20 74 68 69 73  20 68 61 70 70 65 6e 73  | If this happens|
+            0x00002370   20 74 6f 20 79 6f 75 2c  0d 00 6a 75 73 74 20 72  | to you,..just r|
+            0x00002380   65 62 6f 6f 74 20 61 6e  64 20 73 65 6c 65 63 74  |eboot and select|
+            0x00002390   20 6f 70 74 69 6f 6e 20  32 2e 0d 00              | option 2...    |
+
+        .-> 0x0000239c      a000           ldy #0x00                   ; load index y with memory
+        |   0x0000239e      b1fe           lda (0xfe),y                ; load accumulator with memory
+       ,==< 0x000023a0      f012           beq 0x23b4                  ; branch on result zero
+       ||   0x000023a2      c940           cmp #0x40                   ; compare memory and accumulator
+      ,===< 0x000023a4      9002           bcc 0x23a8                  ; branch on carry clear
+      |||   0x000023a6      4920           eor #0x20                   ; "exclusive-or" memory with accumulator
+      `---> 0x000023a8      20d2ff         jsr 0xffd2       ; ROM_CHROUT - output character  
+       ||   0x000023ab      e6fe           inc 0xfe                    ; increment memory by one
+      ,===< 0x000023ad      d002           bne 0x23b1                  ; branch on result not zero
+      |||   0x000023af      e6ff           inc 0xff                    ; increment memory by one
+      `-`=< 0x000023b1      4c9c23         jmp 0x239c                  ; jump to new location
+       `--> 0x000023b4      60             rts                         ; return from subroutine
+
+routine copied to 0x0380
+            0x000023b5      48             pha                         ; push accumulator on stack
+            0x000023b6      8a             txa                         ; transfer index x to accumulator
+            0x000023b7      48             pha                         ; push accumulator on stack
+            0x000023b8      98             tya                         ; transfer index y to accumulator
+            0x000023b9      48             pha                         ; push accumulator on stack
+            0x000023ba      ad00ff         lda 0xff00                  ; load accumulator with memory
+            0x000023bd      48             pha                         ; push accumulator on stack
+            0x000023be      20036c         jsr 0x6c03       ; set memory banking: set kernal and io visible
+            0x000023c1      209fff         jsr 0xff9f       ; ROM_SCNKEY - scan keyboard          
+            0x000023c4      ad0ddc         lda 0xdc0d       ; CIA1: CIA Interrupt Control Register
+            0x000023c7      20066c         jsr 0x6c06       ; set memory banking: set ram visible in all areas
+            0x000023ca      68             pla                         ; pull accumulator from stack
+            0x000023cb      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x000023ce      68             pla                         ; pull accumulator from stack
+            0x000023cf      a8             tay                         ; transfer accumulator to index y
+            0x000023d0      68             pla                         ; pull accumulator from stack
+            0x000023d1      aa             tax                         ; transfer accumulator to index x
+            0x000023d2      68             pla                         ; pull accumulator from stack
+            0x000023d3      40             rti                         ; return from interrupt
+
+filename and file parameters standardized
+            0x000023d4      20bdff         jsr 0xffbd       ; ROM_SETNAM $FFBD - set file name   
+            0x000023d7      a908           lda #0x08                   ; load accumulator with memory
+            0x000023d9      a208           ldx #0x08                   ; load index x with memory
+            0x000023db      a001           ldy #0x01                   ; load index y with memory
+            0x000023dd      4cbaff         jmp 0xffba       ; ROM_SETLFS ;$FFBA - set file parameters
