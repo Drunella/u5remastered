@@ -115,7 +115,7 @@ loading file starts?
         |   0x000020df      20d423         jsr 0x23d4      ; set filename, 8,8,1 (M)
         |   0x000020e2      a900           lda #0x00                   ; load accumulator with memory
         |   0x000020e4      20d5ff         jsr 0xffd5      ; ROM_LOAD - load after call SETLFS,SETNAM    
-        |   0x000020e7      200f72         jsr 0x720f                  ; jump to new location saving return address
+        |   0x000020e7      200f72         jsr 0x720f      ; jumpt table in m file, initialize music?
         |   0x000020ea      a904           lda #0x04                   ; load accumulator with memory
         |   0x000020ec      a2e6           ldx #0xe6                   ; load index x with memory
         |   0x000020ee      a021           ldy #0x21       

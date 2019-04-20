@@ -1,10 +1,11 @@
 Ultima V Remastered
 
-Mission: Put the complete original game for the C64 on an EasyFlash cartdridge
+Mission: Put the complete original game for the C64 on an EasyFlash cartridge
 Variants:
 - Do not change anything
 - Allow Bugfixes
 - No trainer or similar, no demo or other
+- Later: add savegame manager, add trainer, add sound via banking (might be possible)
 ==============================================================================
 
 ToDo
@@ -13,8 +14,10 @@ ToDo
 - Identify all kernal calls
 - identify saved location for current disk
 - identify the meaning of list, slist and tlist saving
-- make tool to create bin file: address
-
+- create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
+- make tool to create bin file: 
+  + list of files and their position in the cartridge
+  + make crt file from binfile (own script or cartconv)
 
 
 General Plan

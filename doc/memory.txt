@@ -160,7 +160,7 @@ Cartridge Memory Map
      1C00      Application Loader
      1D00      Application Loader
      1E00      Application Loader
-     1F00      Startup Code & Reset Vector
+     1F00      Startup Code & Reset Vector (loader.s)
 01:0:0000
 01:1:0000
 02:0:0000
