@@ -1,0 +1,8 @@
+osi 0x41
+dungeon 0x47 25 0 35 15
+britannia 0x42 19 0 35 15
+underworld 0x48 19 0 35 15
+towne 0x43 24 0 35 15
+dwelling 0x44 24 0 35 15
+castle 0x45 24 0 35 15
+keep 0x46 24 0 35 15

@@ -6,6 +6,7 @@ import glob
 import subprocess
 import argparse
 import hashlib
+import traceback
 
 
 
@@ -14,11 +15,6 @@ def readdisks_info(filename):
     with open(filename) as f:
         result = [line.split() for line in f]
     return result
-
-
-def readdisk_directory(filename):
-    result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, universal_newlines=True)
-    print(result.stdout)
 
 
 def readdisk_directory(filename):
@@ -45,6 +41,13 @@ def readdisk_extractfile(diskfile, filename, destfile):
     result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error extracting file " + filename + " from disk " + diskname)
+
+
+def readdisk_extractblock(diskfile, destfile, track, sector):
+    arguments = ["c1541", diskfile, "-bread", destfile, str(track), str(sector)]
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
+    if result.returncode != 0:
+        raise Exception("error extracting block " + track + ", " + sector + " from disk " + diskname)
 
 
 def file_md5(filename):
@@ -74,7 +77,8 @@ def main(argv):
         try:
             diskid = int(d[1], 0)
             diskname = d[0]
-            print("extracting from " + diskname + " ...")
+            if (args.verbose):
+                print("extracting from " + diskname + " ...")
             diskfile = glob.glob(os.path.join(args.source, "disks", diskname + ".*"))
             typeid = readdisk_checktype(diskfile[0], diskid, d[0])
             directory = readdisk_directory(diskfile[0])
@@ -83,7 +87,7 @@ def main(argv):
                 tempfile = os.path.join(temp_path, "uncompressed")
                 readdisk_extractfile(diskfile[0], f, tempfile)
                 hex = file_md5(tempfile)
-                processfile = os.path.join(files_path, hex)
+                processfile = os.path.join(files_path, hex + ".prg")
                 if os.path.isfile(processfile):
                     # file already processed
                     files_directory[entry] = hex
@@ -91,10 +95,26 @@ def main(argv):
                     # create file
                     os.rename(tempfile, processfile)
                     files_directory[entry] = hex
+            if len(d) == 2:
+                continue
+
+            if (args.verbose):
+                print("extracting blocks from " + diskname + " ...")
+            blockfile = os.path.join(temp_path, "block")
+            datafile = os.path.join(files_path, diskname + ".data")
+            with open(datafile, "wb") as df:
+                # d[2]:starttrack d[3]:startsector d[4]:endtrack d[5]:endsector
+                for track in range(int(d[2]), int(d[4])+1):
+                    for sector in range(int(d[3]), int(d[5])+1):
+                        readdisk_extractblock(diskfile[0], blockfile, track, sector)
+                        with open(blockfile, "rb") as sf:
+                            df.write(sf.read())
+            
         except Exception as e:
             print(e)
             print("error processing disk " + diskname)
-            return 1
+            raise e
+            return 2
 
     files_directory_name = os.path.join(files_path, "files.list")
     with open(files_directory_name, "wt") as f:
@@ -103,4 +123,10 @@ def main(argv):
 
         
 if __name__ == '__main__':
-    sys.exit(main(sys.argv))
+    try:
+        retval = main(sys.argv)
+        sys.exit(retval)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        sys.exit(1)
