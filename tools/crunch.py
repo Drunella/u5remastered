@@ -17,7 +17,7 @@ def file_readaddress(filename):
 
 
 def file_crunch(infilename, outfilename, address):
-    arguments = ["exomizer", "mem", "-m", "256", "-l", str(address), "-o", outfilename, infilename]
+    arguments = ["exomizer", "mem", "-m", "256", "-M", "256", "-c", "-l", str(address), "-o", outfilename, infilename]
     result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error crunching file " + infilename)
@@ -54,6 +54,9 @@ def main(argv):
         file_crunch(infilename, outfilename, address)    
     if args.verbose:
         print("")
+    # make a file to let make know we are ready
+    ready_path = os.path.join(files_path, "crunched.done")
+    open(ready_path, 'a').close()
 
 
 if __name__ == '__main__':

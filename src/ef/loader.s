@@ -101,12 +101,12 @@ EASYFLASH_KILL    = $04
         jsr $ff87   ; Initialise System Constants
         jsr $ff8a   ; Restore Kernal Vectors
         ;jsr $ff81   ; Initialize screen editor -> not needed
-        lda #$93     ; character CLEAR
-        jsr $ffd2    ; CHROUT. Write byte to default (=screen) output. input: A
+        ;lda #$93     ; character CLEAR
+        ;jsr $ffd2    ; CHROUT. Write byte to default (=screen) output. input: A
 
         ; start the application code, resides on 00:1:0000        
         cli
-        jmp $8000
+        jmp $bc00
 
     kill:
         lda #EASYFLASH_KILL

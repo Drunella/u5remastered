@@ -5,8 +5,9 @@
 
 TEMP_SUBS_SOURCE = $1600
 TEMP_SUBS_TARGET = $6c00
-
 TEMP_SUBS_LOADFILE = $6c24
+
+STARTUP_TARGET = $2000
 
 
 ;.segment "EF_NAME"
@@ -42,22 +43,22 @@ TEMP_SUBS_LOADFILE = $6c24
 
         ; c128 mmu check could be omitted
         ; 0b00001110, IO, kernal, RAM0. 48K RAM
-        lda #0x0e
-        sta 0xff00
-        lda #0x00
+        lda #$0e
+        sta $ff00
+        lda #$00
 
         ; initialize vars
-        lda #0x00   ; load accumulator with memory
-        sta $37     ; ???
-        sta $c8     ; information about c128
-        sta $79     ; information about c128
-        sta $71     ; ???
+        lda #$00   ; load accumulator with memory
+        sta $37    ; ???
+        sta $c8    ; information about c128
+        sta $79    ; information about c128
+        sta $71    ; ???
         sec
-        ror $78     ; ???
+        ror $78    ; ???
         
         ; copy key board routine
+        ldx #$20   ; calculate this address ###
     @repeat:
-        ldx #$20
         lda irq_routine, x
         sta $0380, x
         dex
@@ -130,7 +131,7 @@ TEMP_SUBS_LOADFILE = $6c24
         sta EASYFLASH_TARGET + 512, x
         dex
         bne @repeat_eapi
-        jsr EAPI_INIT
+        ;jsr EAPIInit
 
         ; bank in 16k mode
         lda #EASYFLASH_LED | EASYFLASH_16K
@@ -159,20 +160,39 @@ TEMP_SUBS_LOADFILE = $6c24
         sta TEMP_SUBS_TARGET + $0800, x
         lda TEMP_SUBS_SOURCE + $0900, x
         sta TEMP_SUBS_TARGET + $0900, x
+        lda TEMP_SUBS_SOURCE + $1000, x
+        sta TEMP_SUBS_TARGET + $1000, x
         dex
         bne @repeat_subs
+
+        ; load startup
+        ldx #$20   ; ### calculate size
+    @repeat_startup:
+        lda startup_entry, x
+        sta STARTUP_TARGET, x
+        dex
+        bne @repeat_startup
+
+        ; leave rom area
+        jmp STARTUP_TARGET
+
+
+    startup_entry:
+        ; initialize eapi
+        jsr EAPIInit
         
         ; load startup.prg or qs.prg, depending on j pressed
         pla         ; key is on stack
         cmp #$22
-        bne @quickstart
-        ldx #$01    ; jump to 0x8000 after load, code will bank out on itself
+        bne @regular
+        ldx #$01    ; jump to 0x8000 after load
         jsr TEMP_SUBS_LOADFILE
-        .bytes "STARTUP", $00
-    @quickstart        :
-        ldx #$01    ; jump to 0x8000 after load, code will bank out on itself
+        .byte "QS", $00
+    @regular:
+        ldx #$00    ; return after load
         jsr TEMP_SUBS_LOADFILE
-        .bytes "QS", $00
+        .byte "STARTUP", $00
+        jmp $8000
 
 
     irq_routine:
@@ -196,188 +216,3 @@ TEMP_SUBS_LOADFILE = $6c24
         tax
         pla
         rti
-
-
-; load and init eapi (visible at 00:01:1800 to 00:01:1AFF)
-;does some checks
-;probably checks if c128 or c64
-;drive select
-;loads files U5SIZ.O TEMP.SUBS 
-;loads M if other drive selected
-;jumps to TEMP.SUBS (0x6c24) and load ST* (STARTUP)
-;jumps to 0x8000
-;size: 992 bytes
---------------------------------------------------------------------------
-      ;lda #0x04                   ; load accumulator with memory
-      ;sta 0x0289       ; Maximum length of keyboard buffer. Values: 4: buffer size
-      ;sta 0x0a20                  ; store accumulator in memory
-      ;lda #0x60                   ; load accumulator with memory
-      ;sta 0x0126                  ; store accumulator in memory
-      ;sta 0x0129                  ; store accumulator in memory
-      ;lda #0xeb                   ; load accumulator with memory
-      ;sta 0x028a       ; Keyboard repeat switch. Bits: 11101011
-      ;lda #0x0e                   ; load accumulator with memory
-      ;sta 0xff00       ; c128 mmu 0b00001110, IO, kernal, RAM0. 48K RAM
-      
-      ;lda #0x00                   ; load accumulator with memory
-      ;sta 0x37                    ; store accumulator in memory
-      ;sta 0xc8                    ; store accumulator in memory
-      ;sta 0x79                    ; store accumulator in memory
-      ;sta 0x71                    ; store accumulator in memory
-      ;sec                         ; set carry flag
-      ;ror 0x78                    ; rotate one bit right (memory or accumulator)
-      
-      ;lda #0x00                   ; load accumulator with memory
-      ;sta 0xd020       ; Border Color black
-      
-      ;ldx #0x20                   ; load index x with memory
-      ;lda 0x23b5,x                ; load accumulator with memory
-      ;sta 0x0380,x                ; store accumulator in memory
-      ;dex                         ; decrement index x by one
-      ;bpl 0x202e                  ; branch on result plus
-      ;lda #0x9e                   ; load accumulator with memory
-      ;sta 0x0318                  ; store accumulator in memory
-      ;lda #0x03                   ; load accumulator with memory
-      ;sta 0x0319      ; Execution address of non-maskable interrupt service routine to 039e (single rti)
-      ;lda #0x4c                   ; load accumulator with memory
-      ;cmp 0xc024                  ; compare memory and accumulator
-      ;bne 0x2062                  ; branch on result not zero
-      ;lda #0x80                   ; load accumulator with memory
-      ;sta 0xc8                    ; store accumulator in memory
-      ;sta 0x79                    ; store accumulator in memory
-      ;lda #0x95                   ; load accumulator with memory
-      ;sta 0x0318                  ; store accumulator in memory
-      ;lda #0x00                   ; load accumulator with memory
-      ;sta 0x00                    ; store accumulator in memory
-      ;sta 0x9d                    ; store accumulator in memory
-      ;lda #0xff                   ; load accumulator with memory
-      ;sta 0xd8                    ; store accumulator in memory
-      ;lda #0x0b                   ; load accumulator with memory
-      ;sta 0xd011      ;VIC Control Register 1
-      lda #0x06                   ; load accumulator with memory
-      sta 0x01        ; memory mapping 0b00000110, io visible, no basic, kernal
-      lda 0xc8                    ; load accumulator with memory
-      bpl 0x206d                  ; branch on result plus
-      jmp 0x20d5                  ; jump to new location
-      sei                         ; set interrupt disable status
-      lda #0x83                   ; load accumulator with memory
-      sta 0x0302                  ; store accumulator in memory
-      lda #0xa4                   ; load accumulator with memory
-      sta 0x0303                  ; store accumulator in memory
-      lda #0x48                   ; load accumulator with memory
-      sta 0x028f                  ; store accumulator in memory
-      lda #0xeb                   ; load accumulator with memory
-      sta 0x0290                  ; store accumulator in memory
-      lda #0xa5                   ; load accumulator with memory
-      sta 0x0330                  ; store accumulator in memory
-      lda #0xf4                   ; load accumulator with memory
-      sta 0x0331                  ; store accumulator in memory
-      cli                         ; clear interrupt disable bit
-      jsr 0x2133      ; display text and wait for input
-      ldx #0xd9                   ; load index x with memory
-      ldy #0x21                   ; load index y with memory
-      lda #0x02                   ; load accumulator with memory
-      jsr 0xffbd      ;$FFBD - set file name  (UJ)  -> reset disk drive               
-      lda #0x0f                   ; load accumulator with memory
-      tay                         ; transfer accumulator to index y
-      ldx #0x08                   ; load index x with memory
-      jsr 0xffba      ;$FFBA - set file parameters  15,8,15
-      jsr 0xffc0      ;$FFC0 - open file after SETLFS,SETNAM
-      ldx #0x11                   ; load index x with memory
-      lda #0xff                   ; load accumulator with memory
-      sec                         ; set carry flag
-      pha                         ; push accumulator on stack
-      sbc #0x01                   ; subtract memory from accumulator with borrow
-      bne 0x20aa                  ; branch on result not zero
-      pla                         ; pull accumulator from stack
-      sbc #0x01                   ; subtract memory from accumulator with borrow
-      bne 0x20a9                  ; branch on result not zero
-      dex                         ; decrement index x by one
-      bne 0x20a6                ; branch on result not zero
-      lda #0x0f                   ; load accumulator with memory
-      jsr 0xffc3      ;$FFC3 - close a logical file             
-       
-
-loading file starts?
-   lda #0x07                   ; load accumulator with memory
-   ldx #0xdc                   ; load index x with memory
-   ldy #0x21                   ; load index y with memory
-   jsr 0x23d4      ; set filename, 8,8,1 (U5S*TEMP) -> U5SIZ.O
-   lda #0x00                   ; load accumulator with memory
-   jsr 0xffd5                  ; jump to new location saving return address
-   lda 0xb000      ; load file decision
-   cmp #0x02       ; compare drive selection
-   beq 0x20d5                  ; branch on result zero
-   sei                         ; set interrupt disable status
-   bit 0x7700                  ; test bits in memory with accumulator
-   cli                         ; clear interrupt disable bit
-   lda 0xc8                    ; load accumulator with memory
-   bpl 0x20fd                  ; branch on result plus
-   lda #0x01                   ; load accumulator with memory
-   ldx #0xe5                   ; load index x with memory
-   ldy #0x21                   ; load index y with memory
-   jsr 0x23d4      ; set filename, 8,8,1 (M)
-   lda #0x00                   ; load accumulator with memory
-   jsr 0xffd5      ; ROM_LOAD - load after call SETLFS,SETNAM    
-   jsr 0x720f      ; jumpt table in m file, initialize music?
-   lda #0x04                   ; load accumulator with memory
-   ldx #0xe6                   ; load index x with memory
-   ldy #0x21       
-   jsr 0x23d4      ; set filename, 8,8,1 (SUB.*)  -> C128
-   lda #0x00                   ; load accumulator with memory
-   jsr 0xffd5      ; ROM_LOAD ;$FFD5 - load after call SETLFS,SETNAM
-   lda 0xd5                    ; load accumulator with memory
-   jmp 0x210b                  ; jump to new location
-   sei                         ; set interrupt disable status
-   lda #0x80                   ; load accumulator with memory
-   sta 0xfffe                  ; store accumulator in memory
-   lda #0x03                   ; load accumulator with memory
-   sta 0xffff                  ; store accumulator in memory
-   cli                         ; clear interrupt disable bit
-   lda 0xc5                    ; load accumulator with memory
-   pha                         ; push accumulator on stack
-   lda #0x05                   ; load accumulator with memory
-   ldx #0xe0                   ; load index x with memory
-   ldy #0x21                   ; load index y with memory
-   jsr 0x23d4      ; set filename, 8,8,1 (TEMP*) TEMP.SUBS
-   lda #0x00                   ; load accumulator with memory
-   jsr 0xffd5                  ; jump to new location saving return address
-   pla                         ; pull accumulator from stack
-   cmp #0x22                   ; compare memory and accumulator
-   bne 0x2127                  ; branch on result not zero
-   ldx #0x01                   ; load index x with memory
-   jsr 0x6c24      ; load file with filename after call, null terminated string, return address is set to after params
-                   ; QS
-   ldx #0x00       ; return after load
-   jsr 0x6c24      ; load file with filename after call, null terminated string, return address is set to after params
-                   ; ST*
-   jmp 0x8000                  ; jump to new location
-
-
-routine copied to 0x0380
-     pha                         ; push accumulator on stack
-     txa                         ; transfer index x to accumulator
-     pha                         ; push accumulator on stack
-     tya                         ; transfer index y to accumulator
-     pha                         ; push accumulator on stack
-     lda 0xff00                  ; load accumulator with memory
-     pha                         ; push accumulator on stack
-     jsr 0x6c03       ; set memory banking: set kernal and io visible
-     jsr 0xff9f       ; ROM_SCNKEY - scan keyboard          
-     lda 0xdc0d       ; CIA1: CIA Interrupt Control Register
-     jsr 0x6c06       ; set memory banking: set ram visible in all areas
-     pla                         ; pull accumulator from stack
-     sta 0xff00                  ; store accumulator in memory
-     pla                         ; pull accumulator from stack
-     tay                         ; transfer accumulator to index y
-     pla                         ; pull accumulator from stack
-     tax                         ; transfer accumulator to index x
-     pla                         ; pull accumulator from stack
-     rti                         ; return from interrupt
-
-filename and file parameters standardized
-       jsr 0xffbd       ; ROM_SETNAM $FFBD - set file name   
-       lda #0x08                   ; load accumulator with memory
-       ldx #0x08                   ; load index x with memory
-       ldy #0x01                   ; load index y with memory
-       jmp 0xffba       ; ROM_SETLFS ;$FFBA - set file parameters

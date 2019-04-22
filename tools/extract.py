@@ -2,12 +2,11 @@
 
 import os
 import sys
-import glob
 import subprocess
 import argparse
 import hashlib
 import traceback
-
+#import pprint
 
 
 def readdisks_info(filename):
@@ -15,6 +14,19 @@ def readdisks_info(filename):
     with open(filename) as f:
         result = [line.split() for line in f]
     return result
+
+
+def readdisk_getdiskfile(directory, diskname):
+    directory = os.path.dirname(os.path.join(directory, diskname))
+    #print("directory: " + directory)
+    #print("filepattern: " + filepattern)
+    for f in os.listdir(directory):
+        filename = os.path.basename(f)
+        if not filename.startswith(diskname):
+            continue
+        if filename.endswith(".d64"):
+            return f
+    raise Exception("no disk file found for " + filepattern)
 
 
 def readdisk_directory(filename):
@@ -72,20 +84,22 @@ def main(argv):
     os.makedirs(files_path, exist_ok=True)
 
     files_directory = dict()
-    disks = readdisks_info(args.source + "/disks/disks.txt")
+    disks = readdisks_info(os.path.join(args.source, "../src/disks.cfg"))
     for d in disks:
         try:
             diskid = int(d[1], 0)
             diskname = d[0]
             if (args.verbose):
-                print("extracting from " + diskname + " ...")
-            diskfile = glob.glob(os.path.join(args.source, "disks", diskname + ".*"))
-            typeid = readdisk_checktype(diskfile[0], diskid, d[0])
-            directory = readdisk_directory(diskfile[0])
+                print("extracting files from " + diskname + " ...")
+            result = readdisk_getdiskfile(args.source, diskname)
+            diskfile = os.path.join(source_path, result)
+            #pprint.pprint(diskfile)
+            typeid = readdisk_checktype(diskfile, diskid, d[0])
+            directory = readdisk_directory(diskfile)
             for f in directory:
                 entry = "0x{0:x}/{1}".format(diskid, f)
                 tempfile = os.path.join(temp_path, "uncompressed")
-                readdisk_extractfile(diskfile[0], f, tempfile)
+                readdisk_extractfile(diskfile, f, tempfile)
                 hex = file_md5(tempfile)
                 processfile = os.path.join(files_path, hex + ".prg")
                 if os.path.isfile(processfile):
@@ -106,7 +120,7 @@ def main(argv):
                 # d[2]:starttrack d[3]:startsector d[4]:endtrack d[5]:endsector
                 for track in range(int(d[2]), int(d[4])+1):
                     for sector in range(int(d[3]), int(d[5])+1):
-                        readdisk_extractblock(diskfile[0], blockfile, track, sector)
+                        readdisk_extractblock(diskfile, blockfile, track, sector)
                         with open(blockfile, "rb") as sf:
                             df.write(sf.read())
             
@@ -117,9 +131,8 @@ def main(argv):
             return 2
 
     files_directory_name = os.path.join(files_path, "files.list")
-    files_directory.sort()
     with open(files_directory_name, "wt") as f:
-        for k in files_directory:
+        for k in sorted(files_directory):
             f.write("{0:s} {1:s}\n".format(k, files_directory[k]))
 
         
