@@ -1,12 +1,13 @@
 size: 1111 bytes
+probably fastloader
 --------------------------------------------------------------------------
-        |   0x00007700      a90b           lda #0x0b                   ; load accumulator with memory
+        |   0x00007700      a90b           lda #0x0b        ; set new load routine -> fastloader
         |   0x00007702      8d3003         sta 0x0330                  ; store accumulator in memory
         |   0x00007705      a977           lda #0x77                   ; load accumulator with memory
         |   0x00007707      8d3103         sta 0x0331                  ; store accumulator in memory
         |   0x0000770a      60             rts                         ; return from subroutine
         
-        |   0x0000770b      8593           sta 0x93                    ; store accumulator in memory
+        |   0x0000770b      8593           sta 0x93         ; entry point of load routine
         |   0x0000770d      a004           ldy #0x04                   ; load index y with memory
        .--> 0x0000770f      b9fb00         lda 0x00fb,y                ; load accumulator with memory
        ||   0x00007712      990077         sta 0x7700,y                ; store accumulator in memory

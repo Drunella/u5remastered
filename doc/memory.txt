@@ -24,10 +24,10 @@ Main Memory Map
    1
    2
    3
-   4
-   5
-   6
-   7
+   4      map
+   5      map
+   6      map
+   7      map
    8
    9
    A      list, slist, tlist, blank.ulist
@@ -128,31 +128,62 @@ Main Memory Map
 Cartridge Memory Map
 ====================
 
-00:0:0000      (file map)
-00:1:0000      (code)
-     0100      (code)
-     0200      (code)
-     0300      (code)
-     0400      (code)
-     0500      (code)
-     0600      (code)
-     0700      (code)
-     0800      (code)
-     0900      (code)
-     0A00      (code)
-     0B00      (code)
-     0C00      (code)
-     0D00      (code)
-     0E00      (code)
-     0F00      (code)
-     1000      (code)
-     1100      (code)
-     1200      (code)
-     1300      (code)
-     1400      (code)
-     1500      (code)
-     1600      (code)
-     1700      (code)
+00:0:0000      (code)
+     0100
+     0200
+     0300
+     0400
+     0500
+     0600
+     0700
+     0800
+     0900
+     0A00
+     0B00
+     0C00
+     0D00
+     0E00
+     0F00
+     1000
+     1100
+     1200
+     1300
+     1400
+     1500
+     1600      (temp.subs)
+     1700      (temp.subs)
+     1800      (temp.subs)
+     1900      (temp.subs)
+     1A00      (temp.subs)
+     1B00      (temp.subs)
+     1C00      (temp.subs)
+     1D00      (temp.subs)
+     1E00      (temp.subs)
+     1F00      (temp.subs)
+00:1:0000      (directory)
+     0100      (directory)
+     0200      (directory)
+     0300      (directory)
+     0400      (directory)
+     0500      (directory)
+     0600      (directory)
+     0700      (directory)
+     0800      (directory)
+     0900      (directory)
+     0A00      (directory)
+     0B00      (directory)
+     0C00      (directory)
+     0D00      (directory)
+     0E00      (directory)
+     0F00      (directory)
+     1000      (directory)
+     1100      (directory)
+     1200      (directory)
+     1300      (directory)
+     1400      (directory)
+     1500      (directory)
+     1600      (directory)
+     1700      (directory)
      1800      EAPI
      1900      EAPI       
      1A00      EAPI
@@ -161,29 +192,131 @@ Cartridge Memory Map
      1D00      Application Loader
      1E00      Application Loader
      1F00      Startup Code & Reset Vector (loader.s)
-01:0:0000
-01:1:0000
-02:0:0000
-02:1:0000
-03:0:0000
-03:1:0000
+01:0:0000      (file data)
+01:1:0000      (file data)
+02:0:0000      (file data)
+02:1:0000      (file data)
+03:0:0000      (file data)
+03:1:0000      (file data)
+04:0:0000      (file data)
+04:1:0000      (file data)
+05:0:0000      (file data)
+05:1:0000      (file data)
+06:0:0000      (file data)
+06:1:0000      (file data)
+07:0:0000      (file data)
+07:1:0000      (file data)
+08:0:0000      (file data)
+08:1:0000      (file data)
+09:0:0000      (file data)
+09:1:0000      (file data)
+10:0:0000      (file data)
+10:1:0000      (file data)
+11:0:0000      (file data)
+11:1:0000      (file data)
+12:0:0000      (file data)
+12:1:0000      (file data)
+13:0:0000      (file data)
+13:1:0000      (file data)
+14:0:0000      (file data)
+14:1:0000      (file data)
+15:0:0000      (file data)
+15:1:0000      (file data)
+16:0:0000      (file data)
+16:1:0000      (file data)
+17:0:0000      (file data)
+17:1:0000      (file data)
+18:0:0000      (blocks data)
+18:1:0000      (blocks data)
+19:0:0000      (blocks data)
+19:1:0000      (blocks data)
+20:0:0000      (blocks data)
+20:1:0000      (blocks data)
+21:0:0000      (blocks data)
+21:1:0000      (blocks data)
+22:0:0000      (blocks data)
+22:1:0000      (blocks data)
+23:0:0000      (blocks data)
+23:1:0000      (blocks data)
+24:0:0000      (blocks data)
+24:1:0000      (blocks data)
+25:0:0000      (blocks data)
+25:1:0000      (blocks data)
+26:0:0000      (blocks data)
+26:1:0000      (blocks data)
+27:0:0000      (blocks data)
+27:1:0000      (blocks data)
+28:0:0000      (blocks data)
+28:1:0000      (blocks data)
+29:0:0000      (blocks data)
+29:1:0000      (blocks data)
+30:0:0000      (blocks data)
+30:1:0000      (blocks data)
+31:0:0000      (blocks data)
+31:1:0000      (blocks data)
+32:0:0000      (blocks data)
+32:1:0000      (blocks data)
+33:0:0000      (blocks data)
+33:1:0000      (blocks data)
+34:0:0000      (blocks data)
+34:1:0000      (blocks data)
+35:0:0000      (blocks data)
+35:1:0000      (blocks data)
+36:0:0000      (blocks data)
+36:1:0000      (blocks data)
+37:0:0000      (blocks data)
+37:1:0000      (blocks data)
+38:0:0000      (blocks data)
+38:1:0000      (blocks data)
+39:0:0000      (blocks data)
+39:1:0000      (blocks data)
+40:0:0000      (blocks data)
+40:1:0000      (blocks data)
+41:0:0000      (blocks data)
+41:1:0000      (blocks data)
+41:0:0000      
+42:1:0000      
+42:0:0000      
+43:1:0000      
+44:0:0000      
+44:1:0000      
+45:0:0000      
+45:1:0000      
+46:0:0000      
+46:1:0000      
+47:0:0000      
+47:1:0000      
 
-...
-...
+48:0:0000      
+48:1:0000      
+49:0:0000      
+41:1:0000      
+50:0:0000      
+50:1:0000      
+51:0:0000      
+51:1:0000      
+52:0:0000      
+52:1:0000      
+53:0:0000      
+53:1:0000      
+54:0:0000      
+54:1:0000      
+55:0:0000      
+55:1:0000      
 
-56:0:0000      (save game)
+56:0:0000      
 56:1:0000
-57:0:0000      (save game)
+57:0:0000      
 57:1:0000
-58:0:0000      (save game)
+58:0:0000      
 58:1:0000
-59:0:0000      (save game)
+59:0:0000      
 59:1:0000
-60:0:0000      (save game)
+60:0:0000      
 60:1:0000
-61:0:0000      (save game)
+61:0:0000      
 61:1:0000
-62:0:0000      (save game)
+62:0:0000      
 62:1:0000
-63:0:0000      (save game)
+63:0:0000      
 63:1:0000

@@ -45,16 +45,16 @@ size: 992 bytes
         |   0x00002050      8d1803         sta 0x0318                  ; store accumulator in memory
         |   0x00002053      a900           lda #0x00                   ; load accumulator with memory
         |   0x00002055      8500           sta 0x00                    ; store accumulator in memory
-        |   0x00002057      859d           sta 0x9d                    ; store accumulator in memory
+        |   0x00002057      859d           sta 0x9d        ; c128: I/O messages: 192 = all, 128 = commands, 64 = errors, 0 = nil
         |   0x00002059      a9ff           lda #0xff                   ; load accumulator with memory
-        |   0x0000205b      85d8           sta 0xd8                    ; store accumulator in memory
+        |   0x0000205b      85d8           sta 0xd8        ; c128 Graphics mode code
         |   0x0000205d      a90b           lda #0x0b                   ; load accumulator with memory
         |   0x0000205f      8d11d0         sta 0xd011      ;VIC Control Register 1
         `-> 0x00002062      a906           lda #0x06                   ; load accumulator with memory
             0x00002064      8501           sta 0x01        ; memory mapping 0b00000110, io visible, no basic, kernal
             0x00002066      a5c8           lda 0xc8                    ; load accumulator with memory
         ,=< 0x00002068      1003           bpl 0x206d                  ; branch on result plus
-       ,==< 0x0000206a      4cd520         jmp 0x20d5                  ; jump to new location
+       ,==< 0x0000206a      4cd520         jmp 0x20d5      ; load_c128
        |`-> 0x0000206d      78             sei                         ; set interrupt disable status
        |    0x0000206e      a983           lda #0x83                   ; load accumulator with memory
        |    0x00002070      8d0203         sta 0x0302                  ; store accumulator in memory
@@ -105,8 +105,10 @@ loading file starts?
        |    0x000020cc      c902           cmp #0x02       ; compare drive selection
        |,=< 0x000020ce      f005           beq 0x20d5                  ; branch on result zero
        ||   0x000020d0      78             sei                         ; set interrupt disable status
-       ||   0x000020d1      2c0077         bit 0x7700                  ; test bits in memory with accumulator
+       ||   0x000020d1      2c0077         bit 0x7700      ; this was earlier a jsr 0x7700 which would start the fastloader, probably different in NTSC version
        ||   0x000020d4      58             cli                         ; clear interrupt disable bit
+
+load_c128:
        ``-> 0x000020d5      a5c8           lda 0xc8                    ; load accumulator with memory
         ,=< 0x000020d7      1024           bpl 0x20fd                  ; branch on result plus
         |   0x000020d9      a901           lda #0x01                   ; load accumulator with memory
@@ -115,7 +117,7 @@ loading file starts?
         |   0x000020df      20d423         jsr 0x23d4      ; set filename, 8,8,1 (M)
         |   0x000020e2      a900           lda #0x00                   ; load accumulator with memory
         |   0x000020e4      20d5ff         jsr 0xffd5      ; ROM_LOAD - load after call SETLFS,SETNAM    
-        |   0x000020e7      200f72         jsr 0x720f      ; jumpt table in m file, initialize music?
+        |   0x000020e7      200f72         jsr 0x720f      ; jump table in m file, initialize music?
         |   0x000020ea      a904           lda #0x04                   ; load accumulator with memory
         |   0x000020ec      a2e6           ldx #0xe6                   ; load index x with memory
         |   0x000020ee      a021           ldy #0x21       
@@ -130,7 +132,7 @@ loading file starts?
        |    0x00002103      a903           lda #0x03                   ; load accumulator with memory
        |    0x00002105      8dffff         sta 0xffff                  ; store accumulator in memory
        |    0x00002108      58             cli                         ; clear interrupt disable bit
-       |    0x00002109      a5c5           lda 0xc5                    ; load accumulator with memory
+       |    0x00002109      a5c5           lda 0xc5        ; key matrix code, for quickstart
        `--> 0x0000210b      48             pha                         ; push accumulator on stack
             0x0000210c      a905           lda #0x05                   ; load accumulator with memory
             0x0000210e      a2e0           ldx #0xe0                   ; load index x with memory

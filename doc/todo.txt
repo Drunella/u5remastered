@@ -68,36 +68,71 @@ File Locator:
 
 Files that load other files or do file operations
 - Load call
-Program/meow.prg (1x) -> startup program, will be replaced
-Program/xyzzy.prg (4x) -> loader, will be changed
-Program/temp.subs.prg (1x) -> main loading function, will be changed
-Program/scratch.prg (3x) -> unknown
+ok Program/meow.prg (1x) -> startup program, will be replaced
+ok Program/xyzzy.prg (4x) -> loader, will be changed
+ok Program/temp.subs.prg (1x) -> main loading function, will be changed
+ok Program/scratch.prg (3x) -> alternative loader with fastloader
 
 - Open call
-Britannia/q.prg  (1x) -> unknown
+Britannia/q.prg  (1x) -> drive detection
 Dungeon/main.dng.prg  (1x) -> unknown
-Program/scratch.prg (1x) -> unknown
-Program/startup.prg (2x) -> will be changed, device 9 related
-Program/temp.subs.prg (3x) -> load, save, load block, will be changed
-Program/xyzzy.prg (1x) -> loader, will be changed
+ok Program/scratch.prg (1x) -> alternative loader with fastloader
+ok Program/startup.prg (2x) -> will be changed, device 9 related
+ok Program/temp.subs.prg (3x) -> load, save, load block, will be changed
+ok Program/xyzzy.prg (1x) -> loader, will be changed
 
 - Save call
 ToDo
 
-- Replace functions
-0x6c24: (0x6c49) load file from disk
-  size: 96 bytes
-  bank in, jump to locator and find bank and address, bank out
-  load file, bank in for every byte and bank out (necessary to copy to eg 0x8000)
-  jump to exomizer to decrunch
+File operations
+===============
+0x6c49 - 0x6f4d
+
+- Load file, get name from return address, x: 0: return, 1: call 0x8000, other call 0xa700
+  0x6c24: (0x6c49) load file from disk [6c49 - 6ca9]
+  copy file to non bankable area
+  bank in directory
+  find entry
+    depending on inserted disk
+    filename    
+  set
+    offset address in file (0)
+    destination address (from file entry)
+    bank (from directory entry)
+    decrunch necessary (yes)
+  load as file
+    + bank in
+    + read one byte
+    + bank out
+    + write one byte
+    + when finished, decrunch if necessary
   
+- Read disk block
+0x6c24: (0x6eae) read disk block, Y: track, X: sector, A: address high byte [6eae - 6f41]
+  depending on inserted disk:
+    set filename
+    correct track offset
+  calculate offset in file
+    (y*16 + x) * 256
+  set
+    offset address in file (256 steps only)
+    destination address (from A and 0)
+    bank (from directory entry)
+    decrunch necessary (no)
+  load as file
   
-0x6c24: (0x6eae) read disk block
-  size: 147 bytes
-  
+- Save file [6de0 - 6e6e]
 0x6c2d: (0x6de0): save file
   size: 142 bytes
 
+- Change disk
+0x6c09 (0x6d47): request disk with text [overwrite 0x6d47 to 6ddf]
+  set current disk in file loader
+  return success
+
+0x6c2a: (0x6caa): check inserted disk, A is requested disk, return C set disk no inserted [overwrite 6caa - 6cdf, 6ce0-6d46]
+  set current disk in file loader
+  return success
 
 
 Build
@@ -127,7 +162,7 @@ Loading
 1. meow.prg
    loads xyzzy.prg ($2000)
    
-2. xyzzy.prg
+2. xyzzy.prg (alternate would be scratch.prg, which will not be loaded)
    drive selection
    many operations, purpose unclear
    loads U5SIZ.O.PRG ($7700)

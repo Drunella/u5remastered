@@ -9,7 +9,7 @@ $0332  !byte $ED,$F5           ; unchanged
 $0334  A9 00      lda #$00     ; 
 $0336  8D 20 D0   sta $d020    ; Border color (only bits #0-#3): black
 $0339  8D 21 D0   sta $d021    ; Background color (only bits #0-#3): black
-$033C  85 9D      sta $9d      ;
+$033C  85 9D      sta $9d      ; no system error messages
 $033E  20 8A FF   jsr $ff8a    ; RESTOR. Fill vector table at memory addresses $0314-$0333 with default values.
 $0341  A9 93      lda #$93     ; character CLEAR
 $0343  20 D2 FF   jsr $ffd2    ; CHROUT. Write byte to default (=screen) output. (If not screen, must call OPEN and CHKOUT beforehands.); input: A

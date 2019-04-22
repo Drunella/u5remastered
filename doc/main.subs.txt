@@ -14,7 +14,7 @@ size=8189
             0x00004c1b      4caf4c         jmp 0x4caf                  ; jump to new location
             0x00004c1e      4c8b51         jmp 0x518b                  ; jump to new location
             0x00004c21      4c8451         jmp 0x5184                  ; jump to new location
-            0x00004c24      4cb253         jmp 0x53b2                  ; jump to new location
+            0x00004c24      4cb253         jmp 0x53b2       ;
             0x00004c27      4cb75e         jmp 0x5eb7                  ; jump to new location
             0x00004c2a      4ce46b         jmp 0x6be4       ;
             0x00004c2d      4c3a52         jmp 0x523a       ;
@@ -35,7 +35,7 @@ size=8189
             0x00004c5a      4cfa5c         jmp 0x5cfa       ;
             0x00004c5d      4c9858         jmp 0x5898                  ; jump to new location
             0x00004c60      4c7469         jmp 0x6974                  ; jump to new location
-            0x00004c63      4cde50         jmp 0x50de                  ; jump to new location
+            0x00004c63      4cde50         jmp 0x50de       ;
             0x00004c66      4ca258         jmp 0x58a2                  ; jump to new location
             0x00004c69      4ca458         jmp 0x58a4                  ; jump to new location
             0x00004c6c      4cea5e         jmp 0x5eea                  ; jump to new location

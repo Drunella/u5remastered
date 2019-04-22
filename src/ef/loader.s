@@ -66,9 +66,10 @@ EASYFLASH_KILL    = $04
         ; Check if one of the magic kill keys is pressed
         ; This should be done in the same way on any EasyFlash cartridge!
         ; screen black 
-        lda #$00        ; border and screen black
+        lda #$00        ; border and screen black, no error messages
         sta $d020
         sta $d021
+        sta $9d
 
         ; Prepare the CIA to scan the keyboard
         lda #$7f
@@ -100,11 +101,12 @@ EASYFLASH_KILL    = $04
         jsr $ff87   ; Initialise System Constants
         jsr $ff8a   ; Restore Kernal Vectors
         ;jsr $ff81   ; Initialize screen editor -> not needed
+        lda #$93     ; character CLEAR
+        jsr $ffd2    ; CHROUT. Write byte to default (=screen) output. input: A
 
-        ; start the application code, resides on 00:1:0000
-        ; ### set bank if startup should not be in bank 00:1:0000
+        ; start the application code, resides on 00:1:0000        
         cli
-        jmp $a000
+        jmp $8000
 
     kill:
         lda #EASYFLASH_KILL

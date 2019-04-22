@@ -1,7 +1,64 @@
+Disks
+=====
+
+program: (id 0x41)
+dungeon: (id 0x47)
+britannia: (id 0x42)
+underworld: (id 0x48)
+towne: (id 0x43)
+dwelling (id 0x44)
+castle: (id 0x45)
+keep: (id 0x46)
+
+
+Files
+=====
+
+- create database with disk/name/hash
+- match every file with this entry
+- several files can point to the same entry
+- does not contain duplicates
+- will be named [disk]/name.prg
+- 236 files + 7 blocks
+- 541650 bytes (without duplicates)
+- 271326 bytes (compressed, no duplicates)
+- exclude list
+  osi/meow
+  osi/u5siz.o
+  osi/dconfig
+  osi/prty.data
+  osi/roster
+  osi/list
+  osi/tlist
+  osi/slist
+  osi/scratch.prg
+  underworld/tlist
+- modification list
+  subs.128
+  xyzzy -> strong modification
+  temp.subs
+  
+
+Blocks
+======
+
+- implement as files with bank boundary
+  britannia: 256 blocks 69632: 19/0 - 35/15
+  underworld: 256 blocks 69632: 19/0 - 35/15
+  towne: 192 blocks 49152: 24/0 - 35/15
+  dwelling: 192 blocks 49152: 24/0 - 35/15
+  castle: 192 blocks 49152: 24/0 - 35/15
+  keep: 192 blocks 49152: 24/0 - 35/15
+  dungeon: 176 blocks: 45056: 25/0 - 35/15
+- 380928 bytes
+
+
+==============================================================================
+
 Program: (id 0x41)
 0 "osi             " aa 2a
 1     "meow"              prg (code, loader, $032c)
-5     "u5siz.o"           prg (code, $7700)
+5     "u5siz.o"           prg (code, $7700) probably fastloader
 5     "subs.128"          prg (code, $7700)
 1     "dconfig"           prg (saved drive config, $b000)
 17    "s0"                prg (data, $c000)
