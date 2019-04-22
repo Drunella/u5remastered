@@ -7,14 +7,17 @@ import subprocess
 import argparse
 import hashlib
 import traceback
+import pprint
 
 
-
-def readdisks_info(filename):
-    disks = []
+def load_files_directory(filename):
+    directory = dict()
     with open(filename) as f:
         result = [line.split() for line in f]
-    return result
+        for l in result:
+          data = l.split()
+          directory[data[0]] = data[1]
+    return directory
 
 
 def readdisk_directory(filename):
@@ -63,14 +66,19 @@ def main(argv):
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
-    p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
+    p.add_argument("-f", dest="output", action="store", required=True, help="output file.")
     args = p.parse_args()
-    source_path = args.source
     temp_path = os.path.join(args.build, "temp")
     os.makedirs(temp_path, exist_ok=True)
     files_path = os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
 
+    f = os.path.join(files_path, "files.list")
+    load_files_directory()
+    
+    
+    
+    return 0
     files_directory = dict()
     disks = readdisks_info(args.source + "/disks/disks.txt")
     for d in disks:
