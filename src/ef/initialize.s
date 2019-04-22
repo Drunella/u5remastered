@@ -1,11 +1,11 @@
 ; =============================================================================
 ; 00:1:0000 (HIROM, bank 0)
 
-.include "easyflash.inc"
+.include "../include/easyflash.inc"
+.include "../include/io.inc"
 
 TEMP_SUBS_SOURCE = $1600
 TEMP_SUBS_TARGET = $6c00
-TEMP_SUBS_LOADFILE = $6c24
 
 STARTUP_TARGET = $2000
 
@@ -131,11 +131,10 @@ STARTUP_TARGET = $2000
         sta EASYFLASH_TARGET + 512, x
         dex
         bne @repeat_eapi
-        ;jsr EAPIInit
 
         ; bank in 16k mode
-        lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        ;lda #EASYFLASH_LED | EASYFLASH_16K
+        ;sta EASYFLASH_CONTROL
         
         ; load temp.subs
         ldx #$00
@@ -186,11 +185,11 @@ STARTUP_TARGET = $2000
         cmp #$22
         bne @regular
         ldx #$01    ; jump to 0x8000 after load
-        jsr TEMP_SUBS_LOADFILE
+        jsr IO_load_file
         .byte "QS", $00
     @regular:
         ldx #$00    ; return after load
-        jsr TEMP_SUBS_LOADFILE
+        jsr IO_load_file
         .byte "STARTUP", $00
         jmp $8000
 

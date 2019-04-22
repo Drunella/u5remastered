@@ -1,17 +1,19 @@
 # Settings
 TARGET=c64
 CL65=cl65
-CA65=ca65
+#CA65=ca65
 #LD65=ld65
-CL65FLAGS=-t $(TARGET)
-CA65FLAGS=-t $(TARGET) -I . -I src/include --debug-info
+CL65FLAGS=-t $(TARGET) -I ./src/include
+#CA65FLAGS=-t $(TARGET) -I . -I ./src/include --debug-info
 #LD65FLAGS=
 
 .SUFFIXES: .prg .s
 
 # all
-all: builddirs build/obj/loader.prg build/obj/initialize.prg build/obj/directory.data.prg build/obj/files.data.prg
+all: code build/obj/directory.data.prg build/obj/files.data.prg
 
+# code
+code: builddirs build/obj/loader.prg build/obj/initialize.prg build/obj/io.prg
 
 # compile
 %.o: %.s builddirs
@@ -34,6 +36,13 @@ build/obj/loader.prg: src/ef/loader.s
 # initialize
 build/obj/initialize.prg: src/ef/initialize.s
 	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
+
+# io
+build/obj/io.prg: src/io/io.s
+	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
+
+# io jump table replacements
+# ### todo ###
 
 # raw files
 build/files/files.list:
