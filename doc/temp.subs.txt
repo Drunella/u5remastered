@@ -1,10 +1,10 @@
 subroutines with jump table in the beginning
 size=2808
 --------------------------------------------------------------------------
-    ,=====< 0x00006c00      4cae6e         jmp 0x6eae       ; read disk block
+    ,=====< 0x00006c00      4cae6e       * jmp 0x6eae       ; read disk block
    ,======< 0x00006c03      4c8476         jmp 0x7684       ; set memory banking: set kernal and io visible
   ,=======< 0x00006c06      4c8f76         jmp 0x768f       ; set memory banking: set ram visible in all areas
-  ========< 0x00006c09      4c476d         jmp 0x6d47                  ; jump to new location
+  ========< 0x00006c09      4c476d       * jmp 0x6d47       ; request disk with text
   ========< 0x00006c0c      4c4e6f         jmp 0x6f4e                  ; jump to new location
   ========< 0x00006c0f      4c2e71         jmp 0x712e                  ; jump to new location
   ========< 0x00006c12      4ce372         jmp 0x72e3                  ; jump to new location
@@ -13,11 +13,11 @@ size=2808
   ========< 0x00006c1b      4c7274         jmp 0x7472                  ; jump to new location
   ========< 0x00006c1e      4c4575         jmp 0x7545                  ; jump to new location
   ========< 0x00006c21      4c7b75         jmp 0x757b                  ; jump to new location
-  ========< 0x00006c24      4c496c         jmp 0x6c49       ; load file from disk, filename in memory after calling code
+  ========< 0x00006c24      4c496c       * jmp 0x6c49       ; load file from disk, filename in memory after calling code
   ========< 0x00006c27      4ce575         jmp 0x75e5                  ; jump to new location
-  ========< 0x00006c2a      4caa6c         jmp 0x6caa       ; check inserted disk, A is requested disk, C set disk no inserted
-  ========< 0x00006c2d      4ce06d         jmp 0x6de0       ; save file
-  ========< 0x00006c30      4c7b6e         jmp 0x6e7b       ; load additional block from address in A
+  ========< 0x00006c2a      4caa6c       * jmp 0x6caa       ; check inserted disk, A is requested disk, C set disk no inserted
+  ========< 0x00006c2d      4ce06d       * jmp 0x6de0       ; save file
+  ========< 0x00006c30      4c7b6e       * jmp 0x6e7b       ; load additional block from address in A
   |||||||   0x00006c33      08                              ; variable, probably drive
   ========< 0x00006c34      4c9976         jmp 0x7699                  ; jump to new location
   ========< 0x00006c37      4ca576         jmp 0x76a5                  ; jump to new location
@@ -29,7 +29,7 @@ size=2808
 
 - File Operations --------------------------------------------------------
 
-0x6c24: (0x6c49) load file from disk, name after return address, x=0 return, x=1 jmp 0800, x>1 jmp a700
+0x6c24: (0x6c49) load_file: load file from disk, name after return address, x=0 return, x=1 jmp 0800, x>1 jmp a700
             0x00006c49      8ea86c         stx 0x6ca8       ; how to start the loaded file
             0x00006c4c      a908           lda #0x08                   ; load accumulator with memory
             0x00006c4e      ae336c         ldx 0x6c33       ; load drive from variable
@@ -50,7 +50,7 @@ size=2808
         |   0x00006c6a      ee736c         inc 0x6c73                  ; increment memory by one
        ,==< 0x00006c6d      d003           bne 0x6c72                  ; branch on result not zero
        ||   0x00006c6f      ee746c         inc 0x6c74                  ; increment memory by one
-       `--> 0x00006c72      adffff         lda 0xffff       ; address will be written by code (first usage: ST* string from xyzzy at 0x212c)
+       `--> 0x00006c72      adffff         lda 0xffff       ; address will be written by code, pointer to filename
         `=< 0x00006c75      d0f2           bne 0x6c69                  ; branch on result not zero
             0x00006c77      8a             txa                         ; transfer index x to accumulator
             0x00006c78      aea96c         ldx 0x6ca9                  ; load index x with memory
@@ -76,7 +76,7 @@ size=2808
             0x00006ca8      00                              ; variable 1: determines of return or start program
             0x00006ca9      00                              ; variable 2: 
 
-0x6c2a: (0x6caa): check inserted disk, A is requested disk, return C set disk no inserted
+0x6c2a: (0x6caa): request_disk: check inserted disk, A is requested disk, return C set disk no inserted
             0x00006caa      8dde6c         sta 0x6cde                  ; store accumulator in memory
             0x00006cad      a5c8           lda 0xc8                    ; load accumulator with memory
             0x00006caf      2901           and #0x01                   ; "and" memory with accumulator
@@ -224,7 +224,7 @@ local: only used in request disk
             0x00006de7      aa             tax                         ; transfer accumulator to index x
             0x00006de8      68             pla                         ; pull accumulator from stack
             0x00006de9      8d796e         sta 0x6e79                  ; store accumulator in memory
-            0x00006dec      a8             tay                         ; transfer accumulator to index y
+            0x00006dec      a8             tay              ; return address now in y,x and in pointer management
             0x00006ded      e8             inx                         ; increment index x by one
         ,=< 0x00006dee      d001           bne 0x4b2108                ; branch on result not zero
         |   0x00006df0      c8             iny                         ; increment index y by one
@@ -233,11 +233,11 @@ local: only used in request disk
         .-> 0x00006df6      e8             inx                         ; increment index x by one
         |   0x00006df7      206f6e         jsr 0x6e6f       ; local
         `=< 0x00006dfa      d0fa           bne 0x4b2108                ; branch on result not zero
-            0x00006dfc      8a             txa                         ; transfer index x to accumulator
+            0x00006dfc      8a             txa              ; string 1 length in A
             0x00006dfd      aea96c         ldx 0x6ca9                  ; load index x with memory
             0x00006e00      84fe           sty 0xfe                    ; store index y in memory
             0x00006e02      86ff           stx 0xff                    ; store index x in memory
-            0x00006e04      85fc           sta 0xfc                    ; store accumulator in memory
+            0x00006e04      85fc           sta 0xfc         ; filename parameter now in fe-ff(address), fc(length)
             0x00006e06      20bdff         jsr 0xffbd       ; SETNAM. Set file name parameters. "S:PRTY.DATA", "S:LIST", "ROSTER" -> delete file
             0x00006e09      a90f           lda #0x0f                   ; load accumulator with memory
             0x00006e0b      ae336c         ldx 0x6c33                  ; load index x with memory
@@ -245,7 +245,7 @@ local: only used in request disk
             0x00006e10      20baff         jsr 0xffba       ; SETLFS. Set file parameters.
             0x00006e13      20c0ff         jsr 0xffc0       ; OPEN. Open file. (Must call SETLFS and SETNAM beforehands.)
             0x00006e16      a90f           lda #0x0f                   ; load accumulator with memory
-            0x00006e18      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
+            0x00006e18      20c3ff         jsr 0xffc3       ; CLOSE. Close file. -> file now deleted
             0x00006e1b      a908           lda #0x08                   ; load accumulator with memory
             0x00006e1d      ae336c         ldx 0x6c33                  ; load index x with memory
             0x00006e20      a000           ldy #0x00                   ; load index y with memory
@@ -259,7 +259,7 @@ local: only used in request disk
             0x00006e2f      a8             tay                         ; transfer accumulator to index y
             0x00006e30      a5fc           lda 0xfc                    ; load accumulator with memory
             0x00006e32      38             sec                         ; set carry flag
-            0x00006e33      e902           sbc #0x02                   ; subtract memory from accumulator with borrow
+            0x00006e33      e902           sbc #0x02        ; filepointer in fe-ff(address) moved two forward, fc(length) reduced by 2, stored in x,y,a
             0x00006e35      20bdff         jsr 0xffbd       ; SETNAM. Set file name parameters. "PRTY.DATA"(x chars), "S:LIST"(512), "SLIST(512)" -> save file
             0x00006e38      206f6e         jsr 0x6e6f       ; local
             0x00006e3b      85fe           sta 0xfe                    ; store accumulator in memory
@@ -267,7 +267,7 @@ local: only used in request disk
             0x00006e40      85ff           sta 0xff                    ; store accumulator in memory
             0x00006e42      206f6e         jsr 0x6e6f       ; local
             0x00006e45      85fc           sta 0xfc                    ; store accumulator in memory
-            0x00006e47      206f6e         jsr 0x6e6f       ; local
+            0x00006e47      206f6e         jsr 0x6e6f       ; local -> the four next values of the parameter listare now in fe,ff (source address), fc,fd(length)
             0x00006e4a      85fd           sta 0xfd                    ; store accumulator in memory
         .-> 0x00006e4c      a5fc           lda 0xfc                    ; load accumulator with memory
         |   0x00006e4e      18             clc                         ; clear carry flag
@@ -278,17 +278,17 @@ local: only used in request disk
         |   0x00006e56      a8             tay                         ; transfer accumulator to index y
         |   0x00006e57      a9fe           lda #0xfe                   ; load accumulator with memory
         |   0x00006e59      20d8ff         jsr 0xffd8       ; SAVE. Save file. (Must call SETLFS and SETNAM beforehands.) A = Address of zero page register holding start address of memory area to save; X/Y = End address of memory area plus 1.
-        `=< 0x00006e5c      b0ee           bcs 0x4b2108                ; branch on carry set
+        `=< 0x00006e5c      b0ee           bcs 0x4b2108     ; on error try again
             0x00006e5e      202901         jsr 0x0129       ; RTS on destination set in xyzzy at the beginning
             0x00006e61      a908           lda #0x08                   ; load accumulator with memory
             0x00006e63      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
             0x00006e66      ad796e         lda 0x6e79                  ; load accumulator with memory
             0x00006e69      48             pha                         ; push accumulator on stack
             0x00006e6a      ad786e         lda 0x6e78                  ; load accumulator with memory
-            0x00006e6d      48             pha                         ; push accumulator on stack
+            0x00006e6d      48             pha              ; return address is now set to last item of parameter list
             0x00006e6e      60             rts                         ; return from subroutine
 
-local:
+local: (string pointer management, return next character)
             0x00006e6f      ee786e         inc 0x6e78                  ; increment memory by one
         ,=< 0x00006e72      d003           bne 0x4b2108                ; branch on result not zero
         |   0x00006e74      ee796e         inc 0x6e79                  ; increment memory by one
@@ -310,8 +310,8 @@ local:
             0x00006e95      a97e           lda #0x7e                   ; load accumulator with memory
             0x00006e97      acac6e         ldy 0x6eac                  ; load index y with memory
             0x00006e9a      aead6e         ldx 0x6ead                  ; load index x with memory
-            0x00006e9d      20ae6e         jsr 0x6eae                  ; jump to new location saving return address
-            0x00006ea0      a97f           lda #0x7f        ; read disk block
+            0x00006e9d      20ae6e         jsr 0x6eae       ; read disk block
+            0x00006ea0      a97f           lda #0x7f        
             0x00006ea2      acac6e         ldy 0x6eac                  ; load index y with memory
             0x00006ea5      aead6e         ldx 0x6ead                  ; load index x with memory
             0x00006ea8      e8             inx                         ; increment index x by one
@@ -319,7 +319,7 @@ local:
         |   0x00006eac      00             brk              ; variable: y (track)
         |   0x00006ead      00             brk              ; variable: x (sector)
 
-0x6c24: (0x6eae) read disk block, Y: track, X: sector, A: address high byte
+0x6c00: (0x6eae) read disk block, Y: track, X: sector, A: address high byte
             0x00006eae      48             pha                         ; push accumulator on stack
             0x00006eaf      a931           lda #0x31                   ; load accumulator with memory
             0x00006eb1      8d426f         sta 0x6f42                  ; store accumulator in memory
