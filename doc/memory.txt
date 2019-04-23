@@ -67,8 +67,8 @@ Main Memory Map
    B      u5siz.o (necessary?) / exomizer
    C      (256 free)
    D      (256 free)
-   E      (ram, probably also temp)
-   F      (ram, temporary storage for disk checking) / exomizer table
+   E      (ram, probably also temp), exomizer table
+   F      (ram, temporary storage for disk checking)
 0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
 0x9000      ( " )
    1        ( " )
@@ -128,7 +128,7 @@ Main Memory Map
 Cartridge Memory Map
 ====================
 
-00:0:0000      (code)
+00:0:0000
      0100
      0200
      0300
@@ -188,9 +188,9 @@ Cartridge Memory Map
      1900      EAPI       
      1A00      EAPI
      1B00      EAPI
-     1C00      Application Loader
-     1D00      Application Loader
-     1E00      Application Loader
+     1C00      (initialize)
+     1D00      (initialize)
+     1E00      
      1F00      Startup Code & Reset Vector (loader.s)
 01:0:0000      (file data)
 01:1:0000      (file data)

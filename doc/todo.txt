@@ -9,16 +9,26 @@ Variants:
 ==============================================================================
 
 ToDo
-- Identify relevant code and files
-- Learn about u5 structure
-- Identify all kernal calls
-- identify saved location for current disk
-- identify the meaning of list, slist and tlist saving
-- create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
+
+- implement new loading routines
+  + omit saving for now
+  + just loading blocks and files
 - make tool to create bin file: 
+  + define map to put together all files for bin file
   + list of files and their position in the cartridge
   + make crt file from binfile (own script or cartconv)
+- identify the meaning of list, slist and tlist saving
+  look in create.prg
+- modify transfer.prg to read from disk
+  + no disk loading available, could be necessary to redesign
+- remove drive selection from main menu
+  patch
 
+- ok Identify relevant code and files
+- ok Learn about u5 structure
+- ok Identify all kernal calls (not all, but is sufficient)
+- ok identify saved location for current disk -> is requested through temp.subs call
+- ok create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
 
 General Plan
 - EasyFlash on load: exchange load function with load function from easyflash
@@ -38,11 +48,13 @@ on save: save data on disk first?
   + all files must be saved all the time!
 
 File Locator:
-- assume 200 files, each file has: (compatible to EasyFS)
+- assume 255 files, each file has: (compatible to EasyFS)
   + 16 bytes name
-  +  1 byte flags 0b01100001 (not hidden, type 0x01, normal prg files)
+       1. byte: diskid (0x41-0x48)
+       2. to n. byte: name
+  +  1 byte flags 0x60|0x01 (not hidden, type 0x01, normal prg files), 0x60|0x09 -> normal file without start address
   +  1 byte bank
-  +  1 byte reserved, -> use as disk id
+  +  1 byte reserved
   +  2 byte start offset in bank, 
   +  3 byte file size
   4800 bytes, appr 3300 bytes of code, enough for inventory and code in one 8k page
@@ -74,8 +86,8 @@ ok Program/temp.subs.prg (1x) -> main loading function, will be changed
 ok Program/scratch.prg (3x) -> alternative loader with fastloader
 
 - Open call
-Britannia/q.prg  (1x) -> drive detection
-Dungeon/main.dng.prg  (1x) -> unknown
+ok Britannia/q.prg  (1x) -> drive detection
+ok Dungeon/main.dng.prg  (1x) -> drive detection
 ok Program/scratch.prg (1x) -> alternative loader with fastloader
 ok Program/startup.prg (2x) -> will be changed, device 9 related
 ok Program/temp.subs.prg (3x) -> load, save, load block, will be changed
@@ -134,6 +146,19 @@ File operations
   set current disk in file loader
   return success
 
+- Load data
+  + needed:
+    offset address in file (high byte only)
+    destination address (from file entry or provided)
+    bank (from directory entry)
+    decrunch necessary
+  + operation
+    bank in
+    read one byte
+    bank out
+    write one byte
+    when finished, decrunch if necessary
+  
 
 Build
 =====
@@ -153,6 +178,7 @@ MEMORY {
 SEGMENTS {
     LOADADDR: load = LOADADDR, type = ro;
 }
+
 
 
 

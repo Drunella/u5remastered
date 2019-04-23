@@ -32,6 +32,10 @@ Files
   osi/tlist
   osi/slist
   osi/scratch.prg
+  osi/subs.128
+  osi/xyzzy
+  osi/temp.subs
+  osi/muff
   underworld/tlist
 - modification list
   subs.128
