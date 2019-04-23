@@ -17,6 +17,10 @@ ToDo
   + define map to put together all files for bin file
   + list of files and their position in the cartridge
   + make crt file from binfile (own script or cartconv)
+- make jmp table modifcator
+  + tool to read map files 
+  + extract relevant symbol
+  + patch other file
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - modify transfer.prg to read from disk

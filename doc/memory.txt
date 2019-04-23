@@ -67,7 +67,7 @@ Main Memory Map
    B      u5siz.o (necessary?) / exomizer
    C      (256 free)
    D      (256 free)
-   E      (ram, probably also temp), exomizer table
+   E      (ram, probably also temp), exomizer table?
    F      (ram, temporary storage for disk checking)
 0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
 0x9000      ( " )
