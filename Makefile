@@ -10,18 +10,18 @@ CL65FLAGS=-t $(TARGET) -I ./src/include
 .SUFFIXES: .prg .s
 
 # all
-all: code build/obj/directory.data.prg build/obj/files.data.prg
+all: build/obj/directory.data.prg build/obj/files.data.prg code
 
 # code
-code: builddirs build/obj/loader.prg build/obj/initialize.prg build/obj/io.prg
+code: build/obj/exodecrunch.prg build/obj/loader.prg build/obj/initialize.prg build/obj/io.prg
 
 # compile
-%.o: %.s builddirs
-	$(CA65) $(CA65FLAGS) -o build/obj/$(@F) $<
+%.o: %.s
+	$(CA65) $(CA65FLAGS) -o $@ $<
 
 # builddir
-builddirs:
-	mkdir -p build/obj build/files build/temp
+#builddirs:
+#	mkdir -p build/obj build/files build/temp
 	
 # loader
 #src/ef/loader.o:  src/ef/loader.s
@@ -39,7 +39,11 @@ build/obj/initialize.prg: src/ef/initialize.s
 
 # io
 build/obj/io.prg: src/io/io.s
-	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
+	$(CL65) $(CL65FLAGS) -vm -m $(<D)/io.map -D decrunch=0x7B1D -o $@ -C $(<D)/$(*F).cfg $^
+
+# exomizer
+build/obj/exodecrunch.prg: src/exo/exodecrunch.s src/exo/get_crunched_byte.s
+	$(CL65) $(CL65FLAGS) -vm -m $(<D)/exodecrunch.map -o $@ -C $(<D)/$(*F).cfg $^
 
 # io jump table replacements
 # ### todo ###
