@@ -38,11 +38,11 @@ build/obj/initialize.prg: src/ef/initialize.s
 	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
 
 # io
-build/obj/io.prg: src/io/io.s
-	$(CL65) $(CL65FLAGS) -vm -m $(<D)/io.map -D decrunch=0x7B1D -o $@ -C $(<D)/$(*F).cfg $^
+build/obj/io.prg src/io/io.map: src/io/io.s src/io/get_crunched_byte.s
+	$(CL65) $(CL65FLAGS) -vm -m $(<D)/io.map -o $@ -C $(<D)/$(*F).cfg $^
 
 # exomizer
-build/obj/exodecrunch.prg: src/exo/exodecrunch.s src/exo/get_crunched_byte.s
+build/obj/exodecrunch.prg: src/exo/exodecrunch.s
 	$(CL65) $(CL65FLAGS) -vm -m $(<D)/exodecrunch.map -o $@ -C $(<D)/$(*F).cfg $^
 
 # io jump table replacements
@@ -51,7 +51,7 @@ build/obj/exodecrunch.prg: src/exo/exodecrunch.s src/exo/get_crunched_byte.s
 # raw files
 build/files/files.list:
 	mkdir -p ./build/files ./build/obj
-	c1541 disks/osi.d64 -read ./disks/temp.subs build/obj/temp.subs.prg
+	c1541 disks/osi.d64 -read temp.subs build/obj/temp.subs.prg
 	tools/extract.py -v -s ./disks -b ./build
 
 # crunched

@@ -4,7 +4,7 @@
 .include "../include/easyflash.inc"
 .include "../include/io.inc"
 .include "efs.inc"
-.include "../exo/exodecrunch.inc"
+.include "../include/exodecrunch.inc"
 
 
 ; jump table vectors must be changed via patch
@@ -95,24 +95,25 @@
     IO_load_file_entry:
         sta requested_loadmode
         pla                            ; load return address to coopy opcode
-        sta load_file_copyname_low
+        sta load_file_copyname_address_low
         pla
-        sta load_file_copyname_high
-        inc load_file_copyname_low     ; and increase by one
+        sta load_file_copyname_address_high
+        inc load_file_copyname_address_low     ; and increase by one
         bne @skip
-        inc load_file_copyname_high
+        inc load_file_copyname_address_high
     @skip:
-        ldy #$00                       ; initialize for copy
-    load_file_copyname_low = load_file_copyname + 1
-    load_file_copyname_high = load_file_copyname + 2
+        ldy #$ff                       ; initialize for copy
+    load_file_copyname_address_low = load_file_copyname_address + 1
+    load_file_copyname_address_high = load_file_copyname_address + 2
     load_file_copyname:
         iny
+    load_file_copyname_address:
         lda $ffff                      ; load
         sta requested_filename, y      ; and store
         beq copydone        
-        inc load_file_copyname_low
+        inc load_file_copyname_address_low
         bne @skip
-        inc load_file_copyname_high
+        inc load_file_copyname_address_high
     @skip:
         jmp load_file_copyname
     copydone:
@@ -131,9 +132,9 @@
     load_jumptomain:
         jmp $8000
     load_return:
-        lda load_file_copyname_high    ; return address on stack
+        lda load_file_copyname_address_high    ; return address on stack
         pha
-        lda load_file_copyname_low
+        lda load_file_copyname_address_low
         pha
         rts
     requested_loadmode:
@@ -251,7 +252,7 @@
 
     requested_fullname:
     requested_disk:
-        .byte $00
+        .byte $41
     requested_filename:
         .byte $00, $00, $00, $00, $00, $00, $00
         .byte $00, $00, $00, $00, $00, $00, $00, $00
@@ -308,18 +309,21 @@
 
         ; find entry in directory
         ; bank in, set bank and start address in fe,ff
+        lda #$07
+        sta $01
         lda #EFS_BANK
         jsr EAPISetBank
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
-        lda >(EFS_DIRECTORY_START - $18)
+        lda #>(EFS_DIRECTORY_START - $18)
         sta $ff
-        lda <(EFS_DIRECTORY_START - $18)
+        lda #<(EFS_DIRECTORY_START - $18)
         sta $fe
     nextname:
         clc
         lda #$18   ; size of dir element
         adc $fe
+        sta $fe
         bcc @done
         inc $ff
     @done:
@@ -332,6 +336,8 @@
         bne morefiles
         lda #EASYFLASH_KILL        ; not found
         sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
         sec
         rts
     morefiles:
@@ -354,12 +360,16 @@
         
     namematch:
         txa                        ; X register is now free
-        ldy #>efs_directory::offset ; entry high offset
+        ldy #efs_directory::offset_high ; entry high offset
         clc
         adc ($fe), y               ; add offset to entry-offset
         tax                        ; uncorrected high offset in X
         ror                        ; move lower bits out, but save carry
         clc                        ; to prepare the correct bank in A
+        ror                        ; 6 bit are the offset, therefore 6 shifts
+        clc
+        ror
+        clc
         ror
         clc
         ror
@@ -369,25 +379,31 @@
         clc
         adc ($fe), y
         pha                        ; bank is now on stack
-        ldy #<efs_directory::offset ; entry low offset
-        lda ($fe), y
-        stx $fe
+
+        txa        ; high offset in A
+        clc
+        adc #$80   ; add $80 for correct memory range
+        sta $fd    ; high offset in temp
+
+        ldy #efs_directory::offset_low ; entry low offset 
+        lda ($fe), y                   ; in A
+
         tax                        ; low offset in x
-        ldy $fe                    ; high offset in y
-        lda #$D0                   ; lhlh bank modein eapi read
+        ldy $fd                    ; high offset in y
+        lda #$D0                   ; lhlh bank mode in eapi read
         jsr EAPISetPtr
         pla                        ; bank
         jsr EAPISetBank            ; now we cannot access the directory anymore
 
         lda block_loader_copy_high ; if zero, we load prg, otherwise we load block
         bne @blockloader
-        lda $a7                    ; save zp variables (exept $fc-$ff)
+        lda $a7                    ; save zp variables (except $fc-$ff)
         pha
         lda $ae
         pha
         lda $af
         pha
-        jsr decrunch
+        jsr EXO_decrunch
         pla
         sta $af
         pla

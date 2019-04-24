@@ -28,7 +28,11 @@
 ; read a crunched byte into A. This subroutine has to preserve X and Y
 ; register and must not modify the state of the carry nor the overflow flag.
 ; -------------------------------------------------------------------
-.import get_crunched_byte
+; ### .import get_crunched_byte
+
+; ### hack ###
+get_crunched_byte = $6DF7
+
 ; -------------------------------------------------------------------
 ; this function is the heart of the decruncher.
 ; It initializes the decruncher zeropage locations and precalculates the
@@ -40,6 +44,8 @@
 
 decrunch_table = $7e00
 
+; static jump table at $7b00
+jmp decrunch
 
 ; -------------------------------------------------------------------
 ; Controls if the shared get_bits routines should be inlined or not.

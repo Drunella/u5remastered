@@ -19,17 +19,13 @@
         .byte
         .byte
         .byte
-        .byte
-        .byte
-        .byte
-        .byte
     .endstruct
     flags .byte
     bank .byte
     reserved .byte
-    offset .word
-    .struct size 
-        lower .word
-        high .byte
-    .endstruct
+    offset_low .byte
+    offset_high .byte
+    size_low .byte
+    size_high .byte
+    size_upper .byte
 .endstruct

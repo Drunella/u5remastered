@@ -6,16 +6,16 @@
 .export get_crunched_byte
 
 
-.code
+.segment "IO_CODE"
 
     get_crunched_byte:
         ; must preserve stat, X, Y
         ; return value in A
         php
-        txa
-        pha
-        tya
-        pha
+        ;txa
+        ;pha
+        ;tya
+        ;pha
 
         ; process, bank in and memory
         lda #$07
@@ -32,10 +32,10 @@
         sta $01
 
         ; restore y, x, stat
-        pla
-        tay
-        pla
-        tax
+        ;pla
+        ;tay
+        ;pla
+        ;tax
         lda temporary_accumulator
         plp        
         rts

@@ -190,11 +190,11 @@ STARTUP_TARGET = $2000
         bne @regular
         ldx #$01    ; jump to 0x8000 after load
         jsr IO_load_file
-        .byte "QS", $00
+        .byte $51, $53, $00  ; ; "QS"
     @regular:
         ldx #$00    ; return after load
         jsr IO_load_file
-        .byte "STARTUP", $00
+        .byte $53, $54, $2a, $00  ; "ST*"
         jmp $8000
 
 

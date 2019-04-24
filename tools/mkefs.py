@@ -85,7 +85,7 @@ def efs_writeextended(data, position, value):
 
 
 def efs_writepaddedstring(data, position, value):
-    text = value.encode('utf-8')
+    text = value.upper().encode('utf-8')
     if len(text) > 15:
         raise Exception("filename too long (" + value + ")")
     data[position:position+16] = bytes([0] * 16)
