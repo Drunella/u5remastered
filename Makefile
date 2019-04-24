@@ -50,6 +50,8 @@ build/obj/exodecrunch.prg: src/exo/exodecrunch.s src/exo/get_crunched_byte.s
 
 # raw files
 build/files/files.list:
+	mkdir -p ./build/files ./build/obj
+	c1541 disks/osi.d64 -read ./disks/temp.subs build/obj/temp.subs.prg
 	tools/extract.py -v -s ./disks -b ./build
 
 # crunched

@@ -4,7 +4,7 @@
 .include "../include/easyflash.inc"
 .include "../include/io.inc"
 
-TEMP_SUBS_SOURCE = $1600
+TEMP_SUBS_SOURCE = $9500  ; banked in memory
 TEMP_SUBS_TARGET = $6c00
 
 STARTUP_TARGET = $2000
@@ -43,9 +43,9 @@ STARTUP_TARGET = $2000
 
         ; c128 mmu check could be omitted
         ; 0b00001110, IO, kernal, RAM0. 48K RAM
-        lda #$0e
-        sta $ff00
-        lda #$00
+        ;lda #$0e
+        ;sta $ff00
+        ;lda #$00
 
         ; initialize vars
         lda #$00   ; load accumulator with memory
@@ -75,8 +75,8 @@ STARTUP_TARGET = $2000
         ;cmp $c024
 
         ; memory mapping 0b00000110, io visible, no basic, kernal   
-        lda #$06
-        sta $01
+        ;lda #$06
+        ;sta $01
         
         ; restore / set vectors
         sei
@@ -123,19 +123,17 @@ STARTUP_TARGET = $2000
         ; load eapi
         ldx #$00
     @repeat_eapi:
-        lda EASYFLASH_SOURCE, x
-        sta EASYFLASH_TARGET, x
-        lda EASYFLASH_SOURCE + 256, x
-        sta EASYFLASH_TARGET + 256, x
-        lda EASYFLASH_SOURCE + 512, x
-        sta EASYFLASH_TARGET + 512, x
+        lda EASYFLASH_SOURCE + $0000, x
+        sta EASYFLASH_TARGET + $0000, x
+        lda EASYFLASH_SOURCE + $0100, x
+        sta EASYFLASH_TARGET + $0100, x
+        lda EASYFLASH_SOURCE + $0200, x
+        sta EASYFLASH_TARGET + $0200, x
+        lda EASYFLASH_SOURCE + $0300, x   ; for exomizer
+        sta EASYFLASH_TARGET + $0300, x
         dex
         bne @repeat_eapi
 
-        ; bank in 16k mode
-        ;lda #EASYFLASH_LED | EASYFLASH_16K
-        ;sta EASYFLASH_CONTROL
-        
         ; load temp.subs
         ldx #$00
     @repeat_subs:
@@ -159,18 +157,18 @@ STARTUP_TARGET = $2000
         sta TEMP_SUBS_TARGET + $0800, x
         lda TEMP_SUBS_SOURCE + $0900, x
         sta TEMP_SUBS_TARGET + $0900, x
-        lda TEMP_SUBS_SOURCE + $1000, x
-        sta TEMP_SUBS_TARGET + $1000, x
+        lda TEMP_SUBS_SOURCE + $0a00, x
+        sta TEMP_SUBS_TARGET + $0a00, x
         dex
         bne @repeat_subs
 
         ; load startup
-        ldx #$20   ; ### calculate size
+        ldx #(irq_routine - startup_entry - 1)
     @repeat_startup:
         lda startup_entry, x
         sta STARTUP_TARGET, x
         dex
-        bne @repeat_startup
+        bpl @repeat_startup
 
         ; leave rom area
         jmp STARTUP_TARGET
@@ -180,6 +178,12 @@ STARTUP_TARGET = $2000
         ; initialize eapi
         jsr EAPIInit
         
+        ; now bank out and set memory
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
+
         ; load startup.prg or qs.prg, depending on j pressed
         pla         ; key is on stack
         cmp #$22
@@ -201,14 +205,14 @@ STARTUP_TARGET = $2000
         pha
         tya
         pha
-        lda $ff00  ; c128 mmu
+        lda $ff00  ; c128 mmu ### not necessary
         pha
         jsr $6c03  ; set memory banking: set kernal and io visible
         jsr $ff9f  ; ROM_SCNKEY - scan keyboard, matrix code $cb, shift key $028d, keys in keyboard buffer
         lda $dc0d  ; CIA1: CIA Interrupt Control Register
         jsr $6c06  ; set memory banking: set ram visible in all areas
         pla        
-        sta $ff00  ; c128 mmu
+        sta $ff00  ; c128 mmu ### not necessary
         pla
         tay
         pla

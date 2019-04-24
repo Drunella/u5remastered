@@ -269,13 +269,17 @@
         event_before
         ldy #$00
     repeat_block_loader:
-        ; bank in
+        ; bank in and memory ###
+        lda #$07
+        sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
         ; read byte
         jsr EAPIReadFlashInc
         tax
-        ; bank out
+        ; bank out and memory ###
+        lda #$06
+        sta $01
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
     block_loader_copy_high = block_loader_copy + 2

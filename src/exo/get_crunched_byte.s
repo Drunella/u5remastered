@@ -17,15 +17,19 @@
         tya
         pha
 
-        ; process, bank in
+        ; process, bank in and memory
+        lda #$07
+        sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
         ; read byte
         jsr EAPIReadFlashInc
         sta temporary_accumulator
-        ; bank out
+        ; bank out and memory ###
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
 
         ; restore y, x, stat
         pla

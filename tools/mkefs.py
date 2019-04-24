@@ -119,10 +119,10 @@ def readdisks_getdiskinfo(disks, diskname):
     return []
 
 
-def readexcludes_info(filename):
-    disks = []
-    with open(filename) as f:
-        result = [line.split() for line in f]
+#def readexcludes_info(filename):
+#    disks = []
+#    with open(filename) as f:
+#        result = [line.split() for line in f]
 
 
 def readexcludes_info(filename):
