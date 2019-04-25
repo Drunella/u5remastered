@@ -93,7 +93,7 @@
     ; filename after return address
     ; x: return mode (0, 1, >1)
     IO_load_file_entry:
-        sta requested_loadmode
+        stx requested_loadmode
         pla                            ; load return address to coopy opcode
         sta load_file_copyname_address_low
         pla
