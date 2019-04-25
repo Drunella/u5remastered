@@ -44,9 +44,6 @@ get_crunched_byte = $6DF7
 
 decrunch_table = $7e00
 
-; static jump table at $7b00
-jmp decrunch
-
 ; -------------------------------------------------------------------
 ; Controls if the shared get_bits routines should be inlined or not.
 ;INLINE_GET_BITS=1
@@ -54,7 +51,7 @@ jmp decrunch
 ; if literal sequences is not used (the data was crunched with the -c
 ; flag) then the following line can be uncommented for shorter and.
 ; slightly faster code.
-LITERAL_SEQUENCES_NOT_USED = 1
+;LITERAL_SEQUENCES_NOT_USED = 1
 ; -------------------------------------------------------------------
 ; if the sequence length is limited to 256 (the data was crunched with
 ; the -M256 flag) then the following line can be uncommented for
@@ -64,7 +61,7 @@ MAX_SEQUENCE_LENGTH_256 = 1
 ; if the sequence length 3 has its own offset table then the following
 ; line can be uncommented for in some situations slightly better
 ; compression at the cost of a larger decrunch table.
-;EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE = 1
+EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE = 1
 ; -------------------------------------------------------------------
 ; zero page addresses used
 ; -------------------------------------------------------------------

@@ -16,8 +16,28 @@ def file_readaddress(filename):
         return high*256 + low
 
 
-def file_crunch(infilename, outfilename, address):
-    arguments = ["exomizer", "mem", "-m", "256", "-M", "256", "-c", "-l", str(address), "-o", outfilename, infilename]
+#def file_prependaddress(filename, address):
+#    low = address % 256
+#    high = address // 256
+#    with open(filename, "rb") as f:
+#        data = f.read()    
+#    with open(filename, "wb") as f:
+#        f.seek(0)
+#        b = bytearray(1)
+#        b[0] = low
+#        f.write(b)
+#        b[0] = high
+#        f.write(b)
+#        f.write(data)
+
+
+def file_crunch(infilename, outfilename):
+    arguments = ["exomizer", "level", \
+                             "-m", "256", \
+                             "-M", "256", \
+                             "-o", outfilename, \
+                             infilename \
+                 ]
     result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error crunching file " + infilename)
@@ -51,7 +71,8 @@ def main(argv):
         infilename = os.path.join(files_path, f)
         outfilename = os.path.join(files_path, basename + ".crunch")
         address = file_readaddress(infilename)
-        file_crunch(infilename, outfilename, address)    
+        file_crunch(infilename, outfilename)
+        #file_prependaddress(outfilename, address)
     if args.verbose:
         print("")
     # make a file to let make know we are ready

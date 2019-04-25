@@ -9,8 +9,11 @@ CL65FLAGS=-t $(TARGET) -I ./src/include
 
 .SUFFIXES: .prg .s
 
+# ultima 5
+ultima5: build/u5remastered.crt
+
 # all
-all: build/obj/directory.data.prg build/obj/files.data.prg code
+all: build/obj/directory.data.prg build/obj/files.data.prg code build/u5remastered.crt
 
 # code
 code: build/obj/exodecrunch.prg build/obj/loader.prg build/obj/initialize.prg build/obj/io.prg
@@ -61,4 +64,12 @@ build/files/crunched.done: build/files/files.list
 # build efs
 build/obj/directory.data.prg build/obj/files.data.prg: build/files/crunched.done
 	tools/mkefs.py -v -s ./src -b ./build
+
+# cartridge binary
+build/obj/u5remastered.bin: build/obj/directory.data.prg build/obj/files.data.prg build/obj/exodecrunch.prg build/obj/initialize.prg build/obj/loader.prg src/ef/eapi-am29f040.prg build/obj/io.prg build/obj/exodecrunch.prg
+	tools/mkbin.py -v -s ./src/ -b ./build/
+
+# cartdridge crt
+build/u5remastered.crt: build/obj/u5remastered.bin
+	cartconv -t easy -o build/u5remastered.crt -i build/obj/u5remastered.bin -n "Ultima 5 Remastered Demo" -p
 

@@ -31,6 +31,8 @@ def efs_makefileentry(hash, data):
     size = len(data)
     offset = data_files_pointer
     data_files_pointer += size
+    #data2 = bytearray(data)
+    #data2.reverse()
     data_files[offset:offset+size] = data
     entry = dict()
     entry["bank"] = int(offset // 0x4000 + 1) # size of one bank

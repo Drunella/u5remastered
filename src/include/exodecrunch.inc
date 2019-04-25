@@ -1,3 +1,3 @@
 
-EXO_decrunch = $7b00
+EXO_decrunch = $7B1D
 
