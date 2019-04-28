@@ -64,6 +64,7 @@ build/obj/directory.data.prg build/obj/files.data.prg: build/files/crunched.done
 
 # cartridge binary
 build/obj/u5remastered.bin: build/obj/directory.data.prg build/obj/files.data.prg build/obj/exodecrunch.prg build/obj/initialize.prg build/obj/loader.prg src/ef/eapi-am29f040.prg build/obj/io.prg build/obj/exodecrunch.prg build/obj/temp.subs.patched.prg
+	cp ./src/crt.map ./build/obj/crt.map
 	tools/mkbin.py -v -s ./src/ -b ./build/
 
 # cartdridge crt

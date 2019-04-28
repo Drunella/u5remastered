@@ -4,8 +4,8 @@
 0 f eapi-am29f040.prg addr 0xb800
 0 f exodecrunch.prg addr 0xbb00
 
-# unmodified ultima 5 library
-0 f temp.subs.prg addr 0x9500
+# jump table modified ultima 5 library
+0 f temp.subs.patched.prg addr 0x9500
 
 # data and dictionary
 0 f directory.data.prg addr 0xa000
@@ -19,21 +19,3 @@
 
 # temp.subs modification
 0 f io.prg addr 0x9549
-
-# jump table read disk block 0x6c00
-0 a 0x6CA8 addr 0x9501
-
-# jump table request disk with text 0x6c09
-0 a 0x6c4c addr 0x950a
-
-# jump table load file from disk 0x6c24
-0 a 0x6c51 addr 0x9525
-
-# jump table check inserted disk 0x6c2a
-0 a 0x6c49 addr 0x952b
-
-# jump table save file 0x6d2d
-0 a 0x6ca1 addr 0x952e
-
-# jump table load additional block 0x6c30
-0 a 0x6ce8 addr 0x9531

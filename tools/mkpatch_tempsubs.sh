@@ -20,11 +20,11 @@ echo "address = 0x0002" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c09 IO_request_disk_char_entry
-target=$( findaddress "IO_request_disk_char_entry" $2 )
+target=$( findaddress "IO_request_disk_id_entry" $2 )
 destname="$1/temp.subs.2.patch"
 echo "jumptable" > $destname
 echo "# 0x6c09" >> $destname
-echo "# IO_request_disk_char_entry" >> $destname
+echo "# IO_request_disk_id_entry" >> $destname
 echo "address = 0x000b" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -38,12 +38,12 @@ echo "address = 0x0026" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c2a IO_request_disk_id_entry
-target=$( findaddress "IO_request_disk_id_entry" $2 )
+target=$( findaddress "IO_request_disk_char_entry" $2 )
 destname="$1/temp.subs.4.patch"
 echo "jumptable" > $destname
 echo "# 0x6c2a" >> $destname
-echo "# IO_request_disk_id_entry" >> $destname
-echo "address = 0x00ac" >> $destname
+echo "# IO_request_disk_char_entry" >> $destname
+echo "address = 0x002c" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c2d IO_save_file_entry

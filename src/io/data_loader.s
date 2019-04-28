@@ -15,10 +15,6 @@
         ; must preserve stat, X, Y
         ; return value in A
         php
-        ;txa
-        ;pha
-        ;tya
-        ;pha
 
         ; process, bank in and memory
         lda #$07
@@ -34,11 +30,6 @@
         lda #$06
         sta $01
 
-        ; restore y, x, stat
-        ;pla
-        ;tay
-        ;pla
-        ;tax
         lda temporary_accumulator
         plp        
         rts
@@ -99,6 +90,9 @@
         sta EASYFLASH_CONTROL
         ; read byte
         jsr EAPIReadFlashInc
+
+        ; ### stop condition ### -> broken
+
         tax
         ; bank out and memory
         lda #$06
