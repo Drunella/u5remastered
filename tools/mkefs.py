@@ -31,6 +31,8 @@ def efs_makefileentry(hash, data):
     size = len(data)
     offset = data_files_pointer
     data_files_pointer += size
+    #data2 = bytearray(data)
+    #data2.reverse()
     data_files[offset:offset+size] = data
     entry = dict()
     entry["bank"] = int(offset // 0x4000 + 1) # size of one bank
@@ -85,7 +87,7 @@ def efs_writeextended(data, position, value):
 
 
 def efs_writepaddedstring(data, position, value):
-    text = value.encode('utf-8')
+    text = value.upper().encode('utf-8')
     if len(text) > 15:
         raise Exception("filename too long (" + value + ")")
     data[position:position+16] = bytes([0] * 16)
@@ -119,10 +121,10 @@ def readdisks_getdiskinfo(disks, diskname):
     return []
 
 
-def readexcludes_info(filename):
-    disks = []
-    with open(filename) as f:
-        result = [line.split() for line in f]
+#def readexcludes_info(filename):
+#    disks = []
+#    with open(filename) as f:
+#        result = [line.split() for line in f]
 
 
 def readexcludes_info(filename):

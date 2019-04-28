@@ -34,8 +34,7 @@ EASYFLASH_KILL    = $04
         cld
 
         ; enable VIC (e.g. RAM refresh)
-        lda #$08
-        sta $d016
+        stx $d016
 
         ; write to RAM to make sure it starts up correctly (=> RAM datasheets)
     wait:
@@ -62,15 +61,15 @@ EASYFLASH_KILL    = $04
         ; bank in 16k mode
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
-        
-        ; Check if one of the magic kill keys is pressed
-        ; This should be done in the same way on any EasyFlash cartridge!
+
         ; screen black 
         lda #$00        ; border and screen black, no error messages
         sta $d020
         sta $d021
         sta $9d
 
+        ; Check if one of the magic kill keys is pressed
+        ; This should be done in the same way on any EasyFlash cartridge!
         ; Prepare the CIA to scan the keyboard
         lda #$7f
         sta $dc00   ; pull down row 7 (DPA)
@@ -91,15 +90,23 @@ EASYFLASH_KILL    = $04
         and #$e0    ; only leave "Run/Stop", "Q" and "C="
         cmp #$e0
         bne kill    ; branch if one of these keys is pressed
+        
+        ; c64 reset
+        jsr $fda3  ; initialize i/o
+        jsr $fd50  ; initialize memory
+        jsr $fd15  ; set io vectors
+        jsr $ff5b  ; more init
+        cli
 
-        ; same init stuff the kernel calls after reset
-        ldx #$0
-        stx $d016
-        jsr $ff84   ; Initialise I/O
+        ; screen black again
+        lda #$00        ; border and screen black, no error messages
+        sta $d020
+        sta $d021
+        sta $9d
 
         ; initialize other stuff
-        jsr $ff87   ; Initialise System Constants
-        jsr $ff8a   ; Restore Kernal Vectors
+        ;jsr $ff87   ; Initialise System Constants
+        ;jsr $ff8a   ; Restore Kernal Vectors
         ;jsr $ff81   ; Initialize screen editor -> not needed
         ;lda #$93     ; character CLEAR
         ;jsr $ffd2    ; CHROUT. Write byte to default (=screen) output. input: A

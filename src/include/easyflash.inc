@@ -10,6 +10,9 @@ EASYFLASH_KILL    = $04
 EASYFLASH_SOURCE  = $B800  ; $A000 (hirom) + 1800
 EASYFLASH_TARGET  = $7800
 
+EFS_BANK          = 0
+EFS_DIRECTORY_START = $A000
+
 EAPIInit          = EASYFLASH_TARGET + 20
 EAPIWriteFlash    = $df80
 EAPIEraseSector   = $df83
