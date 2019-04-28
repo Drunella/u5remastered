@@ -65,13 +65,19 @@
 .export IO_read_block_entry
 .export IO_read_block_alt_entry
 
-.macro event_before
-    jsr $0126  ; copied from original copy
-.endmacro
+; imports
+.import load_prg
+.import load_block
+.import load_block_highdestination
 
-.macro event_after
-    jsr $0129  ; copied from original copy
-.endmacro
+
+;.macro event_before
+;    jsr $0126  ; copied from original copy
+;.endmacro
+
+;.macro event_after
+;    jsr $0129  ; copied from original copy
+;.endmacro
 
 
 .segment "IO_CODE"
@@ -94,7 +100,7 @@
     ; x: return mode (0, 1, >1)
     IO_load_file_entry:
         stx requested_loadmode
-        pla                            ; load return address to coopy opcode
+        pla                            ; load return address to copy opcode
         sta load_file_copyname_address_low
         pla
         sta load_file_copyname_address_high
@@ -118,11 +124,9 @@
         jmp load_file_copyname
     copydone:
 
-        event_before
         ldx #$00
-        stx block_loader_copy_high     ; 0 will load a prg file
+        stx load_block_highdestination ; 0 will load a prg file
         jsr load_file_from_ef          ; load file: X: in file offset
-        event_after
 
         lda requested_loadmode
         beq load_return
@@ -140,6 +144,7 @@
     requested_loadmode:
         .byte $00
 
+
     ; --------------------------------------------------------------------
     ; IO_save_file_entry
     ; read parameter from after return address
@@ -148,11 +153,37 @@
     ; word: (after return address) address
     ; word: (after return address) size
     IO_save_file_entry:
-        ; ### ToDo ###
-        ;event_before
-        ;
-        ;event_after
+        ; ### store or save x
+        ; ### TODO ###
+        pla                            ; load return address to copy opcode
+        sta save_file_copyname_address_low
+        pla
+        sta save_file_copyname_address_high
+
+    save_file_copyname:
+        inc save_file_copyname_address_low     ; increase by one
+        bne @skip
+        inc save_file_copyname_address_high
+    @skip:
+    save_file_copyname_address_low = save_file_copyname_address + 1
+    save_file_copyname_address_high = save_file_copyname_address + 2
+    save_file_copyname_address:
+        lda $ffff                      ; save ###
+        bne save_file_copyname
+
+        lda #$04
+        clc
+        adc save_file_copyname_address_low
+        sta save_file_copyname_address_low
+        bne @skip
+        inc save_file_copyname_address_high
+    @skip:
+        lda save_file_copyname_address_high    ; return address on stack
+        pha
+        lda save_file_copyname_address_low
+        pha
         rts
+
 
     ; --------------------------------------------------------------------
     ; IO_read_block_entry
@@ -209,12 +240,15 @@
         dey
         bne @repeat
 
-        ; address high byte restore
+        ; address high byte
+        lda #$ff
+        sta load_strategy
         pla
-        sta block_loader_copy_high     ; >0 will load a block
+        sta load_block_highdestination ; >0 will load a block
         jmp load_file_from_ef          ; load file: X: in file offset
     load_block_offset:
         .byte $00
+
 
     ; --------------------------------------------------------------------
     ; meaning of function unclear, copied from temp.subs
@@ -258,107 +292,72 @@
         .byte $00, $00, $00, $00, $00, $00, $00, $00
     read_block_filename:
         .byte "BLOCK", $00
+    bank_strategy:
+        .byte $00
+    load_strategy:    ; 00: decrunch; ff: load block; 01: load prg
+        .byte $00
 
 
     ; ====================================================================
-    ; helper functions
+    ; load file
 
-    block_loader:
-        ; high address byte is set in block_loader_copy_high
-        ; eapi ptr set
-        ; eapi bank set
-        event_before
-        ldy #$00
-    repeat_block_loader:
-        ; bank in and memory ###
-        lda #$07
-        sta $01
-        lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
-        ; read byte
-        jsr EAPIReadFlashInc
-        tax
-        ; bank out and memory ###
-        lda #$06
-        sta $01
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
-    block_loader_copy_high = block_loader_copy + 2
-    block_loader_copy:
-        txa
-        sta $ff00,y
-        dey
-        bne repeat_block_loader
-        event_after
-        clc        ; indicate sucess
-        rts
-
-
+    ; --------------------------------------------------------------------
     load_file_from_ef:
         ; name in fixed location: requested_disk + requested_filename
-        ; X: in file offset: 0  for prg, 
-        ;                    0-255 for blocks
-        ; Y: destination address
-        ;     0 for prg, address from prg file
-        ;    >0 address high byte
+        ; load_block_highdestination: set as destination address in non prg
+        ; files
+        ; X: in datafile offset: 0  for prg, 0-255 for blocks
         ; return c set on error
-        ; users $fd,$fe,$ff as local vars
+        ; search in files
+        lda #EFS_FILES_BANKSTRATEGY
+        sta bank_strategy
+        lda #EFS_FILES_LOADSTRATEGY
+        sta load_strategy
+        lda #EFS_FILES_DIR_BANK
+        ldy #>EFS_FILES_DIR_START
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
 
-        ; set loader address, y register is free afterwards
-        ;sty block_loader_copy_high
+        ; search in saves
+        lda #EFS_SAVES_BANKSTRATEGY
+        sta bank_strategy
+        lda #EFS_SAVES_LOADSTRATEGY
+        sta load_strategy
+        lda #EFS_SAVES_DIR_BANK
+        ldy #>EFS_SAVES_DIR_START
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
 
-        ; find entry in directory
-        ; bank in, set bank and start address in fe,ff
-        lda #$07
-        sta $01
-        lda #EFS_BANK
-        jsr EAPISetBank
-        lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
-        lda #>(EFS_DIRECTORY_START - $18)
-        sta $ff
-        lda #<(EFS_DIRECTORY_START - $18)
-        sta $fe
-    nextname:
-        clc
-        lda #$18   ; size of dir element
-        adc $fe
-        sta $fe
-        bcc @done
-        inc $ff
-    @done:
-        ldy #efs_directory::flags  ; text if directory terminator
-        lda #$1f
-        and ($fe), y
-        asl
-        asl
-        asl
-        bne morefiles
-        lda #EASYFLASH_KILL        ; not found
-        sta EASYFLASH_CONTROL
-        lda #$06
-        sta $01
-        sec
+        ; search in britannia ulist
+        lda #EFS_BTLIST_BANKSTRATEGY
+        sta bank_strategy
+        lda #EFS_BTLIST_LOADSTRATEGY
+        sta load_strategy
+        lda #EFS_BTLIST_DIR_BANK
+        ldy #>EFS_BTLIST_DIR_START
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; search in underworld ulist
+        lda #EFS_UTLIST_BANKSTRATEGY
+        sta bank_strategy
+        lda #EFS_UTLIST_LOADSTRATEGY
+        sta load_strategy
+        lda #EFS_UTLIST_DIR_BANK
+        ldy #>EFS_UTLIST_DIR_START
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; not found
+        jsr finish_directory_search
+        sec 
         rts
-    morefiles:
-        ldy #$ff
-    nameloop:
-        iny
-        lda #$3f   ; '?'
-        cmp requested_fullname, y  ; character in name is '?', go to next character
-        beq nameloop
-        lda #$2a   ; '*'
-        cmp requested_fullname, y  ; character in name is '*', we have a match
-        beq namematch
-        lda requested_fullname, y  ; compare character with character in entry
-        cmp ($fe), y               ; if not equal nextname
-        bne nextname
-        lda #$0                    ; compare if both character are zero
-        cmp ($fe), y               ; if not, next name
-        beq namematch
-        jmp nameloop
-        
-    namematch:
+
+    filefound:
         txa                        ; X register is now free
         ldy #efs_directory::offset_high ; entry high offset
         clc
@@ -390,13 +389,13 @@
 
         tax                        ; low offset in x
         ldy $fd                    ; high offset in y
-        lda #$D0                   ; lhlh bank mode in eapi read
+        lda bank_strategy          ; bank strategy
         jsr EAPISetPtr
         pla                        ; bank
         jsr EAPISetBank            ; now we cannot access the directory anymore
 
-        lda block_loader_copy_high ; if zero, we load prg, otherwise we load block
-        bne @blockloader
+        lda load_strategy          ; if zero, we decrunch prg
+        bne otherloader
         lda $a7                    ; save zp variables (except $fc-$ff)
         pha
         lda $ae
@@ -412,6 +411,104 @@
         sta $a7
         clc        ; indicate success
         rts
-    @blockloader:
-        jmp block_loader
+    otherloader:
+        bmi prgloader
+        jmp load_block
+    prgloader:
+        jmp load_prg
+
+
+    ; ====================================================================
+    ; loading file utility, search in several ef
+    ; uses fd, fe, ff in zeropage
+
+    ; --------------------------------------------------------------------
+    start_directory_search:
+        ; A: bank, Y: address high
+        ; directory must be increased  before first usage
+        ; set bank
+        jsr EAPISetBank
+
+        ; bank in and set ($fe) to one element before
+        lda #$07
+        sta $01
+        lda #EASYFLASH_LED | EASYFLASH_16K
+        sta EASYFLASH_CONTROL
+        dey
+        sty $ff
+        lda #$e8   ; 0x00 - 0x18
+        sta $fe
+        rts
+
+
+    ; --------------------------------------------------------------------
+    finish_directory_search:
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
+        rts
+
+
+    ; --------------------------------------------------------------------
+    find_directoryentry:
+        ; name set in fixed location: requested_fullname
+        ; A: directory bank, X: start address of directory
+        ; set pointer to matched directory entry
+        ; C set on not found or other error
+        ; C clear on found
+        ; modified register: A, Y, status
+        ;jsr start_directory_search
+    nextname:
+        ; increase for next pointer
+        clc
+        lda #$18   ; size of dir element
+        adc $fe
+        sta $fe
+        bcc @nohighadd
+        inc $ff
+    @nohighadd:
+
+        ; test if directory overflow
+        lda #$18
+        cmp $ff
+        bcs notfound     ; if A >= $18
+        ; more elements in directory possible
+        ldy #efs_directory::flags  ; test if directory terminator
+        lda #$1f
+        and ($fe), y
+        sta $fd
+        lda #$1f
+        cmp $fd
+        bne morefiles
+    notfound:
+        ;jsr finish_directory_search  ; finish
+        sec                          ; and set C
+        rts
+    morefiles:
+
+        ; compare filename
+        ldy #$ff
+    nameloop:
+        iny
+        lda #$3f   ; '?'
+        cmp requested_fullname, y  ; character in name is '?', go to next character
+        beq nameloop
+        lda #$2a   ; '*'
+        cmp requested_fullname, y  ; character in name is '*', we have a match
+        beq namematch
+        lda requested_fullname, y  ; compare character with character in entry
+        cmp ($fe), y               ; if not equal nextname
+        bne nextname
+        lda #$0                    ; compare if both character are zero
+        cmp ($fe), y               ; if not, next name
+        beq namematch
+        jmp nameloop
+        
+    namematch:
+        clc
+        rts
+
+
+
 

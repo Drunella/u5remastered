@@ -63,8 +63,8 @@ def efs_makedirentry(dir, file):
 def efs_terminatedir():
     global data_directory, data_files, data_files_pointer, data_directory_pointer
     global entries_directory, entries_files
-    content = bytearray(24)
-    content[16] = 0x1F # terminate directory
+    content = bytearray([0xFF] * 24)
+    content[16] = 0xFF # terminate directory
     if data_directory_pointer >= 6144:
         raise Exception("too many files in directory")
     data_directory[data_directory_pointer:data_directory_pointer+24] = content
@@ -157,7 +157,8 @@ def main(argv):
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
-    #p.add_argument("-d", dest="diroutput", action="store", required=True, help="output directory file.")
+    p.add_argument("-x", dest="noblocks", action="store_true", required=True, help="ignore data blocks.")
+    p.add_argument("-e", dest="fileending", action="store", required=True, help="file ending of data files.")
     #p.add_argument("-f", dest="fileoutput", action="store", required=True, help="output data content file.")
     args = p.parse_args()
     temp_path = os.path.join(args.build, "temp")
@@ -191,21 +192,22 @@ def main(argv):
         name["type"] = 0x60|0x01   # normal prg file with start address
         if name["name"] in excludes_list:
             continue
-        content = load_file(os.path.join(files_path, fi + ".crunch"))
+        content = load_file(os.path.join(files_path, fi + "." + args.fileending))
         entry = efs_makefileentry(fi, content)
         efs_makedirentry(name, entry)
         #print("detail:" + detail[0] + " " + detail[1] + " f:" + f)
 
     # add blocks file
-    for e in disks:
-        if len(e) <= 2:
-            continue        
-        name = dict()
-        name["type"] = 0x60|0x09 # normal file without startaddress
-        name["name"] = chr(int(e[1], 0)) + "block"
-        content = load_file(os.path.join(files_path, e[0] + ".data"))
-        entry = efs_makefileentry(e[1], content)
-        efs_makedirentry(name, entry)
+    if not args.noblocks:
+        for e in disks:
+            if len(e) <= 2:
+                continue        
+            name = dict()
+            name["type"] = 0x60|0x09 # normal file without startaddress
+            name["name"] = chr(int(e[1], 0)) + "block"
+            content = load_file(os.path.join(files_path, e[0] + ".data"))
+            entry = efs_makefileentry(e[1], content)
+            efs_makedirentry(name, entry)
     
     efs_terminatedir()
     dirs_path = os.path.join(destination_path, "directory.data.prg")

@@ -11,7 +11,9 @@
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
 
-# savegame data and dictionary
+# savegame data and dictionary ###
+48 f directory.saves.prg addr 0x8000
+48 f files.saves.prg addr 0x9800
 
 # modifications added automatically
 

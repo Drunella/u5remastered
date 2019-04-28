@@ -28,10 +28,8 @@
 ; read a crunched byte. This subroutine has to preserve x and y register
 ; and must not modify the state of the carry flag.
 ; -------------------------------------------------------------------
+.include "../io/io.created.inc"
 ;.import get_crunched_byte
-
-; ### hack ###
-get_crunched_byte = $6DF7
 
 
 ; -------------------------------------------------------------------
