@@ -6,14 +6,19 @@
 .export get_crunched_byte
 .export load_prg
 .export load_block
-.export load_block_highdestination
+
+.export load_destination_high
+.export load_destination_low
+
+.import temporary_accumulator
 
 
 .segment "IO_CODE"
 
+    ; --------------------------------------------------------------------
+    ; must preserve stat, X, Y
+    ; return value in A
     get_crunched_byte:
-        ; must preserve stat, X, Y
-        ; return value in A
         php
 
         ; process, bank in and memory
@@ -24,7 +29,7 @@
         ; read byte
         jsr EAPIReadFlashInc
         sta temporary_accumulator
-        ; bank out and memory ###
+        ; bank out and memory
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
         lda #$06
@@ -33,80 +38,149 @@
         lda temporary_accumulator
         plp        
         rts
-    temporary_accumulator:
-        .byte $00
 
 
+    ; --------------------------------------------------------------------
+    ; high address byte is set in load_destination_high
+    ; low address byte is set in load_destination_low (usually 0)
+    ; eapi ptr set
+    ; eapi bank set
+    ; eapi size not set
     load_block:
-        ; high address byte is set in load_block_highdestination
-        ; eapi ptr set
-        ; eapi bank set
-        ; return C clear on success
-        ldy #$ff
-    repeat_block_loader:
-        ; bank in and memory
-        lda #$07
-        sta $01
-        lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
-        ; read byte
-        jsr EAPIReadFlashInc
+        ; set length to 256
+        lda #$00
         tax
-        ; bank out and memory
-        lda #$06
-        sta $01
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
-        txa
-    load_block_highdestination = block_loader_copy + 2
-:       iny
-    block_loader_copy:
-        sta $ff00,y
-        bne :-
-        clc        ; indicate sucess
-        rts
+        ldy #$01
+        jsr EAPISetLen
+
+        jmp data_loader
 
 
+    ; --------------------------------------------------------------------
+    ; address is loaded as 1. and 2. byte
+    ; eapi ptr set
+    ; eapi bank set
+    ; eapi size set
     load_prg:
-        ; address is loaded as 1. and 2. byte
-        ; eapi ptr set
-        ; eapi bank set
-        ; return C clear on success
+        ; bank in
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
+
         ; read address
         jsr EAPIReadFlashInc
-        sta load_prg_lowdestination
+        sta load_destination_low
         jsr EAPIReadFlashInc
-        sta load_prg_highdestination
+        sta load_destination_high
 
-    repeat_prg_loader:
+        jmp data_loader
+
+
+    ; --------------------------------------------------------------------
+    ; loads data to destination
+    data_loader:
         ; bank in and memory
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
+
         ; read byte
         jsr EAPIReadFlashInc
 
-        ; ### stop condition ### -> broken
-
-        tax
         ; bank out and memory
         lda #$06
         sta $01
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
-        txa
-    load_prg_lowdestination = prg_loader_copy + 1
-    load_prg_highdestination = prg_loader_copy + 2
-    prg_loader_copy:
+
+        ; if C set last byte read
+        bcs data_loader_finish   
+
+        ; write byte to destination
+    load_destination_low = load_destination + 1
+    load_destination_high = load_destination + 2
+    load_destination:
         sta $ffff
-        inc load_prg_lowdestination
+        inc load_destination_low
         bcc :+
-        inc load_prg_highdestination
-:       bne repeat_prg_loader
-        clc        ; indicate sucess
+        inc load_destination_high
+    :   bne data_loader
+
+    data_loader_finish:
         rts
+
+
+
+
+
+;        ldy #$ff
+;    repeat_block_loader:
+;        ; bank in and memory
+;        lda #$07
+;        sta $01
+;        lda #EASYFLASH_LED | EASYFLASH_16K
+;        sta EASYFLASH_CONTROL
+;        ; read byte
+;        jsr EAPIReadFlashInc
+;        tax
+;        ; bank out and memory
+;        lda #$06
+;        sta $01
+;        lda #EASYFLASH_KILL
+;        sta EASYFLASH_CONTROL
+;        txa
+;    load_block_highdestination = block_loader_copy + 2
+;:       iny
+;    block_loader_copy:
+;        sta $ff00,y
+;        bne :-
+;        clc        ; indicate sucess
+;        rts
+
+
+;    load_prg:
+;        ; address is loaded as 1. and 2. byte
+;        ; eapi ptr set
+;        ; eapi bank set
+;        ; eapi size set
+;        ; return C clear on success
+;        lda #$07
+;        sta $01
+;        lda #EASYFLASH_LED | EASYFLASH_16K
+;        sta EASYFLASH_CONTROL
+;        ; read address
+;        jsr EAPIReadFlashInc
+;        sta load_prg_lowdestination
+;        jsr EAPIReadFlashInc
+;        sta load_prg_highdestination
+;
+;    repeat_prg_loader:
+;        ; bank in and memory
+;        lda #$07
+;        sta $01
+;        lda #EASYFLASH_LED | EASYFLASH_16K
+;        sta EASYFLASH_CONTROL
+;        ; read byte
+;        jsr EAPIReadFlashInc
+;
+;        ; ### stop condition ### -> broken
+;
+;        tax
+;        ; bank out and memory
+;        lda #$06
+;        sta $01
+;        lda #EASYFLASH_KILL
+;        sta EASYFLASH_CONTROL
+;        txa
+;    load_prg_lowdestination = prg_loader_copy + 1
+;    load_prg_highdestination = prg_loader_copy + 2
+;    prg_loader_copy:
+;        sta $ffff
+;        inc load_prg_lowdestination
+;        bcc :+
+;        inc load_prg_highdestination
+;:       bne repeat_prg_loader
+;        clc        ; indicate sucess
+;        rts

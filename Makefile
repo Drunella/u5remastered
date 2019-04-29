@@ -23,12 +23,12 @@ all: build/obj/directory.data.prg build/obj/files.data.prg build/u5remastered.cr
 	$(CA65) $(CA65FLAGS) -o $@ $<
 
 # loader.prg
-build/obj/loader.prg: src/ef/loader.s
-	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
+build/obj/loader.prg: src/ef/loader.s src/io/io.created.inc
+	$(CL65) $(CL65FLAGS) -o build/obj/loader.prg -C src/ef/loader.cfg src/ef/loader.s
 
 # initialize
-build/obj/initialize.prg: src/ef/initialize.s
-	$(CL65) $(CL65FLAGS) -o $@ -C $(<D)/$(*F).cfg $^
+build/obj/initialize.prg: src/ef/initialize.s src/io/io.created.inc
+	$(CL65) $(CL65FLAGS) -o build/obj/initialize.prg -C src/ef/initialize.cfg src/ef/initialize.s
 
 # io
 build/obj/io.prg src/io/io.map: src/io/io.s src/io/data_loader.s
@@ -36,7 +36,7 @@ build/obj/io.prg src/io/io.map: src/io/io.s src/io/data_loader.s
 
 # io.map
 src/io/io.created.inc: src/io/io.map
-	tools/parsemap.py -v -s ./src/io/io.map -d ./src/io/io.created.inc -e IO_load_file_entry -e IO_read_block_entry -e IO_request_disk_id_entry -e IO_request_disk_char_entry -e IO_save_file_entry -e IO_read_block_alt_entry -e get_crunched_byte -e load_block_highdestination
+	tools/parsemap.py -v -s ./src/io/io.map -d ./src/io/io.created.inc -e IO_load_file_entry -e IO_read_block_entry -e IO_request_disk_id_entry -e IO_request_disk_char_entry -e IO_save_file_entry -e IO_read_block_alt_entry -e get_crunched_byte -e read_block_filename -e requested_disk
  
 # exomizer
 build/obj/exodecrunch.prg: src/exo/exodecrunch.s src/io/io.created.inc

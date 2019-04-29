@@ -3,6 +3,7 @@
 
 .include "../include/easyflash.inc"
 .include "../include/io.inc"
+.include "../io/io.created.inc"
 
 TEMP_SUBS_SOURCE = $9500  ; banked in memory
 TEMP_SUBS_TARGET = $6c00
@@ -123,14 +124,14 @@ STARTUP_TARGET = $2000
         ; load eapi
         ldx #$00
     @repeat_eapi:
-        lda EASYFLASH_SOURCE + $0000, x
-        sta EASYFLASH_TARGET + $0000, x
-        lda EASYFLASH_SOURCE + $0100, x
-        sta EASYFLASH_TARGET + $0100, x
-        lda EASYFLASH_SOURCE + $0200, x
-        sta EASYFLASH_TARGET + $0200, x
-        lda EASYFLASH_SOURCE + $0300, x   ; for exomizer
-        sta EASYFLASH_TARGET + $0300, x
+        lda EAPI_SOURCE + $0000, x
+        sta EAPI_DESTINATION + $0000, x
+        lda EAPI_SOURCE + $0100, x
+        sta EAPI_DESTINATION + $0100, x
+        lda EAPI_SOURCE + $0200, x
+        sta EAPI_DESTINATION + $0200, x
+        lda EAPI_SOURCE + $0300, x   ; for exomizer
+        sta EAPI_DESTINATION + $0300, x
         dex
         bne @repeat_eapi
 
@@ -177,6 +178,25 @@ STARTUP_TARGET = $2000
     startup_entry:
         ; initialize eapi
         jsr EAPIInit
+
+        ; prepare io area
+        lda #$41
+        sta requested_disk
+
+        lda #$42   ; 'B'
+        sta read_block_filename
+        lda #$4c   ; 'L'
+        sta read_block_filename+1
+        lda #$4f   ; 'O'
+        sta read_block_filename+2
+        lda #$43   ; 'C'
+        sta read_block_filename+3
+        lda #$4b   ; 'K'
+        sta read_block_filename+4
+        lda #$53   ; 'S'
+        sta read_block_filename+5
+        lda #$0   ; '\0'
+        sta read_block_filename+6
         
         ; now bank out and set memory
         lda #EASYFLASH_KILL
