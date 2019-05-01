@@ -5,17 +5,12 @@
 0 f exodecrunch.prg addr 0xbb00
 
 # jump table modified ultima 5 library
-0 f temp.subs.patched.prg addr 0x9500
+0 f temp.subs.patched.prg addr 0x9400
 
 # data and dictionary
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
 
-# savegame data and dictionary ###
-48 f directory.saves.prg addr 0x8000
-48 f files.saves.prg addr 0x9800
-
-# modifications added automatically
-
 # temp.subs modification
-0 f io.prg addr 0x9549
+0 f io.prg addr 0x9449
+0 f data_loader.prg addr 0x9f60

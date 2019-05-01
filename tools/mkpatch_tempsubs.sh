@@ -7,7 +7,7 @@ function findaddress() {
 }
 
 # $1 destdirectory
-# $2 io.created.inc
+# $2 inc file
 mkdir -p $1
 
 # 0x6c00 IO_read_block_entry

@@ -87,7 +87,7 @@ def efs_writeextended(data, position, value):
 
 
 def efs_writepaddedstring(data, position, value):
-    text = value.upper().encode('utf-8')
+    text = value.encode('utf-8')
     if len(text) > 15:
         raise Exception("filename too long (" + value + ")")
     data[position:position+16] = bytes([0] * 16)
@@ -131,6 +131,7 @@ def readexcludes_info(filename):
     disks = []
     with open(filename) as f:
         result = [line.split() for line in f]
+    #pprint.pprint(result)
     return result
 
 
@@ -148,6 +149,14 @@ def load_file(filename):
     with open(filename, "rb") as f:
         return f.read()
 
+def join_ws(iterator, seperator):
+    it = map(str, iterator)
+    seperator = str(seperator)
+    string = next(it, '')
+    for s in it:
+        string += seperator + s
+    return string
+
 
 def main(argv):
     global data_directory
@@ -157,7 +166,7 @@ def main(argv):
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
-    p.add_argument("-x", dest="noblocks", action="store_true", required=True, help="ignore data blocks.")
+    #p.add_argument("-x", dest="noblocks", action="store_true", required=False, help="ignore data blocks.")
     p.add_argument("-e", dest="fileending", action="store", required=True, help="file ending of data files.")
     #p.add_argument("-f", dest="fileoutput", action="store", required=True, help="output data content file.")
     args = p.parse_args()
@@ -173,8 +182,9 @@ def main(argv):
     excludes_list = []
     for ex in excludes:
         d = readdisks_getdiskinfo(disks, ex[0])
-        n = chr(int(d[1], 0)) + ex[1]
-        excludes_list.append(n)
+        n = chr(int(d[1], 0)) + join_ws(ex[1:], " ")
+        excludes_list.append(n.upper())
+    pprint.pprint(excludes_list)
 
     fd = os.path.join(files_path, "files.list")
     entries = load_files_directory(fd)
@@ -188,9 +198,12 @@ def main(argv):
         dd = d[0]
         dn = d[1]
         name = dict()
-        name["name"] = chr(int(dd, 0)) + dn
+        tempname = chr(int(dd, 0)) + dn
+        name["name"] = tempname.upper()
         name["type"] = 0x60|0x01   # normal prg file with start address
+        pprint.pprint(name)
         if name["name"] in excludes_list:
+            print("excluding " + name["name"])
             continue
         content = load_file(os.path.join(files_path, fi + "." + args.fileending))
         entry = efs_makefileentry(fi, content)
@@ -198,16 +211,16 @@ def main(argv):
         #print("detail:" + detail[0] + " " + detail[1] + " f:" + f)
 
     # add blocks file
-    if not args.noblocks:
-        for e in disks:
-            if len(e) <= 2:
-                continue        
-            name = dict()
-            name["type"] = 0x60|0x09 # normal file without startaddress
-            name["name"] = chr(int(e[1], 0)) + "block"
-            content = load_file(os.path.join(files_path, e[0] + ".data"))
-            entry = efs_makefileentry(e[1], content)
-            efs_makedirentry(name, entry)
+    #if not args.noblocks:
+    #    for e in disks:
+    #        if len(e) <= 2:
+    #            continue        
+    #        name = dict()
+    #        name["type"] = 0x60|0x09 # normal file without startaddress
+    #        name["name"] = chr(int(e[1], 0)) + "block"
+    #        content = load_file(os.path.join(files_path, e[0] + ".data"))
+    #        entry = efs_makefileentry(e[1], content)
+    #        efs_makedirentry(name, entry)
     
     efs_terminatedir()
     dirs_path = os.path.join(destination_path, "directory.data.prg")

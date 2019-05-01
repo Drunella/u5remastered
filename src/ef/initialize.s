@@ -3,9 +3,9 @@
 
 .include "../include/easyflash.inc"
 .include "../include/io.inc"
-.include "../io/io.created.inc"
+.include "../io/io.exported.inc"
 
-TEMP_SUBS_SOURCE = $9500  ; banked in memory
+TEMP_SUBS_SOURCE = $9400  ; banked in memory
 TEMP_SUBS_TARGET = $6c00
 
 STARTUP_TARGET = $2000
@@ -160,6 +160,8 @@ STARTUP_TARGET = $2000
         sta TEMP_SUBS_TARGET + $0900, x
         lda TEMP_SUBS_SOURCE + $0a00, x
         sta TEMP_SUBS_TARGET + $0a00, x
+        lda TEMP_SUBS_SOURCE + $0b00, x
+        sta TEMP_SUBS_TARGET + $0b00, x
         dex
         bne @repeat_subs
 
@@ -179,9 +181,18 @@ STARTUP_TARGET = $2000
         ; initialize eapi
         jsr EAPIInit
 
-        ; prepare io area
+        ; prepare directory entry io area
+        ldy #$18
+        lda #$00
+    :   dey
+        sta requested_disk, y
+        bne :-
+
         lda #$41
         sta requested_disk
+
+        lda #$62   ; prg with roml only
+        sta save_files_flags
 
         lda #$42   ; 'B'
         sta read_block_filename

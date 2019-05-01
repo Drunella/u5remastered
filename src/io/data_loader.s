@@ -19,7 +19,7 @@
 temporary_accumulator = $fb
 
 
-.segment "IO_CODE"
+.segment "IO_CODE2"
 
     ; --------------------------------------------------------------------
     ; must preserve stat, X, Y
@@ -80,7 +80,7 @@ temporary_accumulator = $fb
         jsr EAPIReadFlashInc
         sta load_destination_high
 
-        jmp data_loader
+        ;jmp data_loader
 
 
     ; --------------------------------------------------------------------
@@ -142,9 +142,15 @@ temporary_accumulator = $fb
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
 
+        ; inc address
+        inc save_source_low
+        bcc :+
+        inc save_source_high
+    
         ; and write to flash
-        lda temporary_accumulator
+    :   lda temporary_accumulator
         jmp EAPIWriteFlashInc
+
         ; no rts
 
 
