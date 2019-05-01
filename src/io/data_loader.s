@@ -6,11 +6,17 @@
 .export get_crunched_byte
 .export load_prg
 .export load_block
+.export save_prg
 
 .export load_destination_high
 .export load_destination_low
 
-.import temporary_accumulator
+.export save_source_low
+.export save_source_high
+
+;.import temporary_accumulator
+
+temporary_accumulator = $fb
 
 
 .segment "IO_CODE"
@@ -88,6 +94,7 @@
 
         ; read byte
         jsr EAPIReadFlashInc
+        sta temporary_accumulator
 
         ; bank out and memory
         lda #$06
@@ -99,6 +106,7 @@
         bcs data_loader_finish   
 
         ; write byte to destination
+        lda temporary_accumulator
     load_destination_low = load_destination + 1
     load_destination_high = load_destination + 2
     load_destination:
@@ -112,7 +120,32 @@
         rts
 
 
+    ; --------------------------------------------------------------------
+    ; reads data and writes to flash
+    save_prg:
+        ; bank out and memory
+        lda #$06
+        sta $01
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
 
+        ; read byte
+    save_source_low = save_source + 1
+    save_source_high = save_source + 2
+    save_source:
+        lda $ffff ; will be modified by code
+        sta temporary_accumulator
+
+        ; bank in and memory
+        lda #$07
+        sta $01
+        lda #EASYFLASH_LED | EASYFLASH_16K
+        sta EASYFLASH_CONTROL
+
+        ; and write to flash
+        lda temporary_accumulator
+        jmp EAPIWriteFlashInc
+        ; no rts
 
 
 ;        ldy #$ff

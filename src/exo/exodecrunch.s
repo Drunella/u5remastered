@@ -50,8 +50,8 @@
 ; -------------------------------------------------------------------
 zp_len_lo = $a7
 
-zp_src_lo  = $ae
-zp_src_hi  = zp_src_lo + 1
+zp_src_lo  = $ae  ; load address not used at this point
+zp_src_hi  = zp_src_lo + 1  ; load address not used at this point
 
 zp_bits_hi = $fc
 
