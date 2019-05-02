@@ -133,7 +133,8 @@ def main(argv):
     for files in args.mapfiles:
         map = load_map(os.path.join(obj_path, files))
         for e in map:
-            print("processing: " + e[2])
+            if args.verbose:
+                print("processing: " + e[2])
             process(e)
 
     final_path = os.path.join(obj_path, "u5remastered.bin")

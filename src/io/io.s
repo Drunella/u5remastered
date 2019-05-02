@@ -109,16 +109,6 @@
         sta copy_name_address_high
 
         jsr copy_filename
-;        ldy #$ff
-;    load_file_copyname:
-;        iny
-;        jsr getnext_name_character     ; next char in A
-;        sta requested_filename, y      ; and store
-;        bne load_file_copyname
-
-;        ldx #$00
-;        stx load_strategy              ; 0 will load a crunch or prg file
-;        stx load_offset_high           ; load offset is 0
         jsr load_file_from_ef          ; load file
 
         lda requested_loadmode
@@ -154,12 +144,6 @@
 
         ; copy filename
         jsr copy_filename
-;        ldy #$ff
-;    save_file_copyname:
-;        iny
-;        jsr getnext_name_character     ; next char in A
-;        sta requested_filename, y      ; and store
-;        bne save_file_copyname
 
         ; copy address and size
         jsr getnext_name_character
@@ -275,10 +259,6 @@
         lda ($fe), y ; first element bank
         sta block_bank
 
-;        iny
-;        lda ($fe), y ; second element bank-mode
-;        sta bank_strategy
-
         txa
         clc
         iny
@@ -291,62 +271,6 @@
         lda block_bank
         jsr start_search
         jmp load_block
-
-;;        sta load_offset_low
-;
-;        ; correct track offset
-;        ; britannia (0x42), underworld (0x48): 19/0 - 35/15
-;        ; towne (0x43), dwelling (0x44), castle (0x45), keep (0x56): 24/0 - 35/15
-;        ; dungeon (0x47): 25/0 - 35/15
-;        tya        ; track in A, Y is free now
-;        clc
-;        sbc #$13   ; reduce by 0x19
-;
-;        ; if 0x42 we are done
-;        ldy #$42
-;        cpy requested_disk
-;        beq track_corrected
-;
-;        ; if 0x42 we are done
-;        ldy #$48
-;        cpy requested_disk
-;        beq track_corrected
-;
-;        clc
-;        sbc #$05   ; reduce by 5
-;
-;        ; if 0x47, reduce by one
-;        ldy #$47
-;        cpy requested_disk
-;        bne track_corrected
-;        clc
-;        sbc #$01
-;    track_corrected:
-;
-;        ; calculate offset, track is in A
-;        asl      ; multiply track with 16 and add sector
-;        asl
-;        asl
-;        asl
-;;        sta load_offset_high  ; store in temp
-;        txa      ; sector was in X
-;        clc
-;;        adc load_offset_high
-;        tax      ; offset in X
-;
-;        ; set filename
-;        ldy #$06
-;    @repeat:
-;        lda read_block_filename, y
-;        sta requested_filename, y
-;        dey
-;        bne @repeat
-
-        ; load strategy, destination address
-;        lda #$ff
-;        sta load_strategy      ; block file as load strategy
-;        jmp load_file_from_ef
-;        rts
 
 
     ; --------------------------------------------------------------------
@@ -386,7 +310,7 @@
     ; must be set:
     ;   requested_disk + requested_filename
     ;   load_strategy
-    load_file_from_ef:
+    load_file_from_ef: ; unroll function
         lda #$00
         sta load_strategy ; load crunch file
         lda #EFS_FILES_BANKSTRATEGY
@@ -426,7 +350,7 @@
 
         ; not found
         jsr finish_search
-        sec 
+        sec
         rts
 
     filefound:
@@ -460,42 +384,7 @@
 
     ; ====================================================================
     ; loading file utility, search in several ef
-    ; uses fc, fd, fe, ff in zeropage
-
-    ; --------------------------------------------------------------------
-    ; set saves addresses and bank strategy and starts directory search
-;    start_saves_directory_search:
-;        lda #EFS_SAVES_MAXDIRECTORYENTRIES
-;        sta erase_max_directories
-;;        lda #EFS_SAVES_BANKSTRATEGY
-;;        sta bank_strategy
-;        lda #EFS_SAVES_BANK
-;        sta save_directory_bank
-;        ldy #$80
-;        jmp start_directory_search
-
-
-    ; --------------------------------------------------------------------
-    ; set btlist addresses and bank strategy and starts directory search
-;    start_btlist_directory_search:
-;        lda #EFS_BTLIST_BANK
-;        sta save_directory_bank
-;        jmp start_tlist_directory_search
-
-
-    ; --------------------------------------------------------------------
-    ; set utlist addresses and bank strategy and starts directory search
-;    start_utlist_directory_search:
-;        lda #EFS_UTLIST_BANK
-;        sta save_directory_bank
-;    start_tlist_directory_search:
-;        lda #EFS_TLIST_MAXDIRECTORYENTRIES
-;        sta erase_max_directories
-;        lda #EFS_TLIST_BANKSTRATEGY
-;        sta bank_strategy
-;        ldy #>EFS_TLIST_DIR_START
-;        sty erase_start_offset
-;        jmp start_directory_search
+    ; uses fe, ff in zeropage
 
 
     ; --------------------------------------------------------------------
@@ -592,31 +481,9 @@
         lda ($fe), y
 ;        beq moreentries     ; entry deleted, Z is set
         and #$1f
- ;       and ($fe), y
+;        and ($fe), y
         cmp #$1f
         beq emptyentry
-;        lda #$01   ; clears the Z flag
-;    moreentries:
-;        ; set file bank and offset
-;        ldy #efs_directory::bank
-;        lda ($fe), y
-;        sta save_files_bank
-;
-;        ldy #efs_directory::offset_low
-;        lda ($fe), y
-;        ldy #efs_directory::size_low
-;        clc
-;        adc ($fe), y
-;        sta save_files_offset_low
-;        
-;        ldy #efs_directory::offset_high
-;        lda ($fe), y
-;        ldy #efs_directory::size_high
-;        adc ($fe), y
-;        clc
-;        ;adc #$18
-;        sta save_files_offset_high
-        ; return
         clc
         rts
     emptyentry:
@@ -821,10 +688,6 @@
         ; set size for directory entry
         inc save_files_size_low
         inc save_files_size_low
-;        lda #$0
-;        ldy #$0
-;        ldx #$18
-;        jsr EAPISetLen 
 
         ; write name, we will write some garbage after the 0 terminator
         ldy #$00
@@ -835,22 +698,7 @@
         bcc :-
 
         ; already done
-;        dec save_files_size_low
-;        dec save_files_size_low
         rts
-
-    ; --------------------------------------------------------------------
-    ; yx_decrease
-    ; decreases 16 bit value defined by yx (x is low)
-    ; if zero, returns N flag set
-    ; must not change X, Y, N outside
-    ; uses A
-;.macro yx_decrease
-;        dex
-;        bpl :+
-;        dey
-;    :   
-;.endmacro
 
 
     ; --------------------------------------------------------------------
@@ -895,10 +743,6 @@
         jmp save_file_repeat   ; branch if positive (max 0x79 !)
 finish:
         rts
-;    save_source_address_low = save_source_address + 1
-;    save_source_address_low = save_source_address + 2
-;    save_source_address:
-;        lda $ffff ; will be modified by code
 
 
     ; ====================================================================
@@ -909,7 +753,6 @@ finish:
 
 .export requested_disk
 .export read_block_filename
-;.export temporary_accumulator
 .export save_files_directory_entry
 .export save_files_flags
 
@@ -954,13 +797,7 @@ finish:
 
     requested_loadmode:
         .byte $00
-;    load_block_offset:
-;        .byte $00
 
-;    block_track:
-;        .byte $00
-;    block_sector:
-;        .byte $00
     block_bank:
         .byte $00
 

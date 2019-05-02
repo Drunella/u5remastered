@@ -39,13 +39,9 @@ def map_initialize():
     map_data = bytearray([0xff] * 0x800)
 
 
-def bank_create():
-    return bytearray([0xff] * 0x2000)
-
-
 def crtmap_appendentry(filename, block, name, address):
     with open(filename, "at") as f:
-        content = "{0} a {1} addr 0x{2:04x}\n".format(block, name, address)
+        content = "{0} f {1} addr 0x{2:04x}\n".format(block, name, address)
         return f.write(content)
 
 
@@ -131,23 +127,25 @@ def main(argv):
         map_data[diskid*256+255] = starttrack
         for b in range(0, height, 2):
             # double line or single line
-            factor = 2
-            if b+1 >= height:
-                factor = 1
+            #factor = 2
+            #if b+1 >= height:
+            #    factor = 1
 
             # make data
-            bank_data = bank_create()
+            bank_data = bytearray([0xff] * 0x2000)
             baseaddress = calculate_address(lowhigh)
             
             if b+1 >= height:
-                # one lines
-                s = b * 256*16 * 1
-                bank_data[0:] = block_data[s:s+0x1000*1]
+                # one line
+                s = b * 256*16
+                l = 0x1000
+                bank_data[0:l] = block_data[s:s+l]
                 blockmap_appendentry(diskid, b, startbank, baseaddress)
             else:
                 # two lines
-                s = b * 256*16 * 2
-                bank_data[0:] = block_data[s:s+0x1000*2]
+                s = b * 256*16
+                l = 0x2000
+                bank_data[0:l] = block_data[s:s+l]
                 blockmap_appendentry(diskid, b, startbank, baseaddress)
                 blockmap_appendentry(diskid, b+1, startbank, baseaddress+0x10)
 

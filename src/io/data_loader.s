@@ -112,11 +112,12 @@ temporary_accumulator = $fb
     load_destination:
         sta $ffff
         inc load_destination_low
-        bcc :+
+        bne :+
         inc load_destination_high
     :   bne data_loader
 
     data_loader_finish:
+        clc        ; indicate success
         rts
 
 
@@ -144,82 +145,10 @@ temporary_accumulator = $fb
 
         ; inc address
         inc save_source_low
-        bcc :+
+        bne :+
         inc save_source_high
     
         ; and write to flash
     :   lda temporary_accumulator
         jmp EAPIWriteFlashInc
-
         ; no rts
-
-
-;        ldy #$ff
-;    repeat_block_loader:
-;        ; bank in and memory
-;        lda #$07
-;        sta $01
-;        lda #EASYFLASH_LED | EASYFLASH_16K
-;        sta EASYFLASH_CONTROL
-;        ; read byte
-;        jsr EAPIReadFlashInc
-;        tax
-;        ; bank out and memory
-;        lda #$06
-;        sta $01
-;        lda #EASYFLASH_KILL
-;        sta EASYFLASH_CONTROL
-;        txa
-;    load_block_highdestination = block_loader_copy + 2
-;:       iny
-;    block_loader_copy:
-;        sta $ff00,y
-;        bne :-
-;        clc        ; indicate sucess
-;        rts
-
-
-;    load_prg:
-;        ; address is loaded as 1. and 2. byte
-;        ; eapi ptr set
-;        ; eapi bank set
-;        ; eapi size set
-;        ; return C clear on success
-;        lda #$07
-;        sta $01
-;        lda #EASYFLASH_LED | EASYFLASH_16K
-;        sta EASYFLASH_CONTROL
-;        ; read address
-;        jsr EAPIReadFlashInc
-;        sta load_prg_lowdestination
-;        jsr EAPIReadFlashInc
-;        sta load_prg_highdestination
-;
-;    repeat_prg_loader:
-;        ; bank in and memory
-;        lda #$07
-;        sta $01
-;        lda #EASYFLASH_LED | EASYFLASH_16K
-;        sta EASYFLASH_CONTROL
-;        ; read byte
-;        jsr EAPIReadFlashInc
-;
-;        ; ### stop condition ### -> broken
-;
-;        tax
-;        ; bank out and memory
-;        lda #$06
-;        sta $01
-;        lda #EASYFLASH_KILL
-;        sta EASYFLASH_CONTROL
-;        txa
-;    load_prg_lowdestination = prg_loader_copy + 1
-;    load_prg_highdestination = prg_loader_copy + 2
-;    prg_loader_copy:
-;        sta $ffff
-;        inc load_prg_lowdestination
-;        bcc :+
-;        inc load_prg_highdestination
-;:       bne repeat_prg_loader
-;        clc        ; indicate sucess
-;        rts

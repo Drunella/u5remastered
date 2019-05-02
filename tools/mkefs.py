@@ -184,7 +184,7 @@ def main(argv):
         d = readdisks_getdiskinfo(disks, ex[0])
         n = chr(int(d[1], 0)) + join_ws(ex[1:], " ")
         excludes_list.append(n.upper())
-    pprint.pprint(excludes_list)
+    #pprint.pprint(excludes_list)
 
     fd = os.path.join(files_path, "files.list")
     entries = load_files_directory(fd)
@@ -201,7 +201,7 @@ def main(argv):
         tempname = chr(int(dd, 0)) + dn
         name["name"] = tempname.upper()
         name["type"] = 0x60|0x01   # normal prg file with start address
-        pprint.pprint(name)
+        #pprint.pprint(name)
         if name["name"] in excludes_list:
             print("excluding " + name["name"])
             continue
