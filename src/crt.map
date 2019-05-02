@@ -14,3 +14,5 @@
 # temp.subs modification
 0 f io.prg addr 0x9449
 0 f data_loader.prg addr 0x9f60
+
+# automatic additions

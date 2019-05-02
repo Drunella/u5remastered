@@ -15,8 +15,6 @@ ultima5: build/u5remastered.crt
 # all
 all: build/obj/directory.data.prg build/obj/files.data.prg build/u5remastered.crt
 
-# code
-#code: build/obj/exodecrunch.prg build/obj/loader.prg build/obj/initialize.prg build/obj/io.prg
 
 # compile
 %.o: %.s
@@ -68,12 +66,34 @@ build/files/crunched.done: build/files/files.list
 build/obj/directory.data.prg build/obj/files.data.prg: build/files/crunched.done
 	tools/mkefs.py -v -s ./src -b ./build -e crunch
 
+# build blocks
+build/obj/crt.blocks.map: build/files/files.list
+	tools/mkblocks.py -v -s src/ -b build/ -m build/obj/crt.blocks.map
+
 # cartridge binary
-build/obj/u5remastered.bin: build/obj/directory.data.prg build/obj/files.data.prg build/obj/exodecrunch.prg build/obj/initialize.prg build/obj/loader.prg src/ef/eapi-am29f040.prg build/obj/io.prg build/obj/data_loader.prg build/obj/exodecrunch.prg build/obj/temp.subs.patched.prg
+build/obj/u5remastered.bin: build/obj/directory.data.prg build/obj/files.data.prg build/obj/exodecrunch.prg build/obj/initialize.prg build/obj/loader.prg src/ef/eapi-am29f040.prg build/obj/io.prg build/obj/data_loader.prg build/obj/exodecrunch.prg build/obj/temp.subs.patched.prg build/obj/crt.blocks.map
 	cp ./src/crt.map ./build/obj/crt.map
-	tools/mkbin.py -v -s ./src/ -b ./build/
+	cp ./src/ef/eapi-am29f040.prg ./build/obj/eapi-am29f040.prg
+	tools/mkbin.py -v -b ./build/ -m crt.map -m crt.blocks.map
 
 # cartdridge crt
 build/u5remastered.crt: build/obj/u5remastered.bin
 	cartconv -t easy -o build/u5remastered.crt -i build/obj/u5remastered.bin -n "Ultima 5 Remastered Demo" -p
 
+clean:
+	rm -rf build/obj
+
+mrproper:
+	rm -rf build
+	# all .o .map files
+	rm src/ef/initialize.o
+	rm src/ef/loader.o
+	rm src/exo/exodecrunch.map
+	rm src/exo/exodecrunch.o
+	rm src/exo/exodecrunch.s.old
+	rm src/io/data_loader.exported.inc
+	rm src/io/data_loader.map
+	rm src/io/data_loader.o
+	rm src/io/io.exported.inc
+	rm src/io/io.map
+	rm src/io/io.o

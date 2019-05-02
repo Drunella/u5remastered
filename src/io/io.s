@@ -261,22 +261,23 @@
         lda requested_disk
         sec
         sbc #$41
+        clc
         adc #>EFS_BLOCKMAP_ADDRESS
         sta $ff
         tya
         ldy #$ff
         sec
         sbc ($fe), y ; corrected track now in A
-        asl
+        ;asl
         asl
         tay ; correct offset now in Y
 
         lda ($fe), y ; first element bank
         sta block_bank
 
-        iny
-        lda ($fe), y ; second element bank-mode
-        sta bank_strategy
+;        iny
+;        lda ($fe), y ; second element bank-mode
+;        sta bank_strategy
 
         txa
         clc
@@ -284,7 +285,7 @@
         adc ($fe), y ; third element address
         tay          ; high offset in Y
         ldx #$00     ; low offset always zero
-        lda bank_strategy
+        lda #$D0     ; bank mode does not matter
         jsr EAPISetPtr
 
         lda block_bank
