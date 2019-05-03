@@ -33,7 +33,7 @@ build/obj/data_loader.prg src/io/data_loader.map: src/io/data_loader.s
 	$(CL65) $(CL65FLAGS) -vm -m ./src/io/data_loader.map -o build/obj/data_loader.prg -C src/io/data_loader.cfg $^
 # data loader map
 src/io/data_loader.exported.inc: src/io/data_loader.map
-	tools/parsemap.py -v -s ./src/io/data_loader.map -d ./src/io/data_loader.exported.inc -e get_crunched_byte -e load_prg -e save_prg -e save_source_high -e save_source_low -e load_block -e load_destination_high -e load_destination_low -e save_source_low -e save_source_high
+	tools/parsemap.py -v -s ./src/io/data_loader.map -d ./src/io/data_loader.exported.inc -e get_crunched_byte -e load_prg -e save_prg_byte -e save_source_high -e save_source_low -e load_block -e load_destination_high -e load_destination_low -e save_source_low -e save_source_high
 
 # io
 build/obj/io.prg src/io/io.map: src/io/io.s src/io/data_loader.exported.inc

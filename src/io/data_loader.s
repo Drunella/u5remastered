@@ -6,7 +6,7 @@
 .export get_crunched_byte
 .export load_prg
 .export load_block
-.export save_prg
+.export save_prg_byte
 
 .export load_destination_high
 .export load_destination_low
@@ -80,7 +80,7 @@ temporary_accumulator = $fb
         jsr EAPIReadFlashInc
         sta load_destination_high
 
-        ;jmp data_loader
+        ; no jmp data_loader as directly below
 
 
     ; --------------------------------------------------------------------
@@ -123,7 +123,7 @@ temporary_accumulator = $fb
 
     ; --------------------------------------------------------------------
     ; reads data and writes to flash
-    save_prg:
+    save_prg_byte:
         ; bank out and memory
         lda #$06
         sta $01

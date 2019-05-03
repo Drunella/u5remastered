@@ -103,19 +103,79 @@
     ; x: return mode (0, 1, >1)
     IO_load_file_entry:
         stx requested_loadmode
-        pla                            ; load return address to copy opcode
+        ; load return address to copy opcode
+        pla
         sta copy_name_address_low
         pla
         sta copy_name_address_high
-
         jsr copy_filename
-        jsr load_file_from_ef          ; load file
 
+        ; search file and load
+        lda #$00
+        sta load_strategy ; load crunch file
+        lda #EFS_FILES_BANKSTRATEGY
+        sta bank_strategy
+        lda #EFS_FILES_DIR_BANK
+        ldy #>EFS_FILES_DIR_START
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; search for save file
+        lda #$01 ; load prg file
+        sta load_strategy
+        lda #$B0 ; bank strategy llll...
+        sta bank_strategy
+
+        ; search in saves
+        lda #EFS_SAVES_BANK
+        ldy #$80   ; all saves are in low bank
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; search in britannia tlist
+        lda #EFS_BTLIST_BANK
+        ldy #$80   ; all saves are in low bank
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; search in underworld tlist
+        lda #EFS_UTLIST_BANK
+        ldy #$80   ; all saves are in low bank
+        jsr start_directory_search
+        jsr find_directoryentry
+        bcc filefound
+
+        ; not found, can happen
+        jsr finish_search
+        sec
+        jmp load_return
+
+    filefound:
+        jsr prepare_filentry    ; returns bank in A
+        jsr EAPISetBank      ; now we cannot access the directory anymore
+
+        lda load_strategy    ; if zero, we decrunch prg
+        bne otherloader
+        lda $a7              ; save zp variables (except $fc-$ff)
+        pha
+        jsr EXO_decrunch
+        pla
+        sta $a7
+        jmp startorreturn
+    otherloader:
+        jsr load_prg
+    
+    startorreturn:
+        ; decide how to start (if) te loaded prg
         lda requested_loadmode
+        clc        ; success
         beq load_return                ; 0: return
         cmp #$01
         beq load_jumptomain            ; 1: jump to $800
-        jmp $a700                      ; >1: jumup to $a700
+        jmp $a700                      ; >1: jump to $a700
     load_jumptomain:
         jmp $8000
     load_return:
@@ -156,38 +216,47 @@
         sta save_files_size_high
 
         ; identify where to save
-        lda #$48   ; underworld
+        ldx #EFS_UTLIST_BANK
+        lda #$48   ; underworld for underworld TLIST
         cmp requested_disk
-        beq save_utlist
+        beq save_file_step1
+
+        ldx #EFS_BTLIST_BANK
         lda #$54   ; 'T' of britannia TLIST
         cmp requested_filename
-        beq save_btlist
-        ; ### if file is LIST, SLIST or ROSTER do not check for erase ###
-        ; ### check erase only if PRTY.DATA
+        beq save_file_step1
+
+        ldx #EFS_SAVES_BANK
+        lda #$50   ; 'P' of PRTY.DATA
+        sta erase_disallow  ; save any value
+        cmp requested_filename
+        beq save_file_step1
+        ; disallow erase
+        lda #$00
+        sta erase_disallow  ; save zero for disallow erase
+
+    save_file_step1:
+        stx save_directory_bank
+        lda #$b0
+        sta bank_strategy
 
         ; prepare settings for save files
-        lda #EFS_SAVES_BANK
-        sta save_directory_bank
-        lda #EFS_SAVES_MAXDIRECTORYENTRIES
-        sta erase_max_directories
-        jmp save_file_step2
-    save_btlist:
-        ; prepare settings for btlist
-        lda #EFS_BTLIST_BANK
-        sta save_directory_bank
-        jmp save_file_step15
-    save_utlist:
-        ; prepare settings for utlist
-        lda #EFS_UTLIST_BANK
-        sta save_directory_bank
-    save_file_step15:
-        lda #EFS_TLIST_MAXDIRECTORYENTRIES
-        sta erase_max_directories
+;    save_saves:
+;        lda #EFS_SAVES_BANK
+;        sta save_directory_bank
+;        jmp save_file_step2
+;    save_btlist:
+;        ; prepare settings for btlist
+;        lda #EFS_BTLIST_BANK
+;        sta save_directory_bank
+;        jmp save_file_step2
+;    save_utlist:
+;        ; prepare settings for utlist
+;        lda #EFS_UTLIST_BANK
+;        sta save_directory_bank
 
     save_file_step2:
         ; locate file and delete
-        lda #$b0
-        sta bank_strategy
         ldy #$80   ; all saves are in low banks
         lda save_directory_bank
         jsr start_directory_search
@@ -201,9 +270,30 @@
         sta save_files_bank
         ldy #$80   ; all saves are in low banks
         jsr start_directory_search
-        jsr count_directoryentries
-        cmp erase_max_directories
+
+        ; count directories
+        lda #$00
+        sta save_files_offset_low
+        lda #$18
+        sta save_files_offset_high
+        lda #$ff
+        sta count_directories
+        ; increase for next pointer
+    save_file_step35:
+        inc count_directories
+        jsr next_directory_entry
+        ; test if more entries
+        jsr terminator_directory_entry
+        bcs :+     ; if erminator entry (C set) leave
+        jsr prepare_filentry  ; this sets the new offset
+        jmp save_file_step35
+    :   lda count_directories
+
+        ; check if flash sector needs to be erased
+        cmp #EFS_MAXDIRECTORYENTRIES
         bcc save_file_step4
+        lda erase_disallow
+        beq save_file_step4
         ; erase sector and set fe,ff
         lda save_directory_bank
         sta save_files_bank
@@ -211,6 +301,7 @@
         sty $ff
         jsr EAPIEraseSector   ; erase
         lda #$00
+        sta $fe
         sta save_files_offset_low
         lda #$18
         sta save_files_offset_high
@@ -224,6 +315,7 @@
         pha
         lda copy_name_address_low
         pha
+        clc        ; success
         rts
 
 
@@ -238,7 +330,7 @@
         sta $fe
 
         ; bank in block map
-        lda #EFS_BLOCKMAP_BANK
+        lda #BLOCKMAP_BANK
         jsr start_search
 
         ; fe,ff now shows to the page area with the line data per disk
@@ -246,13 +338,12 @@
         sec
         sbc #$41
         clc
-        adc #>EFS_BLOCKMAP_ADDRESS
+        adc #>BLOCKMAP_ADDRESS
         sta $ff
         tya
         ldy #$ff
         sec
         sbc ($fe), y ; corrected track now in A
-        ;asl
         asl
         tay ; correct offset now in Y
 
@@ -262,7 +353,7 @@
         txa
         clc
         iny
-        adc ($fe), y ; third element address
+        adc ($fe), y ; second element address
         tay          ; high offset in Y
         ldx #$00     ; low offset always zero
         lda #$D0     ; bank mode does not matter
@@ -271,6 +362,7 @@
         lda block_bank
         jsr start_search
         jmp load_block
+        ; C is cleared in load_block
 
 
     ; --------------------------------------------------------------------
@@ -301,91 +393,8 @@
 
 
     ; ====================================================================
-    ; load file
-
-    ; --------------------------------------------------------------------
-    ; finds the directory entry in all directories
-    ; and sets the pointer fc,fd to the file entry
-    ; and sets eapi len, addr and strategy but not bank
-    ; must be set:
-    ;   requested_disk + requested_filename
-    ;   load_strategy
-    load_file_from_ef: ; unroll function
-        lda #$00
-        sta load_strategy ; load crunch file
-        lda #EFS_FILES_BANKSTRATEGY
-        sta bank_strategy
-        lda #EFS_FILES_DIR_BANK
-        ldy #>EFS_FILES_DIR_START
-        jsr start_directory_search
-        jsr find_directoryentry
-        bcc filefound
-
-        ; search for save file
-        lda #$01 ; load prg file
-        sta load_strategy
-        lda #$B0 ; bank strategy llll...
-        sta bank_strategy
-
-        ; search in saves
-        lda #EFS_SAVES_BANK
-        ldy #$80   ; all saves are in low bank
-        jsr start_directory_search
-        jsr find_directoryentry
-        bcc filefound
-
-        ; search in britannia tlist
-        lda #EFS_BTLIST_BANK
-        ldy #$80   ; all saves are in low bank
-        jsr start_directory_search
-        jsr find_directoryentry
-        bcc filefound
-
-        ; search in underworld tlist
-        lda #EFS_UTLIST_BANK
-        ldy #$80   ; all saves are in low bank
-        jsr start_directory_search
-        jsr find_directoryentry
-        bcc filefound
-
-        ; not found
-        jsr finish_search
-        sec
-        rts
-
-    filefound:
- ;       ldy load_offset_high
-        jsr prepare_filentry    ; returns bank in A
-        jsr EAPISetBank      ; now we cannot access the directory anymore
-
-        lda load_strategy    ; if zero, we decrunch prg
-        bne otherloader
-        lda $a7              ; save zp variables (except $fc-$ff)
-        pha
-        ;lda $ae
-        ;pha
-        ;lda $af
-        ;pha
-        jsr EXO_decrunch
-        ;pla
-        ;sta $af
-        ;pla
-        ;sta $ae
-        pla
-        sta $a7
-        clc        ; indicate success
-        rts
-    otherloader:
-;        bmi prgloader
-;        jmp load_block
-;    prgloader:
-        jmp load_prg
-
-
-    ; ====================================================================
-    ; loading file utility, search in several ef
+    ; loading file utility, search in several efs dirs
     ; uses fe, ff in zeropage
-
 
     ; --------------------------------------------------------------------
     ; copies filename to temporary storage
@@ -492,33 +501,6 @@
 
 
     ; --------------------------------------------------------------------
-    ; counts the number of entries in the directory
-    ; leaves fd,ff pointer showing the next free entry :)
-    ; must prepare with start_directory_search
-    ; returns count in A
-    ; uses A, X, Y, status
-    count_directoryentries:
-        lda #$00
-        sta save_files_offset_low
-        lda #$18
-        sta save_files_offset_high
-        lda #$ff
-        sta count_directories
-        ; increase for next pointer
-    again:
-        inc count_directories
-        jsr next_directory_entry
-
-        ; test if more entries
-        jsr terminator_directory_entry
-        bcs :+     ; if erminator entry (C set) leave
-        jsr prepare_filentry
-        jmp again
-    :   lda count_directories
-        rts
-
-
-    ; --------------------------------------------------------------------
     ; name set in fixed location: requested_fullname
     ; set pointer fe,ff to matched directory entry
     ; C set on not found or other error
@@ -574,7 +556,7 @@
     ; bank_strategy must be set
     ; returns bank in A
     prepare_filentry:
-        ; load offset, set pointer and store in buffer
+        ; load offset, set pointer and store in buffer (load and save)
         ldy #efs_directory::offset_low
         lda ($fe), y
         sta save_files_offset_low  ; store offset in buffer
@@ -586,9 +568,9 @@
         adc #$80
         tay
         lda bank_strategy
-        jsr EAPISetPtr ; x: low; y: high; a: bank strategy
+        jsr EAPISetPtr ; x: low; y: high; a: bank strategy (load)
 
-        ; load size, set and add to offset in buffer
+        ; load size, set and add to offset in buffer (load and save)
         ldy #efs_directory::size_low
         lda ($fe), y
         tax
@@ -600,52 +582,30 @@
         tay
         adc save_files_offset_high ; add to offset buffer
         sta save_files_offset_high
+
+        ; modify new offset to increase bank (only in A, save only)
         rol        ; prepare what to add to bank
         rol
         rol
         rol
-        and #$15   ; 3 bits + carry relevant for bank
+        and #$0f   ; 3 bits + carry relevant for bank (4 bits)
         sta save_files_bank
 
         lda #$00   ; no file is larger than 0xffff
-        jsr EAPISetLen
+        jsr EAPISetLen ; size in A Y X (high to low)
 
-        ; offset
+        ; offset (only for save)
         lda save_files_offset_high
         and #$1f
         sta save_files_offset_high
 
+        ; add to bank
         ldy #efs_directory::bank
         lda ($fe),y
         clc
         adc save_files_bank
         sta save_files_bank
-        lda ($fe),y
-
-;        ldy #efs_directory::offset_low
-;        lda ($fe),y
-;        tax
-;        iny        ; ldy #efs_directory::offset_high
-;        lda ($fe),y
-;        clc
-;        adc #$80
-;        tay
-;        lda bank_strategy
-;        jsr EAPISetPtr ; x: low; y: high; a: bank strategy
-;
-;        ; set size
-;        ldy #efs_directory::size_low
-;        lda ($fe), y
-;        tax
-;        iny        ; ldy #efs_directory::size_high
-;        lda ($fe), y
-;        tay
-;        lda #$00   ; no file is larger than 0xffff
-;        jsr EAPISetLen
-
-;        ldy #efs_directory::bank
-;        lda ($fe),y
-;        sta save_files_bank
+        lda ($fe),y  ; load bank again (for load)
         rts
 
 
@@ -734,7 +694,7 @@
         dex
         dex        ; we know that no file size crosses a page boundary
     save_file_repeat:
-        jsr save_prg
+        jsr save_prg_byte
         dex
         bne save_file_repeat
         dey
@@ -785,14 +745,16 @@ finish:
         .byte "BLOCK", $00
     bank_strategy:
         .byte $00
-    load_strategy:    ; 00: decrunch; ff: load block; 01: load prg
+    load_strategy:    ; 00: decrunch; 01: load prg
         .byte $00
 
     save_directory_bank:
         .byte $00
-    erase_max_directories:
-        .byte $00
+;    erase_max_directories:
+;        .byte $00
     count_directories:
+        .byte $00
+    erase_disallow:
         .byte $00
 
     requested_loadmode:
