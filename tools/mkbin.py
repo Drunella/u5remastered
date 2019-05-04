@@ -70,14 +70,56 @@ def bin_write(filename):
 # 0 a 0x6ca8 addr 0x9601
 #
 
+def process(e):
+    global obj_path
+    type = e[1]
+    bank = int(e[0], 0)
+    file = e[2]
+    if len(e) > 3:
+        flag = e[3]
+        value = int(e[4], 0)
+        if flag != "addr":
+            raise Exception("unknown flag " + flag)
+    else:
+        flag = ""
+        value = 0
+
+    if type == "f":
+        # load file
+        filename = os.path.join(obj_path, file)
+        data = load_file(filename)
+        if file.endswith(".prg"):
+            address = remove_prg(data)
+            if flag == "addr":
+                address = value
+        else:
+            if flag != "addr":
+                raise Exception("must give address for non prg file")
+            address = value
+        bin_placedata(data, bank, address)
+    elif type == "a":
+        address = value
+        value = int(file, 0)
+        if flag != "addr":
+            raise Exception("must give address for non prg file")
+        data = bytearray(2);
+        data[0] = value % 256
+        data[1] = value // 256
+        bin_placedata(data, bank, address)
+    else:
+        raise Exception("unknown type " + type)
+
+
 def main(argv):
     global binary_file
+    global obj_path
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
-    p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
+#    p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
+    p.add_argument("-m", dest="mapfiles", action="append", required=True, help="mapfile.")
     args = p.parse_args()
-    source_path = args.source
+#    source_path = args.source
     temp_path = os.path.join(args.build, "temp")
     os.makedirs(temp_path, exist_ok=True)
     files_path = os.path.join(args.build, "files")
@@ -85,48 +127,15 @@ def main(argv):
     obj_path = os.path.join(args.build, "obj")
     os.makedirs(obj_path, exist_ok=True)
 
-    map = load_map(os.path.join(obj_path, "crt.map"))
     bin_initialize()
 
     # add prg files
-    for e in map:
-        #pprint.pprint(e)
-        type = e[1]
-        bank = int(e[0], 0)
-        file = e[2]
-        if len(e) > 3:
-            flag = e[3]
-            value = int(e[4], 0)
-            if flag != "addr":
-                raise Exception("unknown flag " + flag)
-        else:
-            flag = ""
-            value = 0
-
-        if type == "f":
-            # load file
-            filename = os.path.join(obj_path, file)
-            data = load_file(filename)
-            if file.endswith(".prg"):
-                address = remove_prg(data)
-                if flag == "addr":
-                    address = value
-            else:
-                if flag != "addr":
-                    raise Exception("must give address for non prg file")
-                address = value
-            bin_placedata(data, bank, address)
-        elif type == "a":
-            address = value
-            value = int(file, 0)
-            if flag != "addr":
-                raise Exception("must give address for non prg file")
-            data = bytearray(2);
-            data[0] = value % 256
-            data[1] = value // 256
-            bin_placedata(data, bank, address)
-        else:
-            raise Exception("unknown type " + type)
+    for files in args.mapfiles:
+        map = load_map(os.path.join(obj_path, files))
+        for e in map:
+            if args.verbose:
+                print("processing: " + e[2])
+            process(e)
 
     final_path = os.path.join(obj_path, "u5remastered.bin")
     bin_write(final_path)

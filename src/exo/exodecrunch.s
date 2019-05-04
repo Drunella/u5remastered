@@ -28,10 +28,8 @@
 ; read a crunched byte. This subroutine has to preserve x and y register
 ; and must not modify the state of the carry flag.
 ; -------------------------------------------------------------------
+.include "../io/data_loader.exported.inc"
 ;.import get_crunched_byte
-
-; ### hack ###
-get_crunched_byte = $6DF7
 
 
 ; -------------------------------------------------------------------
@@ -52,8 +50,8 @@ get_crunched_byte = $6DF7
 ; -------------------------------------------------------------------
 zp_len_lo = $a7
 
-zp_src_lo  = $ae
-zp_src_hi  = zp_src_lo + 1
+zp_src_lo  = $ae  ; load address not used at this point
+zp_src_hi  = zp_src_lo + 1  ; load address not used at this point
 
 zp_bits_hi = $fc
 
