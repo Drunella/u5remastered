@@ -885,7 +885,7 @@ local:
    || |||   0x00008847      a90f           lda #0x0f                   ; load accumulator with memory
    || |||   0x00008849      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
    || |||   0x0000884c      a909           lda #0x09                   ; load accumulator with memory
-   || |||   0x0000884e      8d336c         sta 0x6c33                  ; store accumulator in memory
+   || |||   0x0000884e      8d336c         sta 0x6c33       ; store drive id 9
    || |||   0x00008851      20a24c         jsr 0x4ca2                  ; jump to new location saving return address
    || |||   0x00008854      20cb8b         jsr 0x8bcb                  ; jump to new location saving return address
    || |||   0x00008857      a912           lda #0x12                   ; load accumulator with memory
@@ -944,7 +944,7 @@ local:
    ||||||   0x000088c9      a90f           lda #0x0f                   ; load accumulator with memory
    ||||||   0x000088cb      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
    ||||||   0x000088ce      a908           lda #0x08                   ; load accumulator with memory
-   ||||||   0x000088d0      8d336c         sta 0x6c33                  ; store accumulator in memory
+   ||||||   0x000088d0      8d336c         sta 0x6c33       ; store 8 as drive id
    |``----> 0x000088d3      4ca24c         jmp 0x4ca2                  ; jump to new location
    |  |||   0x000088d6      4d2d577700 02 29 49
    |  |||   0x000088dc      2949           and #0x49                   ; "and" memory with accumulator

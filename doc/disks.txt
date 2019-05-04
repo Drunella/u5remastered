@@ -57,6 +57,24 @@ Blocks
 - 380928 bytes
 
 
+
+1581 Disk
+=========
+
+- 80 tracks each 40 sectors
+- Directory track 40
+- map blocks: each 16 sectors wide
+- two map lines in a track
+- 79 * 40 sectors for data
+- height: 16+16+12+12+12+12+11: 91*16 sectors
+  - 45 tracks and a half track for maps
+- 1704 sectors for files (432816)
+- 1141 sectors needed
+=> simple
+
+
+
+
 ==============================================================================
 
 Program: (id 0x41)

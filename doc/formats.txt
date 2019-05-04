@@ -1,0 +1,24 @@
+Block Maps Format
+=================
+
+- 8 maps of block lines (256 bytes)
+
+map 0: track corrector
+index   track corrector
+0       b
+..
+7
+
+map 1-7: addresses of block lines (256 bytes)
+index   bank  high-address
+0       b     b
+...
+17
+
+
+- all even block lines start at a bank boundary
+  low rom: $80 and $90
+  high rom: $A0 and $B0
+- one bank contains two block lines
+- a block can be addressed by adding the sector to the high address
+- reading a block will never cross a page or bank boundary
