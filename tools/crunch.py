@@ -49,9 +49,9 @@ def main(argv):
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
     args = p.parse_args()
-    temp_path = os.path.join(args.build, "temp")
-    os.makedirs(temp_path, exist_ok=True)
-    files_path = os.path.join(args.build, "files")
+#    temp_path = os.path.join(args.build, "temp")
+#    os.makedirs(temp_path, exist_ok=True)
+    files_path = args.build #os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
 
     amount = 0

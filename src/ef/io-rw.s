@@ -1,7 +1,7 @@
 ; =============================================================================
 ; can be wherever it wants to be
 
-.include "../include/easyflash.inc"
+.include "easyflash.i"
 
 .export get_crunched_byte
 .export load_prg

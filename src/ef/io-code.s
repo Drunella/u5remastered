@@ -1,11 +1,10 @@
 ; =============================================================================
 ; 00:1:1600 (LOROM, bank 0)
 
-.include "../include/easyflash.inc"
-.include "../include/io.inc"
-.include "efs.inc"
-.include "../include/exodecrunch.inc"
-.include "data_loader.exported.inc"
+.include "easyflash.i"
+.include "io.i"
+.include "../exo/exodecrunch.i"
+;.include "data_loader.exported.inc"
 
 ; jump table vectors must be changed via patch
 ;
@@ -66,13 +65,31 @@
 .export IO_read_block_alt_entry
 
 ; imports
-;.import load_prg
-;.import load_block
-;.import save_prg
-;.import load_destination_low
-;.import load_destination_high
-;.import save_source_low
-;.import save_source_high
+.import load_prg
+.import load_block
+.import save_prg_byte
+.import load_destination_low
+.import load_destination_high
+.import save_source_low
+.import save_source_high
+.import save_files_directory_entry
+.import requested_fullname
+.import alt_track
+.import alt_sector
+.import block_bank
+.import count_directories
+.import save_files_offset_high
+.import save_files_offset_low
+.import save_files_bank
+.import save_directory_bank
+.import erase_disallow
+.import requested_filename
+.import save_files_size_high
+.import save_files_size_low
+.import bank_strategy
+.import load_strategy
+.import requested_loadmode
+.import requested_disk
 
 ;.macro event_before
 ;    jsr $0126  ; copied from original copy
@@ -703,67 +720,3 @@
         jmp save_file_repeat   ; branch if positive (max 0x79 !)
 finish:
         rts
-
-
-    ; ====================================================================
-    ; library wide variables
-    ; library variables must be initialized in initialize.s
-
-.segment "IO_DATA"
-
-.export requested_disk
-.export read_block_filename
-.export save_files_directory_entry
-.export save_files_flags
-
-    ; order reflects precisely a directory entry
-    save_files_directory_entry:
-    requested_fullname:
-    requested_disk:
-        .byte $41
-    requested_filename:
-        .byte $00, $00, $00, $00, $00, $00, $00
-        .byte $00, $00, $00, $00, $00, $00, $00, $00
-    save_files_flags:
-        .byte $00
-    save_files_bank:
-        .byte $00
-    save_files_bank_high:
-        .byte $00
-    save_files_offset_low:
-        .byte $00
-    save_files_offset_high:
-        .byte $00
-    save_files_size_low:
-        .byte $00
-    save_files_size_high:
-        .byte $00
-    save_files_size_upper:
-        .byte $00
-
-    read_block_filename:
-        .byte "BLOCK", $00
-    bank_strategy:
-        .byte $00
-    load_strategy:    ; 00: decrunch; 01: load prg
-        .byte $00
-
-    save_directory_bank:
-        .byte $00
-;    erase_max_directories:
-;        .byte $00
-    count_directories:
-        .byte $00
-    erase_disallow:
-        .byte $00
-
-    requested_loadmode:
-        .byte $00
-
-    block_bank:
-        .byte $00
-
-    alt_track:  ; 6eac
-        .byte $00
-    alt_sector: ; 6ead
-        .byte $00
