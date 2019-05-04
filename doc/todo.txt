@@ -10,95 +10,101 @@ Variants:
 
 ToDo
 
-- implement new loading routines
-  + omit saving for now
-  + just loading blocks and files
-- make tool to create bin file: 
-  + define map to put together all files for bin file
-  + list of files and their position in the cartridge
-  + make crt file from binfile (own script or cartconv)
-- make jmp table modifcator
-  + tool to read map files 
-  + extract relevant symbol
-  + patch other file
+- add patching of prg files with other prg files
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - modify transfer.prg to read from disk
   + no disk loading available, could be necessary to redesign
 - remove drive selection from main menu
   patch
+- check for irq handling while loading
+- improve makefile: phony labels, correct building in external directory
+- idea: replace all filenames with numbers (not important right now)
+  directory search is simple multiplication (well not simple, but ok)
+  identification of save files is easy
+  rewrite of load call everywere necessary: b:number b:argument size 0 0 0 ...
 
+- ok make jmp table modificator
+  + tool to read map files 
+  + extract relevant symbol
+  + patch other file
+- ok implement new loading routines
+  + omit saving for now
+  + just loading blocks and files
+- ok make tool to create bin file: 
+  + define map to put together all files for bin file
+  + list of files and their position in the cartridge
+  + make crt file from binfile (own script or cartconv)
+- ok save strategy
 - ok Identify relevant code and files
 - ok Learn about u5 structure
 - ok Identify all kernal calls (not all, but is sufficient)
 - ok identify saved location for current disk -> is requested through temp.subs call
 - ok create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
 
-General Plan
-- EasyFlash on load: exchange load function with load function from easyflash
-  + bank in directory and code
-  + initialize eapi / fast initialize eapi
-  + get file information from directory
-  + bank out
-  + if need to load from disk, leave and load from disk
-  + load file byte wise to destination (with bank in / bank out)
-  + bank in
-  + initialize decrunch
-  + bank out
-  + execute decrunch
-  + return
-on save: save data on disk first?
-  + if enough banks to save, save to flash
-  + all files must be saved all the time!
+Not used zeropage addresses
+- fc, fd, fe, ff (probably temporary variables)
+- fb (not found with lda)
 
-File Locator:
-- assume 255 files, each file has: (compatible to EasyFS)
-  + 16 bytes name
-       1. byte: diskid (0x41-0x48)
-       2. to n. byte: name
-  +  1 byte flags 0x60|0x01 (not hidden, type 0x01, normal prg files), 0x60|0x09 -> normal file without start address
-  +  1 byte bank
-  +  1 byte reserved
-  +  2 byte start offset in bank, 
-  +  3 byte file size
-  4800 bytes, appr 3300 bytes of code, enough for inventory and code in one 8k page
-  saveable files simply point to the correct block
-- blocks:
-  dungeon: 19 + 11*16 = 195 blocks
-  britannia: 256 blocks
-  underworld: 256 blocks
-  towne: 192 blocks
-  dwelling: 192 blocks
-  castle: 192 blocks
-  keep: 192 blocks
-  -> assume 1536 blocks
-  block location: 4 byte address: 6144
-  simple address resolution disk*256 + x*16 + y 
-  or: disk start address fixed + x*16 + y
-  about 1024 bytes code
-  -> put as large files in efs, and load block with special method (name x)
-- saving
-  must be redesign at the source:
-  first erase and then save all files
-  list saving is a problem :(
 
-Files that load other files or do file operations
-- Load call
-ok Program/meow.prg (1x) -> startup program, will be replaced
-ok Program/xyzzy.prg (4x) -> loader, will be changed
-ok Program/temp.subs.prg (1x) -> main loading function, will be changed
-ok Program/scratch.prg (3x) -> alternative loader with fastloader
+- Save Game
+    save S:PRTY.DATA (bc00, 0030)
+    save S:LIST (4a00, 0200)
+    load TLIST
+    save S:SLIST (4a00, 0200)
+    load LIST
+    save S:ROSTER (1000, 0400)
 
-- Open call
-ok Britannia/q.prg  (1x) -> drive detection
-ok Dungeon/main.dng.prg  (1x) -> drive detection
-ok Program/scratch.prg (1x) -> alternative loader with fastloader
-ok Program/startup.prg (2x) -> will be changed, device 9 related
-ok Program/temp.subs.prg (3x) -> load, save, load block, will be changed
-ok Program/xyzzy.prg (1x) -> loader, will be changed
+- Create new game
+  + insert program
+    load
+    load FONT3.SHPTBL
+    load CREATE1.TXT
+    load C1
+    load C2
+    load C3
+    load MAIN.SUBS
+  + insert underworld
+    load BLANK.ROSTER
+    load BLANK.PARTY
+    load BLANK.ULIST
+    save S:TLIST (4a00, 0200)
+  + insert britannia
+    save S:ROSTER (1000, 0400)
+    save S:PRTY.DATA (bc00, 0030)
+    save S:LIST (4a00, 0200)
+    save S:SLIST (4a00, 0200)
+    load STARTUP
+    load MAIN.SUBS
+    ...
 
-- Save call
-ToDo
+- Journey Onward (after new game)
+    load...
+    loads ENTER.PLAY ($8000)
+    (change disk BRITANNIA)
+    loads PRTY.DATA ($bc00)
+    loads SLIST ($4a00)
+    save S:TLIST (4a00, 0200)
+    loads LIST ($4a00)
+    loads ROSTER ($1000) (ROS*)
+    (change disk DWELLING)
+    loads MAIN.T* ($8000)
+
+- Change to Britannia
+     load TLIST
+     load MAIN.OUT
+
+- Enter Keep
+    load E
+    save S:TLIST
+    (enter keep)
+    load MAIN.TWN
+
+- Leave Keep
+    (insert britannia)
+    load TLIST
+    load MAIN.OUT
+
 
 File operations
 ===============
@@ -162,28 +168,6 @@ File operations
     bank out
     write one byte
     when finished, decrunch if necessary
-  
-
-Build
-=====
-
-- cc65 command to make prg
-  + cl65 -o out.prg -t c64 -C config.cfg in.s (config must have startaddress definition)
-FEATURES {
-    STARTADDRESS:    default = $ff00;
-}
-SYMBOLS {
-    __LOADADDR__:    type = import;
-}
-MEMORY {
-    LOADADDR: file = %O, start = %S - 2, size = $0002;
-}
-
-SEGMENTS {
-    LOADADDR: load = LOADADDR, type = ro;
-}
-
-
 
 
 Loading
@@ -195,7 +179,7 @@ Loading
 2. xyzzy.prg (alternate would be scratch.prg, which will not be loaded)
    drive selection
    many operations, purpose unclear
-   loads U5SIZ.O.PRG ($7700)
+   loads U5SIZ.O.PRG ($7700) (fastloader)
    loads TEMP.SUBS ($6c00)
 
 3. jumps to TEMP.SUBS
@@ -232,8 +216,10 @@ Loading
 
 
 
+==============================================================================
+Old stuff
+
 Calculation
-===========
 
 - 1 5 1/4 disk: 174848 bytes (minus directory): 169984 bytes
 - U5 has 8 disks: 1.359.872 bytes
@@ -272,3 +258,68 @@ Calculation
 Overall uncompressed size: 881764 
 => should fit
 
+-----
+
+File Locator:
+- assume 255 files, each file has: (compatible to EasyFS)
+  + 16 bytes name
+       1. byte: diskid (0x41-0x48)
+       2. to n. byte: name
+  +  1 byte flags 0x60|0x01 (not hidden, type 0x01, normal prg files)
+  +  1 byte bank
+  +  1 byte reserved
+  +  2 byte start offset in bank, 
+  +  3 byte file size
+  4800 bytes, appr 3300 bytes of code, enough for inventory and code in one 8k page
+  saveable files simply point to the correct block
+- blocks:
+  dungeon: 19 + 11*16 = 195 blocks
+  britannia: 272 blocks
+  underworld: 272 blocks
+  towne: 192 blocks
+  dwelling: 192 blocks
+  castle: 192 blocks
+  keep: 192 blocks
+  -> assume 1564 blocks
+  block location: 4 byte address: 6144
+  simple address resolution disk*256 + x*16 + y 
+  or: disk start address fixed + x*16 + y
+  about 1024 bytes code
+  -> put as large files in efs, and load block with special method (name x)
+- saving
+  must be redesign at the source:
+  first erase and then save all files
+  list saving is a problem :(
+
+Files that load other files or do file operations
+- Load call
+ok Program/meow.prg (1x) -> startup program, will be replaced
+ok Program/xyzzy.prg (4x) -> loader, will be changed
+ok Program/temp.subs.prg (1x) -> main loading function, will be changed
+ok Program/scratch.prg (3x) -> alternative loader with fastloader
+
+- Open call
+ok Britannia/q.prg  (1x) -> drive detection
+ok Dungeon/main.dng.prg  (1x) -> drive detection
+ok Program/scratch.prg (1x) -> alternative loader with fastloader
+ok Program/startup.prg (2x) -> will be changed, device 9 related
+ok Program/temp.subs.prg (3x) -> load, save, load block, will be changed
+ok Program/xyzzy.prg (1x) -> loader, will be changed
+
+-----
+
+- cc65 command to make prg
+  + cl65 -o out.prg -t c64 -C config.cfg in.s (config must have startaddress definition)
+FEATURES {
+    STARTADDRESS:    default = $ff00;
+}
+SYMBOLS {
+    __LOADADDR__:    type = import;
+}
+MEMORY {
+    LOADADDR: file = %O, start = %S - 2, size = $0002;
+}
+
+SEGMENTS {
+    LOADADDR: load = LOADADDR, type = ro;
+}
