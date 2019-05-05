@@ -165,7 +165,7 @@
         jsr find_directoryentry
         bcc filefound
 
-        ; not found, can happen
+        ; not found, can happen, may crash afterwards
         jsr finish_search
         sec
         jmp load_return
