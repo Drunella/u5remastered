@@ -9,9 +9,11 @@
 .import save_files_flags
 .import requested_disk
 
+.import IO_load_file_entry
 
-TEMP_SUBS_SOURCE = $9300  ; banked in memory
-TEMP_SUBS_DESTINATION = $6c00
+
+;TEMP_SUBS_SOURCE = $9300  ; banked in memory
+;TEMP_SUBS_DESTINATION = $6c00
 
 
 .segment "LOADER"
@@ -50,7 +52,7 @@ TEMP_SUBS_DESTINATION = $6c00
         ror $78    ; ???
         
         ; copy key board routine
-        ldx #$20   ; calculate this address ###
+        ldx #$20   ; calculate this value ###
     @repeat:
         lda irq_routine, x
         sta $0380, x
@@ -110,102 +112,28 @@ TEMP_SUBS_DESTINATION = $6c00
 
         ; check if quickstart
         ; ### without loading there is probably no time
+        ; ### should come as function parameter
         lda $c5     ; key matrix code, for quickstart
         pha
         
         ; copy code
-        ldx #$00
-    repeat:
-        ; eapi
-        lda EAPI_SOURCE + $0000, x
-        sta EAPI_DESTINATION + $0000, x
-        lda EAPI_SOURCE + $0100, x
-        sta EAPI_DESTINATION + $0100, x
-        lda EAPI_SOURCE + $0200, x
-        sta EAPI_DESTINATION + $0200, x
-
-        ; exomizer
-        lda EXO_SOURCE, x
-        sta EXO_DESTINATION, x
-
-        ; load temp.subs
-        lda TEMP_SUBS_SOURCE + $0000, x
-        sta TEMP_SUBS_DESTINATION + $0000, x
-        lda TEMP_SUBS_SOURCE + $0100, x
-        sta TEMP_SUBS_DESTINATION + $0100, x
-        lda TEMP_SUBS_SOURCE + $0200, x
-        sta TEMP_SUBS_DESTINATION + $0200, x
-        lda TEMP_SUBS_SOURCE + $0300, x
-        sta TEMP_SUBS_DESTINATION + $0300, x
-        lda TEMP_SUBS_SOURCE + $0400, x
-        sta TEMP_SUBS_DESTINATION + $0400, x
-        lda TEMP_SUBS_SOURCE + $0500, x
-        sta TEMP_SUBS_DESTINATION + $0500, x
-        lda TEMP_SUBS_SOURCE + $0600, x
-        sta TEMP_SUBS_DESTINATION + $0600, x
-        lda TEMP_SUBS_SOURCE + $0700, x
-        sta TEMP_SUBS_DESTINATION + $0700, x
-        lda TEMP_SUBS_SOURCE + $0800, x
-        sta TEMP_SUBS_DESTINATION + $0800, x
-        lda TEMP_SUBS_SOURCE + $0900, x
-        sta TEMP_SUBS_DESTINATION + $0900, x
-        lda TEMP_SUBS_SOURCE + $0a00, x
-        sta TEMP_SUBS_DESTINATION + $0a00, x
-        lda TEMP_SUBS_SOURCE + $0b00, x
-        sta TEMP_SUBS_DESTINATION + $0b00, x
-
-        dex
-        bne repeat
-
-;        ; load startup
-;        ldx #(irq_routine - startup_entry - 1)
-;    @repeat_startup:
-;        lda startup_entry, x
-;        sta STARTUP_TARGET, x
-;        dex
-;        bpl @repeat_startup
-;
-;        ; leave rom area
-;        jmp STARTUP_TARGET
-
-
-;    startup_entry:
-        ; initialize eapi
-        jsr EAPIInit
-
-        ; prepare directory entry io area
-        ldy #$18
-        lda #$00
-    :   dey
-        sta requested_disk, y
-        bne :-
-
-        lda #$41
-        sta requested_disk
-
-        lda #$62   ; prg with roml only
-        sta save_files_flags
-
-        lda #$42   ; 'B'
-        sta read_block_filename
-        lda #$4c   ; 'L'
-        sta read_block_filename+1
-        lda #$4f   ; 'O'
-        sta read_block_filename+2
-        lda #$43   ; 'C'
-        sta read_block_filename+3
-        lda #$4b   ; 'K'
-        sta read_block_filename+4
-        lda #$53   ; 'S'
-        sta read_block_filename+5
-        lda #$0   ; '\0'
-        sta read_block_filename+6
+        jsr load_basicfiles
         
         ; now bank out and set memory
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
         lda #$06
         sta $01
+
+        ; load temp.subs
+        ldx #$00    ; return after load
+        jsr IO_load_file_entry
+        .byte $54, $45, $4d, $50, $2e, $53, $55, $42, $53, $00  ; "TEMP.SUBS"
+
+        ; load io.add
+        ldx #$00    ; return after load
+        jsr IO_load_file_entry
+        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
         ; load startup.prg or qs.prg, depending on j pressed
         pla         ; key is on stack
@@ -242,3 +170,67 @@ TEMP_SUBS_DESTINATION = $6c00
         tax
         pla
         rti
+
+
+    load_basicfiles:
+        ; bank in 16k mode
+        lda #$07
+        sta $01
+        lda #EASYFLASH_LED | EASYFLASH_16K
+        sta EASYFLASH_CONTROL
+
+        ; copy code
+        ldx #$00
+        ; eapi
+    :   lda EAPI_SOURCE + $0000, x
+        sta EAPI_DESTINATION + $0000, x
+        lda EAPI_SOURCE + $0100, x
+        sta EAPI_DESTINATION + $0100, x
+        lda EAPI_SOURCE + $0200, x
+        sta EAPI_DESTINATION + $0200, x
+
+        ; exomizer
+        lda EXO_SOURCE, x
+        sta EXO_DESTINATION, x
+
+        dex
+        bne :-
+
+        ; initialize eapi
+        jsr EAPIInit
+
+        ; prepare directory entry io area
+        ldy #$18
+        lda #$00
+    :   dey
+        sta requested_disk, y
+        bne :-
+
+        lda #$41
+        sta requested_disk
+
+        lda #$62   ; prg with roml only
+        sta save_files_flags
+
+        lda #$42   ; 'B'
+        sta read_block_filename
+        lda #$4c   ; 'L'
+        sta read_block_filename+1
+        lda #$4f   ; 'O'
+        sta read_block_filename+2
+        lda #$43   ; 'C'
+        sta read_block_filename+3
+        lda #$4b   ; 'K'
+        sta read_block_filename+4
+        lda #$53   ; 'S'
+        sta read_block_filename+5
+        lda #$0   ; '\0'
+        sta read_block_filename+6
+
+        ; now bank out but do not set memory
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
+        lda #$07
+        sta $01
+
+        rts

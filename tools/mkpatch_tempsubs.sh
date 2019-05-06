@@ -16,6 +16,7 @@ destname="$1/temp.subs.1.patch"
 echo "jumptable" > $destname
 echo "# 0x6c00" >> $destname
 echo "# IO_read_block_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x0002" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -25,6 +26,7 @@ destname="$1/temp.subs.2.patch"
 echo "jumptable" > $destname
 echo "# 0x6c09" >> $destname
 echo "# IO_request_disk_id_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x000b" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -34,6 +36,7 @@ destname="$1/temp.subs.3.patch"
 echo "jumptable" > $destname
 echo "# 0x6c24" >> $destname
 echo "# IO_load_file_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x0026" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -43,6 +46,7 @@ destname="$1/temp.subs.4.patch"
 echo "jumptable" > $destname
 echo "# 0x6c2a" >> $destname
 echo "# IO_request_disk_char_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x002c" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -52,6 +56,7 @@ destname="$1/temp.subs.5.patch"
 echo "jumptable" > $destname
 echo "# 0x6c2d" >> $destname
 echo "# IO_save_file_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x002f" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
@@ -61,5 +66,6 @@ destname="$1/temp.subs.6.patch"
 echo "jumptable" > $destname
 echo "# 0x6c30" >> $destname
 echo "# IO_read_block_alt_entry" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x0032" >> $destname
 echo "newtarget = 0x$target" >> $destname

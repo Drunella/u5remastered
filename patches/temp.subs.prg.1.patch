@@ -1,0 +1,4 @@
+prg
+; replace io code in temp.subs
+filename = "0x41/temp.subs"
+prg = "./build/ef/io-replacement.prg"
