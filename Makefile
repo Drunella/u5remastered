@@ -34,7 +34,7 @@ build/ef/init.prg: build/ef/init.o
 	$(CL65) $(CL65FLAGS) -o $@ -C src/ef/init.cfg $^
 
 # easyflash loader.prg
-build/ef/loader.prg: build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o
+build/ef/loader.prg: build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o
 	$(CL65) $(CL65FLAGS) -o $@ -C src/ef/loader.cfg $^
 
 # io-replacement

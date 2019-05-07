@@ -39,7 +39,7 @@
 ; This function will not change the interrupt status bit and it will not
 ; modify the memory configuration.
 ; -------------------------------------------------------------------
-;.export decrunch
+.export EXO_decrunch
 
 ; -------------------------------------------------------------------
 ; if literal sequences is not used (the data was crunched with the -c
@@ -77,7 +77,7 @@ tabl_hi = decrunch_table + 104
 ; call the decruncher
 ; no constraints on register content, however the
 ; decimal flag has to be #0 (it almost always is, otherwise do a cld)
-decrunch:
+EXO_decrunch:
 ; -------------------------------------------------------------------
 ; init zeropage, x and y regs. (12 bytes)
 ;

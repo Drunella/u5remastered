@@ -111,7 +111,7 @@ def apply_patch_prg(data):
     with open(fn, "rb") as f:
         pdata = bytearray(f.read())
     dest = address_get(pdata)
-    pos = dest - base
+    pos = dest - base + 2
     length = len(pdata) - 2
     if pos < 0:
         raise Exception("prg patch " + fn + " is not within file")

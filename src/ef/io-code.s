@@ -3,7 +3,7 @@
 
 .include "easyflash.i"
 .include "io.i"
-.include "../exo/exodecrunch.i"
+;.include "../exo/exodecrunch.i"
 ;.include "data_loader.exported.inc"
 
 ; jump table vectors must be changed via patch
@@ -65,6 +65,7 @@
 .export IO_read_block_alt_entry
 
 ; imports
+.import EXO_decrunch
 .import load_prg
 .import load_block
 .import save_prg_byte

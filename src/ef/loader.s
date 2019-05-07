@@ -91,8 +91,8 @@
         sta $0331
         cli
         
-        lda #$01    ; store ultima 5 drive setting selection (selected 1, 1541 or 1571) -> we hopefully do not need a drive
-        sta $b000
+        ;lda #$01    ; store ultima 5 drive setting selection (selected 1, 1541 or 1571) -> we hopefully do not need a drive
+        ;sta $b000
 
         ; original ultima 5 loader initializes the disk drive here
         ; we might too, simply copying the code
