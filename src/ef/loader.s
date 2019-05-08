@@ -11,17 +11,26 @@
 
 .import IO_load_file_entry
 
+.export _load_basicfiles
+.export _startupgame
 
-;TEMP_SUBS_SOURCE = $9300  ; banked in memory
-;TEMP_SUBS_DESTINATION = $6c00
 
 
 .segment "LOADER"
 
     ; initialize and load everything
     ; mostly copied from xyzzy.prg from ultima 5 osi disk
-    
-    initialize_start:
+    ; will never return
+    ; void __fastcall__ startupgame(uint8_t how);
+    ; how == 1 then quick start
+    _startupgame:
+        ; we will never return, reset stack
+        ldx #$ff  ;
+        txs
+
+        ; put how to load on stack
+        pha
+
         ; Maximum length of keyboard buffer.
         lda #$04
         sta $0289
@@ -113,11 +122,11 @@
         ; check if quickstart
         ; ### without loading there is probably no time
         ; ### should come as function parameter
-        lda $c5     ; key matrix code, for quickstart
-        pha
+;        lda $c5     ; key matrix code, for quickstart
+;        pha
         
         ; copy code
-        jsr load_basicfiles
+        jsr _load_basicfiles
         
         ; now bank out and set memory
         lda #EASYFLASH_KILL
@@ -135,9 +144,9 @@
         jsr IO_load_file_entry
         .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
-        ; load startup.prg or qs.prg, depending on j pressed
-        pla         ; key is on stack
-        cmp #$22
+        ; load startup.prg or qs.prg, depending on parameter pressed
+        pla         ; how to load is on stack
+        cmp #$01
         bne @regular
         ldx #$01    ; jump to 0x8000 after load
         jsr IO_load_file
@@ -172,7 +181,7 @@
         rti
 
 
-    load_basicfiles:
+    _load_basicfiles:
         ; bank in 16k mode
         lda #$07
         sta $01

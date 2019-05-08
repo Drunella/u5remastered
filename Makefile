@@ -1,13 +1,15 @@
 # Settings
 TARGET=c64
-CL65=cl65
+LD65=cl65
 CA65=ca65
+CC65=cc65
 #LD65=ld65
-CL65FLAGS=-t $(TARGET) -I ./src/include
-CA65FLAGS=-t $(TARGET) -I . -I ./src/include --debug-info
+LD65FLAGS=-v -t $(TARGET) 
+CA65FLAGS=-v -t $(TARGET) -I . --debug-info
+CC65FLAGS=-v -t $(TARGET) -O
 #LD65FLAGS=
 
-.SUFFIXES: .prg .s
+.SUFFIXES: .prg .s .c
 .PHONY: clean mrproper subdirs all easyflash
 
 
@@ -20,30 +22,38 @@ easyflash: subdirs build/ef/directory.data.prg build/ef/files.data.prg build/u5r
 # d81
 
 
-# compile
+# assemble
 build/%.o: src/%.s
+	$(CA65) $(CA65FLAGS) -o $@ $<
+
+# compile
+build/%.s: src/%.c
+	$(CC65) $(CC65FLAGS) -o $@ $<
+
+# assemble2
+build/%.o: build/%.s
 	$(CA65) $(CA65FLAGS) -o $@ $<
 
 
 # exomizer for ef
 build/ef/exodecrunch.prg: build/exo/exodecrunch.o build/ef/io-rw.o build/ef/io-data.o
-	$(CL65) $(CL65FLAGS) -o $@ -C src/ef/exodecrunch.cfg $^
+	$(LD65) $(LD65FLAGS) -o $@ -C src/ef/exodecrunch.cfg $^
 
 # easyflash init.prg
 build/ef/init.prg: build/ef/init.o
-	$(CL65) $(CL65FLAGS) -o $@ -C src/ef/init.cfg $^
+	$(LD65) $(LD65FLAGS) -o $@ -C src/ef/init.cfg $^
 
 # easyflash loader.prg
-build/ef/loader.prg: build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o
-	$(CL65) $(CL65FLAGS) -o $@ -C src/ef/loader.cfg $^
+build/ef/loader.prg: build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $^
 
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
-	$(CL65) $(CL65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
 
 # io-addendum
 build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
-	$(CL65) $(CL65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
+	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
 
 # io map
 build/ef/io-replacement.inc: build/ef/io-replacement.map
