@@ -157,10 +157,10 @@ def main(argv):
             # increase values
             startbank += 1
 
-    # write block map    
-    blockmap_bank = 39
-    blockmap_address = 0x8000
-    blockmap_lowhigh = 0
+    # write block map
+    blockmap_bank = int(blockmap["blockmap"][0], 0)
+    blockmap_lowhigh = int(blockmap["blockmap"][1], 0)
+    blockmap_address = calculate_address(blockmap_lowhigh) * 256
     #blockmap_appendentry(0, b, startbank, baseaddress)
     blockmapname = os.path.join(destination_path, "blockmap.aprg")
     write_prg(blockmapname, blockmap_lowhigh, map_data)

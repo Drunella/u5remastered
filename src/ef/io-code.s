@@ -57,12 +57,12 @@
 ;
 
 ; export the entry points of the functions
-.export IO_request_disk_id_entry
-.export IO_request_disk_char_entry
-.export IO_load_file_entry
-.export IO_save_file_entry
-.export IO_read_block_entry
-.export IO_read_block_alt_entry
+.export _IO_request_disk_id_entry
+.export _IO_request_disk_char_entry
+.export _IO_load_file_entry
+.export _IO_save_file_entry
+.export _IO_read_block_entry
+.export _IO_read_block_alt_entry
 
 ; imports
 .import EXO_decrunch
@@ -105,12 +105,12 @@
 
 
     ; --------------------------------------------------------------------
-    IO_request_disk_id_entry:
+    _IO_request_disk_id_entry:
         clc
         adc #$40   ; add 40 to get the character
 
     ; --------------------------------------------------------------------
-    IO_request_disk_char_entry:
+    _IO_request_disk_char_entry:
         sta requested_disk
         clc        ; disk request always succeeds
         rts
@@ -119,7 +119,7 @@
     ; IO_load_file_entry: load file
     ; filename after return address
     ; x: return mode (0, 1, >1)
-    IO_load_file_entry:
+    _IO_load_file_entry:
         stx requested_loadmode
         ; load return address to copy opcode
         pla
@@ -210,7 +210,7 @@
     ; string: (after return address) null terminated filename, prepended with "S:"
     ; word: (after return address) address
     ; word: (after return address) size
-    IO_save_file_entry:
+    _IO_save_file_entry:
         pla                            ; load return address to copy opcode
         sta copy_name_address_low
         pla
@@ -340,7 +340,7 @@
     ; --------------------------------------------------------------------
     ; IO_read_block_entry
     ; y:track x:sector a:high destination address
-    IO_read_block_entry:
+    _IO_read_block_entry:
          ; save destination address
         sta load_destination_high
         lda #$00
@@ -387,7 +387,7 @@
     ; meaning of function unclear, copied from temp.subs
     ; parameter a, x
     ; some calculations to get the track and number from a
-    IO_read_block_alt_entry:
+    _IO_read_block_alt_entry:
         sta alt_sector
         sta alt_track
         txa
@@ -402,12 +402,12 @@
         lda #$7e
         ldy alt_track
         ldx alt_sector
-        jsr IO_read_block_entry
+        jsr _IO_read_block_entry
         lda #$7f
         ldy alt_track
         ldx alt_sector
         inx
-        jmp IO_read_block_entry
+        jmp _IO_read_block_entry
 
 
     ; ====================================================================

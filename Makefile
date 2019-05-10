@@ -4,13 +4,14 @@ LD65=cl65
 CA65=ca65
 CC65=cc65
 #LD65=ld65
-LD65FLAGS=-v -t $(TARGET) 
-CA65FLAGS=-v -t $(TARGET) -I . --debug-info
-CC65FLAGS=-v -t $(TARGET) -O
+LD65FLAGS=-t $(TARGET)
+CA65FLAGS=-t $(TARGET) -I . --debug-info
+CC65FLAGS=-t $(TARGET) -O
 #LD65FLAGS=
+export LD65_LIB=/opt/cc65/share/cc65/lib
 
 .SUFFIXES: .prg .s .c
-.PHONY: clean mrproper subdirs all easyflash
+.PHONY: clean subdirs all easyflash
 
 
 # all
@@ -57,7 +58,7 @@ build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o
 
 # io map
 build/ef/io-replacement.inc: build/ef/io-replacement.map
-	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e IO_load_file_entry -e IO_read_block_entry -e IO_request_disk_id_entry -e IO_request_disk_char_entry -e IO_save_file_entry -e IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
+	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e _IO_load_file_entry -e _IO_read_block_entry -e _IO_request_disk_id_entry -e _IO_request_disk_char_entry -e _IO_save_file_entry -e _IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
 
 
 # raw files
@@ -105,8 +106,6 @@ subdirs:
 clean:
 	rm -rf build/ef
 	rm -rf build/d81
-
-mrproper:
 	rm -rf build
 
 

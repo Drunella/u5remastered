@@ -4,15 +4,8 @@
 0 f eapi-am29f040.prg addr 0xb800
 0 f exodecrunch.prg addr 0xbc00
 
-# jump table modified ultima 5 library
-#0 f temp.subs.patched.prg addr 0x9300
-
 # data and dictionary
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
-
-# temp.subs modification
-#0 f io-replacement.prg addr 0x9349
-#0 f io-addendum.prg addr 0x9e60
 
 # automatic additions

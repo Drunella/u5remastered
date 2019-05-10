@@ -9,7 +9,7 @@
 .import save_files_flags
 .import requested_disk
 
-.import IO_load_file_entry
+.import _IO_load_file_entry
 
 .export _load_basicfiles
 .export _startupgame
@@ -136,12 +136,12 @@
 
         ; load temp.subs
         ldx #$00    ; return after load
-        jsr IO_load_file_entry
+        jsr _IO_load_file_entry
         .byte $54, $45, $4d, $50, $2e, $53, $55, $42, $53, $00  ; "TEMP.SUBS"
 
         ; load io.add
         ldx #$00    ; return after load
-        jsr IO_load_file_entry
+        jsr _IO_load_file_entry
         .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
         ; load startup.prg or qs.prg, depending on parameter pressed
@@ -187,6 +187,10 @@
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
+
+        ; switch to bank 0
+        lda #$00
+        sta $de00
 
         ; copy code
         ldx #$00
