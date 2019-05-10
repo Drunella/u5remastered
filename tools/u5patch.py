@@ -80,7 +80,7 @@ def apply_patch_jumptable(data):
     o = int(data["oldtarget"], 0)
     old = binary_file[a+1] + binary_file[a+2]*256
     if old != o:
-        raise Exception("patch {0} old target (0x{1:04x}) does not match".format(data["filename"], old))
+        raise Exception("patch {0} old target (0x{1:04x}) does not match".format(data["destfile"], old))
     binary_file[a + 1] = n % 256
     binary_file[a + 2] = n // 256
 
@@ -97,10 +97,10 @@ def apply_patch_prghex(data):
     n = bytes.fromhex(data["new"])
     
     if len(o) != len(n):
-        raise Exception("patch " + data["filename"] + " failed")
+        raise Exception("patch " + data["destfile"] + " failed")
     check = binary_file[a:a+len(o)]
     if compare_bytes(o, check) == False:
-        raise Exception("patch " + data["filename"] + " failed: original content not found");
+        raise Exception("patch " + data["destfile"] + " failed: original content not found");
     binary_file[a:a+len(o)] = n
 
 
@@ -108,7 +108,7 @@ def apply_patch_prgbin(data):
     # patch file with content of other prgfile. The data of the patch file must be inside the 
     # original file
     # prgbin
-    # filename = [the filename of the prg file]
+    # prg = [the filename of the prg file]
     global binary_file
     address = address_get(binary_file)
     patch_filename = data["prg"]
@@ -119,9 +119,9 @@ def apply_patch_prgbin(data):
     patch_length = len(patch_data) - 2
     length = len(binary_file)
     if patch_position < 0:
-        raise Exception("prg patch " + patch_filename + " does not start within file")
+        raise Exception("prg patch of " + data["destfile"] + " does not start within file")
     if patch_length <= 0:
-        raise Exception("prg patch " + patch_filename + " is too short")
+        raise Exception("prg patch of " + data["destfile"] + " is too short")
     if patch_position+len(patch_data) > length:
         # resize
         t = bytearray(patch_position+len(patch_data))
@@ -137,7 +137,6 @@ def main(argv):
     p.add_argument("patches", nargs='+', help="patch to apply.")
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-q", dest="dryrun", action="store_true", required=False, help="don't patch, just dryrun.")
-#    p.add_argument("-d", dest="destfilename", action="store", required=False, help="destination file name.")
     p.add_argument("-a", dest="autopatch", action="store_true", required=False, help="auto patch files from patches.")
     p.add_argument("-f", dest="filedir", action="store", required=True, help="directory to search files.")
     args = p.parse_args()
@@ -151,6 +150,7 @@ def main(argv):
 
             # find file
             filename = fileslist[patch["filename"]] + ".prg"
+            patch["destname"] = filename
             load_file(os.path.join(files_path, filename))
         
             # apply patch
