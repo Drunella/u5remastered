@@ -60,6 +60,13 @@ build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o
 build/ef/io-replacement.inc: build/ef/io-replacement.map
 	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e _IO_load_file_entry -e _IO_read_block_entry -e _IO_request_disk_id_entry -e _IO_request_disk_char_entry -e _IO_save_file_entry -e _IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
 
+# transfer-load
+build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/transfer-load.map -o $@ -C ./src/ef/transfer-load.cfg $^
+
+# transfer-load map
+build/ef/transfer-load.inc: build/ef/transfer-load.map
+	tools/parsemap.py -v -s ./build/ef/transfer-load.map -d build/ef/transfer-load.inc -e _disk_load_block -e _disk_check_type
 
 # raw files
 build/files/files.list: build/ef/io-addendum.prg
@@ -68,8 +75,9 @@ build/files/files.list: build/ef/io-addendum.prg
 	echo "0x41/io.add io.add" >> build/files/files.list
 	
 # patch
-build/files/patched.done: build/files/files.list build/ef/io-replacement.inc
+build/files/patched.done: build/files/files.list build/ef/io-replacement.inc build/ef/transfer-load.inc build/ef/transfer-load.prg
 	tools/mkpatch_tempsubs.sh ./build/patches ./build/ef/io-replacement.inc
+	tools/mkpatch_transfer.sh ./build/patches ./build/ef/transfer-load.inc
 	tools/u5patch.py -v -f ./build/files -a ./patches/*.patch ./build/patches/*.patch
 	touch ./build/files/patched.done
 	 

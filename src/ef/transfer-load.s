@@ -1,11 +1,12 @@
 ; =============================================================================
 ; transfer-load.s
 ; reprogrammed check disk and load block from temp.subs
+; starts at $8d26
 
 drive_number = $6c33
 
-.export disk_load_block
-.export disk_check_type
+.export _disk_load_block
+.export _disk_check_type
 
 
 .segment "TRANSFER_LOAD"
@@ -15,10 +16,10 @@ drive_number = $6c33
     ; Y: track
     ; X: sector
     ; A: address high byte
-    disk_load_block:
+    _disk_load_block:
         pha
         lda #$31
-        sta disk_load_block_filename + 2
+        sta disk_load_block_filename + 1
         pla
         sta $4b
         txa
@@ -32,8 +33,8 @@ drive_number = $6c33
         sta $4a
         jsr $0126
         lda #$01
-        ldx #$40
-        ldy #$6f
+        ldx #<disk_load_block_hash
+        ldy #>disk_load_block_hash
         jsr $ffbd  ; SETNAM. Set file name parameters. A = File name length; X/Y = Pointer to file name.
         lda #$05
         tay
@@ -41,8 +42,8 @@ drive_number = $6c33
         jsr $ffba  ; SETLFS. Set file parameters. A = Logical number; X = Device number; Y = Secondary address.
         jsr $ffc0  ; OPEN
         lda #$0c
-        ldx #$41
-        ldy #$6f
+        ldx #<disk_load_block_filename
+        ldy #>disk_load_block_filename
         jsr $ffbd  ; SETNAM. Set file name parameters. A = File name length; X/Y = Pointer to file name.
         lda #$0f
         tay
@@ -97,15 +98,18 @@ drive_number = $6c33
         sta disk_load_block_filename, x
         rts
 
+    disk_load_block_hash:
+        ;     '#'
+        .byte $23
     disk_load_block_filename:
-        ;     '#' 'U' '1' ' ' '5' ' ' '0' ' ' '0' '0' ' ' '0' '0' 
-        .byte $23,$55,$31,$20,$35,$20,$30,$20,$30,$30,$20,$30,$30,$00
+        ;     'U' '1' ' ' '5' ' ' '0' ' ' '0' '0' ' ' '0' '0' 
+        .byte $55,$31,$20,$35,$20,$30,$20,$30,$30,$20,$30,$30,$00
 
 
     ; --------------------------------------------------------------------
     ; disk_check_type
     ; A: value, X: offset in string
-    disk_check_type:
+    _disk_check_type:
         sta disk_check_type_requested + 1
         lda $c8
         and #$01
@@ -131,7 +135,7 @@ drive_number = $6c33
         lda #$7f
         ldy #$12
         ldx #$00
-        jsr disk_load_block
+        jsr _disk_load_block
         lda $7fa2
     disk_check_type_requested:
         cmp #$ff
