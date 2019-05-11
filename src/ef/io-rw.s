@@ -7,6 +7,7 @@
 .export load_prg
 .export load_block
 .export save_prg_byte
+.export erase_prg
 
 .export load_destination_high
 .export load_destination_low
@@ -117,6 +118,7 @@ temporary_accumulator = $fb
     :   bne data_loader
 
     data_loader_finish:
+        jsr $0129  ; sound on
         clc        ; indicate success
         rts
 
@@ -151,4 +153,23 @@ temporary_accumulator = $fb
         ; and write to flash
     :   lda temporary_accumulator
         jmp EAPIWriteFlashInc
+        ; no rts
+
+
+    ; --------------------------------------------------------------------
+    ; erase_prg
+    ; erases the file that fe,ff points to
+    ; can only be used for files in low ram
+    ; parameters
+    ;    fe,ff: address of directory entry
+    erase_prg:
+        lda #efs_directory::flags
+        clc
+        adc $fe
+        tax        ; low address in x
+        lda #$00
+        adc $ff
+        tay        ; high address in y
+        lda #$00
+        jmp EAPIWriteFlash ; erase flag of file
         ; no rts

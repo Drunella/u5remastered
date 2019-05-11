@@ -69,6 +69,7 @@
 .import load_prg
 .import load_block
 .import save_prg_byte
+.import erase_prg
 .import load_destination_low
 .import load_destination_high
 .import save_source_low
@@ -92,14 +93,6 @@
 .import requested_loadmode
 .import requested_disk
 
-;.macro event_before
-;    jsr $0126  ; copied from original copy
-;.endmacro
-
-;.macro event_after
-;    jsr $0129  ; copied from original copy
-;.endmacro
-
 
 .segment "IO_CODE"
 
@@ -121,6 +114,8 @@
     ; x: return mode (0, 1, >1)
     _IO_load_file_entry:
         stx requested_loadmode
+        jsr $0126  ; sound off
+
         ; load return address to copy opcode
         pla
         sta copy_name_address_low
@@ -168,6 +163,7 @@
 
         ; not found, can happen, may crash afterwards
         jsr finish_search
+        jsr $0129  ; sound on
         sec
         jmp load_return
 
@@ -182,6 +178,7 @@
         jsr EXO_decrunch
         pla
         sta $a7
+        jsr $0129  ; sound on
         jmp startorreturn
     otherloader:
         jsr load_prg
@@ -211,6 +208,8 @@
     ; word: (after return address) address
     ; word: (after return address) size
     _IO_save_file_entry:
+        jsr $0126  ; sound off
+
         pla                            ; load return address to copy opcode
         sta copy_name_address_low
         pla
@@ -258,21 +257,6 @@
         lda #$b0
         sta bank_strategy
 
-        ; prepare settings for save files
-;    save_saves:
-;        lda #EFS_SAVES_BANK
-;        sta save_directory_bank
-;        jmp save_file_step2
-;    save_btlist:
-;        ; prepare settings for btlist
-;        lda #EFS_BTLIST_BANK
-;        sta save_directory_bank
-;        jmp save_file_step2
-;    save_utlist:
-;        ; prepare settings for utlist
-;        lda #EFS_UTLIST_BANK
-;        sta save_directory_bank
-
     save_file_step2:
         ; locate file and delete
         ldy #$80   ; all saves are in low banks
@@ -280,7 +264,7 @@
         jsr start_directory_search
         jsr find_directoryentry
         bcs save_file_step3   ; file not found
-        jsr erase_file
+        jsr erase_prg
 
     save_file_step3:
         ; check if bank needs to be erased
@@ -333,6 +317,7 @@
         pha
         lda copy_name_address_low
         pha
+        jsr $0129  ; sound on
         clc        ; success
         rts
 
@@ -347,6 +332,12 @@
         sta load_destination_low
         sta $fe
 
+        txa
+        pha        ; sector on stack
+        tya
+        pha        ; track on stack
+        jsr $0126  ; sound off
+
         ; bank in block map
         lda #BLOCKMAP_BANK
         jsr start_search
@@ -358,7 +349,7 @@
         clc
         adc #>BLOCKMAP_ADDRESS
         sta $ff
-        tya
+        pla        ; track from stack
         ldy #$ff
         sec
         sbc ($fe), y ; corrected track now in A
@@ -368,7 +359,7 @@
         lda ($fe), y ; first element bank
         sta block_bank
 
-        txa
+        pla        ; sector from stack
         clc
         iny
         adc ($fe), y ; second element address
@@ -625,25 +616,6 @@
         sta save_files_bank
         lda ($fe),y  ; load bank again (for load)
         rts
-
-
-    ; --------------------------------------------------------------------
-    ; erase_file
-    ; erases the file that fe,ff points to
-    ; can only be used for files in low ram
-    ; parameters
-    ;    fe,ff: address of directory entry
-    erase_file:
-        lda #efs_directory::flags
-        clc
-        adc $fe
-        tax        ; low address in x
-        lda #$00
-        adc $ff
-        tay        ; high address in y
-        lda #$00
-        jmp EAPIWriteFlash ; erase flag of file
-        ; no rts
 
 
     ; --------------------------------------------------------------------

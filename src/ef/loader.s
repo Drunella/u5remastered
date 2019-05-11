@@ -61,7 +61,7 @@
         ror $78    ; ???
         
         ; copy key board routine
-        ldx #$20   ; calculate this value ###
+        ldx #(irq_routine_end - irq_routine)   ; calculate this value ###
     @repeat:
         lda irq_routine, x
         sta $0380, x
@@ -179,6 +179,8 @@
         tax
         pla
         rti
+    irq_routine_end:
+        nop
 
 
     _load_basicfiles:
