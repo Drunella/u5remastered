@@ -21,6 +21,8 @@ EFS_SAVES_BANK = 40
 EFS_BTLIST_BANK = 48
 EFS_UTLIST_BANK = 56
 
+MUSIC_BANK = 18
+
 
 ; eapi functions
 

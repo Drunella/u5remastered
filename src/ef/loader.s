@@ -10,6 +10,7 @@
 .import requested_disk
 
 .import _IO_load_file_entry
+.import _music_init_impl
 
 .export _load_basicfiles
 .export _startupgame
@@ -60,20 +61,14 @@
         sec
         ror $78    ; ???
         
-        ; copy key board routine
-        ldx #(irq_routine_end - irq_routine)   ; calculate this value ###
-    @repeat:
-        lda irq_routine, x
-        sta $0380, x
-        dex
-        bpl @repeat
+;        ; copy key board routine
+;        ldx #(irq_routine_end - irq_routine)   ; calculate this value ###
+;    @repeat:
+;        lda irq_routine, x
+;        sta $0380, x
+;        dex
+;        bpl @repeat
         
-        ; Execution address of non-maskable interrupt service routine to 039e (single rti)
-        lda #$9e
-        sta $0318
-        lda #$03
-        sta $0319
-
         ; check if this is a c128 (value $4c at this address) -> it should not
         ;lda #$4c
         ;cmp $c024
@@ -103,36 +98,8 @@
         ;lda #$01    ; store ultima 5 drive setting selection (selected 1, 1541 or 1571) -> we hopefully do not need a drive
         ;sta $b000
 
-        ; original ultima 5 loader initializes the disk drive here
-        ; we might too, simply copying the code
-        ; ###
-        
-        ; load here 128.sub and m
-        ; maybe I find a way to play music on c64
-        ; ###
-        
-        ; set Execution address of interrupt service routine to 0x0380
-        sei
-        lda #$80
-        sta $fffe
-        lda #$03
-        sta $ffff
-        cli
-
-        ; check if quickstart
-        ; ### without loading there is probably no time
-        ; ### should come as function parameter
-;        lda $c5     ; key matrix code, for quickstart
-;        pha
-        
-        ; copy code
+        ; initialize loader
         jsr _load_basicfiles
-        
-        ; now bank out and set memory
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
-        lda #$06
-        sta $01
 
         ; load temp.subs
         ldx #$00    ; return after load
@@ -144,43 +111,80 @@
         jsr _IO_load_file_entry
         .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
+        ; now bank out and set memory
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
+
+        ; we now can load files in a regular way
+        
+        ; load here music
+        ; maybe I find a way to play music on c64
+        ldx #$00    ; return after load
+        jsr _IO_load_file_entry
+        .byte $4d, $55, $53, $49, $43, $00  ; "MUSIC"
+        
+        ; and init interrupt handler
+        jsr _music_init_impl
+
+        ; Execution address of non-maskable interrupt service routine to 039e (single rti)
+;        lda #$9e
+;        sta $0318
+;        lda #$03
+;        sta $0319
+
+        
+        ; set Execution address of interrupt service routine to 0x0380
+;        sei
+;        lda #$80
+;        sta $fffe
+;        lda #$03
+;        sta $ffff
+;        cli
+
+;        ; load io.add
+;        ldx #$00    ; return after load
+;        jsr IO_load_file
+;        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
+
         ; load startup.prg or qs.prg, depending on parameter pressed
         pla         ; how to load is on stack
         cmp #$01
         bne @regular
         ldx #$01    ; jump to 0x8000 after load
-        jsr IO_load_file
+        jsr _IO_load_file_entry
         .byte $51, $53, $00  ; ; "QS"
     @regular:
         ldx #$00    ; return after load
-        jsr IO_load_file
+        jsr _IO_load_file_entry
         .byte $53, $54, $2a, $00  ; "ST*"
         jmp $8000
 
 
-    irq_routine:
-        ; probably need to take care of bank in/out ###
-        pha
-        txa
-        pha
-        tya
-        pha
-        lda $ff00  ; c128 mmu ### not necessary
-        pha
-        jsr $6c03  ; set memory banking: set kernal and io visible
-        jsr $ff9f  ; ROM_SCNKEY - scan keyboard, matrix code $cb, shift key $028d, keys in keyboard buffer
-        lda $dc0d  ; CIA1: CIA Interrupt Control Register
-        jsr $6c06  ; set memory banking: set ram visible in all areas
-        pla        
-        sta $ff00  ; c128 mmu ### not necessary
-        pla
-        tay
-        pla
-        tax
-        pla
-        rti
-    irq_routine_end:
-        nop
+;    irq_routine:
+;        ; probably need to take care of bank in/out ###
+;        pha
+;        txa
+;        pha
+;        tya
+;        pha
+;        lda $ff00  ; c128 mmu ### not necessary
+;        pha
+;        jsr $6c03  ; set memory banking: set kernal and io visible
+;        jsr $ff9f  ; ROM_SCNKEY - scan keyboard, matrix code $cb, shift key $028d, keys in keyboard buffer
+;        lda $dc0d  ; CIA1: CIA Interrupt Control Register
+;        jsr $6c06  ; set memory banking: set ram visible in all areas
+;        pla        
+;        sta $ff00  ; c128 mmu ### not necessary
+;        pla
+;        tay
+;        pla
+;        tax
+;        pla
+;        rti
+;    irq_routine_end:
+;        nop
 
 
     _load_basicfiles:

@@ -11,7 +11,11 @@ CC65FLAGS=-t $(TARGET) -O
 export LD65_LIB=/opt/cc65/share/cc65/lib
 
 .SUFFIXES: .prg .s .c
-.PHONY: clean subdirs all easyflash
+.PHONY: clean subdirs all easyflash mrproper
+
+LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-source.o
+
+MUSIC_FILES=build/ef/music-base.o build/ef/music-source.o
 
 
 # all
@@ -45,8 +49,12 @@ build/ef/init.prg: build/ef/init.o
 	$(LD65) $(LD65FLAGS) -o $@ -C src/ef/init.cfg $^
 
 # easyflash loader.prg
-build/ef/loader.prg: build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o
+build/ef/loader.prg: $(LOADER_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $^
+
+# music
+build/ef/music.prg: $(MUSIC_FILES)
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o $@ -C src/ef/music.cfg $^
 
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
@@ -68,11 +76,17 @@ build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
 build/ef/transfer-load.inc: build/ef/transfer-load.map
 	tools/parsemap.py -v -s ./build/ef/transfer-load.map -d build/ef/transfer-load.inc -e _disk_load_block -e _disk_check_type
 
-# raw files
-build/files/files.list: build/ef/io-addendum.prg
-	tools/extract.py -v -s ./disks -b ./build/files
+# source files
+build/source/files.list:
+	tools/extract.py -v -s ./disks -b ./build/source
+
+# files with additional items
+build/files/files.list: build/source/files.list build/ef/io-addendum.prg build/ef/music.prg
+	cp ./build/source/* ./build/files/
 	cp build/ef/io-addendum.prg build/files/io.add.prg
+	cp build/ef/music.prg build/files/music.prg
 	echo "0x41/io.add io.add" >> build/files/files.list
+	echo "0x41/music music" >> build/files/files.list
 	
 # patch
 build/files/patched.done: build/files/files.list build/ef/io-replacement.inc build/ef/transfer-load.inc build/ef/transfer-load.prg
@@ -107,6 +121,7 @@ build/u5remastered.crt: build/ef/u5remastered.bin
 
 subdirs:
 	@mkdir -p ./build/temp ./build/exo
+	@mkdir -p ./build/sources
 	@mkdir -p ./build/files
 	@mkdir -p ./build/patches
 	@mkdir -p ./build/ef
@@ -114,6 +129,12 @@ subdirs:
 clean:
 	rm -rf build/ef
 	rm -rf build/d81
+	rm -rf build/files
+	rm -rf build/patches
+	rm -rf build/temp
+	rm -rf build/exo
+
+mrproper:
 	rm -rf build
 
 

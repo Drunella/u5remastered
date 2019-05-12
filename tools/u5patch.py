@@ -150,7 +150,7 @@ def main(argv):
 
             # find file
             filename = fileslist[patch["filename"]] + ".prg"
-            patch["destname"] = filename
+            patch["destfile"] = filename
             load_file(os.path.join(files_path, filename))
         
             # apply patch
