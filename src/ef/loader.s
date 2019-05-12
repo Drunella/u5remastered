@@ -37,7 +37,7 @@
         sta $0289
         sta $0a20  ; ?
 
-        ; fill non-bankable routines with rti
+        ; fill non-bankable routines with rts
         lda #$60
         sta $0126
         sta $0129
@@ -55,12 +55,15 @@
         ; initialize vars
         lda #$00   ; load accumulator with memory
         sta $37    ; ???
-        sta $c8    ; information about c128
-        sta $79    ; information about c128
+        sta $c8    ; is not c128
+        ;sta $79    ; music off
         sta $71    ; ???
         sec
         ror $78    ; ???
-        
+
+        lda #$80
+        sta $79    ; music on
+
 ;        ; copy key board routine
 ;        ldx #(irq_routine_end - irq_routine)   ; calculate this value ###
 ;    @repeat:
@@ -101,6 +104,12 @@
         ; initialize loader
         jsr _load_basicfiles
 
+        ; now bank out and set memory
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL
+        lda #$06
+        sta $01
+
         ; load temp.subs
         ldx #$00    ; return after load
         jsr _IO_load_file_entry
@@ -111,20 +120,12 @@
         jsr _IO_load_file_entry
         .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
-        ; now bank out and set memory
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
-        lda #$06
-        sta $01
-
-        ; we now can load files in a regular way
-        
         ; load here music
         ; maybe I find a way to play music on c64
         ldx #$00    ; return after load
         jsr _IO_load_file_entry
         .byte $4d, $55, $53, $49, $43, $00  ; "MUSIC"
-        
+
         ; and init interrupt handler
         jsr _music_init_impl
 

@@ -85,7 +85,8 @@ def process(e):
         value = 0
 
     if type == "f":
-        # load file
+        # set prg file with load address
+        # addr must be given for a non prg file
         filename = os.path.join(build_path, file)
         data = load_file(filename)
         if file.endswith(".prg"):
@@ -99,6 +100,8 @@ def process(e):
         bin_placedata(data, bank, address)
         return address
     elif type == "a":
+        # set binary file without load address
+        # address must be given
         address = value
         value = int(file, 0)
         if flag != "addr":

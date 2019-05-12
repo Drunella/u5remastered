@@ -1,6 +1,7 @@
 
 
 .include "easyflash.i"
+.include "music.i"
 
 
 .import __MUSIC_IRQHANDLER_LOAD__
@@ -11,20 +12,29 @@
 .import __MUSIC_JUMPTABLE_RUN__
 
 .import _swap_zerospace_variables
+.import _sid_transfer
+.import _sid_process
+.import _sid_mute
+.import _sid_initialize
 
-.export music_masterswitch
-.export music_save_zeropage
+.export music_masterswitch ; ### rename
+.export music_timer        ; ### rename
+
 .export _music_init_impl
+.export _play_song
+
+.export music_save_zeropage
+
+.export music_info
+.export music_voice_decisions
+.export music_workplace_7219
 
 
 ; 0x0100, 22 bytes
 .segment "MUSIC_DATA"
 
-    music_masterswitch:
-      .byte $ff    ; turned off
-
     music_save_zeropage:
-      .res    $0a, $00
+        .res $0a, $00
 
 
 
@@ -33,7 +43,7 @@
 
     ; 0x123
     _music_init:
-        rts        ; purpose of this function is unknown
+        rts        ; purpose of this function is unknown, probably initialization
         nop
         nop
 
@@ -92,7 +102,8 @@
         jsr music_bankout
 
     leave_interrupt:
-        ; scan keyboard
+        ; SCNKEY. Query keyboard; put current matrix code into memory address $00CB,
+        ; current status of shift keys into memory address $028D and PETSCII code into keyboard buffer.
         jsr $ff9f
 
         ; restore banking setting
@@ -123,6 +134,7 @@
         dex
         bne :-
 
+        php
         sei
         ; set nmi handler to single rti
         lda #<(__MUSIC_IRQHANDLER_RUN__ + __MUSIC_IRQHANDLER_SIZE__ - 1) ; single rti
@@ -142,12 +154,31 @@
         stx $fffe
         sty $ffff
 
-        lda #$ff
-        sta music_masterswitch
+        ; save current bank setting
+        lda $01
+        pha
+        lda #$06
+        sta $01
 
-        cli
+        ; bank in music bank
+        jsr music_bankin
+
+        ; initialize
+        jsr _swap_zerospace_variables
+        jsr _sid_initialize
+        jsr _swap_zerospace_variables
+
+        ; restore old bank setting
+        jsr music_bankout
+        pla
+        sta $01
+        plp        ; clears interrupt flag
+
+        ; wait for sound activity
+        ; ###
+        ; _sid_initialize_waitforirq
+
         rts
-
 
 
 ; any place
@@ -177,6 +208,11 @@
         ldy #>music_interrupt
         stx $fffe 
         sty $ffff 
+
+        lda #$9a    ; timer value wfrom m.prg init
+        sta $dc06
+        lda #$42
+        sta $dc07
 
     music_leave:
         ; restore old bank setting
@@ -224,9 +260,7 @@
         jsr music_bankin
 
         ; mute sid chip
-        nop ; ### todo
-        nop
-        nop
+        jsr _sid_mute
 
         ; set music control to off
         lda #$ff
@@ -258,23 +292,64 @@
 
     ; plays the music
     forward_music:
-        ;lda $79    ; music on/off
-        ;bpl @exit
-
         jsr _swap_zerospace_variables
+        jsr _sid_process
+        jsr _sid_transfer
 
-        inc $7dff ; dummy work
-
-;        jsr 0x741a ; 0x720c
-;        jsr 0x78a6 ; transfer data to sid
-
-        lda #$ff ; lda 0x7225 ; ### timer value low
+        lda music_timer ; timer value low
         sta $dc06
-        lda #$ff ; lda 0x7226 ; ### timer value high
+        lda music_timer+1 ; timer value high
         sta $dc07
 
         jsr _swap_zerospace_variables
-
-    ;@exit:
         rts
 
+
+    ; play song
+    _play_song:
+         stx song_information_3cd
+         stx song_information_3cc
+         lda $79
+         bpl play_song_leave
+         ldy #$ff
+         tya                
+    :    cpx song_information_3ce
+         beq play_song_leave
+         dey                
+         bne :-
+         sbc #$01
+         bne :-
+    play_song_leave:                            
+         rts                
+
+
+    ; ------------------------------------------------------------------------
+
+    ; music_info: move to struct later
+    music_info:
+        .byte $00, $00
+        .byte $01, $01
+        .byte $02, $02
+
+    music_frequency:
+        .word $0000
+        .word $0000
+        .word $0000
+
+    music_unknown_data:
+        .res $0a, $00
+
+    music_voice_decisions:
+        .word $0000
+        .word $0000
+        .word $0000
+
+
+    ; music_processing: ### struct
+    music_workplace_7219:
+    music_masterswitch:
+        .byte $ff    ; turned off
+    music_timer:
+        .res $02, $ff
+
+        .res 231, $00 ; ###

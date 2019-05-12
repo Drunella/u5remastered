@@ -8,4 +8,7 @@
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
 
+# music bank
+18 f music.aprg addr 0x8000
+
 # automatic additions
