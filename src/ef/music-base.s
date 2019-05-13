@@ -3,7 +3,7 @@
 .include "easyflash.i"
 .include "music.i"
 
-
+; segment boundaries
 .import __MUSIC_IRQHANDLER_LOAD__
 .import __MUSIC_IRQHANDLER_SIZE__
 .import __MUSIC_IRQHANDLER_RUN__
@@ -11,24 +11,23 @@
 .import __MUSIC_JUMPTABLE_SIZE__
 .import __MUSIC_JUMPTABLE_RUN__
 
-.import _swap_zerospace_variables
+; imports from disassemble
 .import _sid_transfer
 .import _sid_process
-.import _sid_mute
+.import _sid_cleargate
 .import _sid_initialize
+.import music_masterswitch
+.import music_timer
+.import music_activity
+.import song_data
 
-.export music_masterswitch ; ### rename
-.export music_timer        ; ### rename
-
+; exports
 .export _music_init_impl
 .export _play_song
 
-.export music_save_zeropage
 
-.export music_info
-.export music_voice_decisions
-.export music_workplace_7219
 
+; ----------------------------------------------------------------------------
 
 ; 0x0100, 22 bytes
 .segment "MUSIC_DATA"
@@ -37,6 +36,8 @@
         .res $0a, $00
 
 
+
+; ----------------------------------------------------------------------------
 
 ; 0x123
 .segment "MUSIC_JUMPTABLE"
@@ -56,6 +57,8 @@
         jmp music_on_impl
 
 
+
+; ----------------------------------------------------------------------------
 
 ; 0x12c
 .segment "MUSIC_IRQHANDLER"
@@ -118,6 +121,8 @@
 
 
 
+; ----------------------------------------------------------------------------
+
 ; in temp area space
 .segment "MUSIC_INIT"
 
@@ -165,6 +170,10 @@
 
         ; initialize
         jsr _swap_zerospace_variables
+        lda #<song_data  ; load address of song data
+        sta $50
+        lda #>song_data
+        sta $51   
         jsr _sid_initialize
         jsr _swap_zerospace_variables
 
@@ -174,12 +183,14 @@
         sta $01
         plp        ; clears interrupt flag
 
-        ; wait for sound activity
-        ; ###
-        ; _sid_initialize_waitforirq
+        ; wait for sound activity ###
+        jsr _sid_initialize_waitforirq
 
         rts
 
+
+
+; ----------------------------------------------------------------------------
 
 ; any place
 .segment "MUSIC_CONTROL"
@@ -260,7 +271,7 @@
         jsr music_bankin
 
         ; mute sid chip
-        jsr _sid_mute
+        jsr _sid_cleargate
 
         ; set music control to off
         lda #$ff
@@ -323,33 +334,60 @@
          rts                
 
 
-    ; ------------------------------------------------------------------------
-
-    ; music_info: move to struct later
-    music_info:
-        .byte $00, $00
-        .byte $01, $01
-        .byte $02, $02
-
-    music_frequency:
-        .word $0000
-        .word $0000
-        .word $0000
-
-    music_unknown_data:
-        .res $0a, $00
-
-    music_voice_decisions:
-        .word $0000
-        .word $0000
-        .word $0000
+    ; swaps 10 values between zeropage and backup
+    _swap_zerospace_variables:
+        ldx #$0a
+    :   lda $50, x   
+        tay          
+        lda music_save_zeropage, x 
+        sta $50, x   
+        tya          
+        sta music_save_zeropage, x 
+        dex          
+        bpl :-
+        rts          
 
 
-    ; music_processing: ### struct
-    music_workplace_7219:
-    music_masterswitch:
-        .byte $ff    ; turned off
-    music_timer:
-        .res $02, $ff
+     ; waits for activity
+     _sid_initialize_waitforirq:
+        ldx #$00
+        ldy #$00
+        lda music_activity
+    :   cmp music_activity
+        bne :+
+        dey                         
+        bne :-
+        dex                         
+        bne :-
+    :   rts                         
 
-        .res 231, $00 ; ###
+
+
+;    ; music_info: move to struct later
+;    music_info:
+;        .byte $00, $00
+;        .byte $01, $01
+;        .byte $02, $02
+;
+;    music_frequency:
+;        .word $0000
+;        .word $0000
+;        .word $0000
+;
+;    music_unknown_data:
+;        .res $0a, $00
+;
+;    music_voice_decisions:
+;        .word $0000
+;        .word $0000
+;        .word $0000
+
+
+;    ; music_processing: ### struct
+;    music_workplace_7219:
+;    music_masterswitch:
+;        .byte $ff    ; turned off
+;    music_timer:
+;        .res $02, $ff
+;
+;        .res 231, $00 ; ###

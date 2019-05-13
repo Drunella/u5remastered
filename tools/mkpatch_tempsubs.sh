@@ -75,3 +75,14 @@ echo "filename = \"0x41/temp.subs\"" >> $destname
 echo "address = 0x0030" >> $destname
 echo "oldtarget = 0x6e7b" >> $destname
 echo "newtarget = 0x$target" >> $destname
+
+# 0x76bc jump to play_song
+target=$( findaddress "_play_song" $3 )
+destname="$1/temp.subs.7.patch"
+echo "jumptable" > $destname
+echo "# 0x76bc" >> $destname
+echo "# _play_song" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0abc" >> $destname
+echo "oldtarget = 0x7703" >> $destname
+echo "newtarget = 0x$target" >> $destname

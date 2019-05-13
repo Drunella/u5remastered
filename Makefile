@@ -3,6 +3,7 @@ TARGET=c64
 LD65=cl65
 CA65=ca65
 CC65=cc65
+DA65=da65
 #LD65=ld65
 LD65FLAGS=-t $(TARGET)
 CA65FLAGS=-t $(TARGET) -I . --debug-info
@@ -13,9 +14,9 @@ export LD65_LIB=/opt/cc65/share/cc65/lib
 .SUFFIXES: .prg .s .c
 .PHONY: clean subdirs all easyflash mrproper
 
-LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-source.o
+LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o
 
-MUSIC_FILES=build/ef/music-base.o build/ef/music-source.o
+MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
 
 # all
@@ -50,11 +51,15 @@ build/ef/init.prg: build/ef/init.o
 
 # easyflash loader.prg
 build/ef/loader.prg: $(LOADER_FILES)
-	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $^
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $(LOADER_FILES)
 
 # music
-build/ef/music.prg: $(MUSIC_FILES)
-	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o $@ -C src/ef/music.cfg $^
+build/ef/music.prg build/files/music_rom.bin build/ef/music.map: $(MUSIC_FILES)
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(MUSIC_FILES)
+
+# music map
+build/ef/music.inc: build/ef/music.map
+	tools/parsemap.py -v -s ./build/ef/music.map -d build/ef/music.inc -e _play_song
 
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
@@ -80,6 +85,16 @@ build/ef/transfer-load.inc: build/ef/transfer-load.map
 build/source/files.list:
 	tools/extract.py -v -s ./disks -b ./build/source
 
+# get m.prg	
+build/source/m.prg:
+	c1541 osi.d64 -read m ./build/source/m.prg
+
+# disassemble m.prg 
+build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info ./src/ef/music-export.i
+	$(DA65) -i ./src/ef/music-disassemble.info -o ./build/temp/music-disassemble.s
+	cat ./src/ef/music-export.i >> ./build/temp/music-disassemble.s
+	$(CA65) $(CA65FLAGS) -o ./build/ef/music-disassemble.o ./build/temp/music-disassemble.s
+
 # files with additional items
 build/files/files.list: build/source/files.list build/ef/io-addendum.prg build/ef/music.prg
 	cp ./build/source/* ./build/files/
@@ -89,10 +104,12 @@ build/files/files.list: build/source/files.list build/ef/io-addendum.prg build/e
 	echo "0x41/music music" >> build/files/files.list
 	
 # patch
-build/files/patched.done: build/files/files.list build/ef/io-replacement.inc build/ef/transfer-load.inc build/ef/transfer-load.prg
-	tools/mkpatch_tempsubs.sh ./build/patches ./build/ef/io-replacement.inc
+build/files/patched.done: build/files/files.list build/ef/io-replacement.inc build/ef/transfer-load.inc build/ef/transfer-load.prg build/ef/music.inc build/files/music_rom.bin
+	tools/mkpatch_tempsubs.sh ./build/patches ./build/ef/io-replacement.inc ./build/ef/music.inc
 	tools/mkpatch_transfer.sh ./build/patches ./build/ef/transfer-load.inc
+	tools/mkpatch_music.sh ./build/patches ./build/ef/music.inc
 	tools/u5patch.py -v -f ./build/files -a ./patches/*.patch ./build/patches/*.patch
+	cp build/files/music_rom.bin build/ef/music_rom.aprg
 	touch ./build/files/patched.done
 	 
 # crunch
@@ -109,7 +126,7 @@ build/ef/crt.blocks.map: build/files/files.list
 	tools/mkblocks.py -v -o ./src/disks.cfg -b ./src/ef/block.map -f ./build/files -m ./build/ef/crt.blocks.map -d ./build/ef
 
 # cartridge binary
-build/ef/u5remastered.bin: build/ef/directory.data.prg build/ef/files.data.prg build/ef/exodecrunch.prg build/ef/init.prg build/ef/loader.prg src/ef/eapi-am29f040.prg build/ef/crt.blocks.map
+build/ef/u5remastered.bin: build/ef/directory.data.prg build/ef/files.data.prg build/ef/exodecrunch.prg build/ef/init.prg build/ef/loader.prg src/ef/eapi-am29f040.prg build/ef/crt.blocks.map build/ef/music_rom.aprg
 	cp ./src/ef/crt.map ./build/ef/crt.map
 	cp ./src/ef/eapi-am29f040.prg ./build/ef/eapi-am29f040.prg
 	tools/mkbin.py -v -b ./build/ef -m ./build/ef/crt.map -m ./build/ef/crt.blocks.map -o ./build/ef/u5remastered.bin

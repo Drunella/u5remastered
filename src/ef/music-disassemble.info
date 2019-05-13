@@ -1,0 +1,87 @@
+GLOBAL {
+    INPUTNAME       "build/source/m.prg";
+    STARTADDR       $7200;    # takes start addr into account
+    PAGELENGTH      0;        # No paging
+    INPUTOFFS       2;
+    CPU             "6502";
+    COMMENTS        4;
+};
+
+
+# outside label
+LABEL { ADDR $03CC; NAME "song_information_3cc"; };
+LABEL { ADDR $03CD; NAME "song_information_3cd"; };
+LABEL { ADDR $03CE; NAME "song_information_3ce"; };
+
+LABEL { ADDR $7219; NAME "music_masterswitch"; };
+LABEL { ADDR $7225; NAME "music_timer"; };
+LABEL { ADDR $7223; NAME "music_activity"; };
+
+LABEL { ADDR $762b; NAME "music_song_1"; };
+LABEL { ADDR $762d; NAME "music_song_2"; };
+LABEL { ADDR $762f; NAME "music_song_3"; };
+LABEL { ADDR $7631; NAME "music_song_4"; };
+LABEL { ADDR $7633; NAME "music_song_5"; };
+LABEL { ADDR $7635; NAME "music_song_6"; };
+LABEL { ADDR $7637; NAME "music_song_7"; };
+LABEL { ADDR $7639; NAME "music_song_8"; };
+LABEL { ADDR $763b; NAME "music_song_9"; };
+LABEL { ADDR $763d; NAME "music_song_10"; };
+LABEL { ADDR $763f; NAME "music_song_11"; };
+LABEL { ADDR $7641; NAME "music_song_12"; };
+LABEL { ADDR $7643; NAME "music_song_13"; };
+LABEL { ADDR $7645; NAME "music_song_14"; };
+LABEL { ADDR $7647; NAME "music_song_15"; };
+LABEL { ADDR $7649; NAME "music_song_16"; };
+
+
+# jumptable: skip
+RANGE { START $7200;  END $7218; TYPE skip; };
+
+
+# code segments
+SEGMENT { START $7303;  END $79b7; NAME "MUSIC_SOURCE"; };
+#SEGMENT { START $762b;  END $764a; NAME "MUSIC_SONGSTART"; };
+#SEGMENT { START $764b;  END $79b7; NAME "MUSIC_SOURCE"; };
+
+# initialization code: skip first part and last part
+RANGE { START $7303;  END $7316; TYPE skip; };
+RANGE { START $7317;  END $73a7; TYPE code; };
+RANGE { START $73a8;  END $73ba; TYPE skip; };
+RANGE { START $73bb;  END $73bb; TYPE code; };
+
+# forward music, skip some code, take all the other.
+RANGE { START $73bc;  END $73fa; TYPE skip; };
+RANGE { START $73fb;  END $762a; TYPE CODE; };
+RANGE { START $762b;  END $764a; TYPE ADDRTABLE; };
+RANGE { START $764b;  END $798e; TYPE CODE; };
+
+# keyboard, irq handling skip
+RANGE { START $798f;  END $79b7; TYPE skip; };
+RANGE { START $7bc4;  END $7c9d; TYPE skip; };
+
+# labels
+LABEL { ADDR $7317; NAME "_sid_initialize"; };
+LABEL { ADDR $73fb; NAME "_sid_cleargate"; };
+LABEL { ADDR $741a; NAME "_sid_process"; };
+LABEL { ADDR $78a6; NAME "_sid_transfer"; };
+LABEL { ADDR $7661; NAME "note_data_insert_low"; };
+LABEL { ADDR $7667; NAME "note_data_insert_high"; };
+
+
+# data segments
+SEGMENT { START $7219;  END   $7302; NAME "MUSIC_CONTROL"; };
+SEGMENT { START $7ba8;  END   $7bc3; NAME "MUSIC_CONTROL"; };
+
+# ram data block 1: 7219 - 7302
+RANGE { START $7219;  END $7302; TYPE ByteTable; };
+RANGE { START $7ba8;  END $7bc3; TYPE ByteTable; };
+
+
+# song data
+SEGMENT { START $79b8;  END   $7ba7; NAME "MUSIC_SOURCE"; };
+SEGMENT { START $7c9e;  END   $9fa5; NAME "MUSIC_SOURCE"; };
+RANGE { START $79b8;  END $7ba7; TYPE ByteTable; };
+RANGE { START $7c9e;  END $9fa5; TYPE byteTable; };
+LABEL { ADDR $79b8; NAME "note_data"; };
+LABEL { ADDR $7ca0; NAME "song_data"; };

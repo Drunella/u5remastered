@@ -104,6 +104,25 @@ def apply_patch_prghex(data):
     binary_file[a:a+len(o)] = n
 
 
+def apply_patch_binhex(data): 
+    # patch a prg file with hexadecimal, no load address
+    # prghex
+    # address = [the local address in the filee] ; load address is automaticall applied
+    # original = [the hex data of the old value]
+    # new = [the hex data of te new value]
+    global binary_file
+    a = int(data["address"], 0)
+    o = bytes.fromhex(data["original"])
+    n = bytes.fromhex(data["new"])
+    
+    if len(o) != len(n):
+        raise Exception("patch " + data["destfile"] + " failed")
+    check = binary_file[a:a+len(o)]
+    if compare_bytes(o, check) == False:
+        raise Exception("patch " + data["destfile"] + " failed: original content not found");
+    binary_file[a:a+len(o)] = n
+
+
 def apply_patch_prgbin(data): 
     # patch file with content of other prgfile. The data of the patch file must be inside the 
     # original file
@@ -149,7 +168,13 @@ def main(argv):
             patch = load_patch(p)
 
             # find file
-            filename = fileslist[patch["filename"]] + ".prg"
+            if patch["filename"] in fileslist:
+                filename = fileslist[patch["filename"]] + ".prg"
+            elif os.path.isfile(os.path.join(files_path,  patch["filename"])):
+                filename = patch["filename"]
+            else:
+                raise Exception("cannot find file " + patch["filename"])
+
             patch["destfile"] = filename
             load_file(os.path.join(files_path, filename))
         
@@ -158,6 +183,8 @@ def main(argv):
                 apply_patch_jumptable(patch)
             elif patch["type"] == "prghex":
                 apply_patch_prghex(patch)
+            elif patch["type"] == "binhex":
+                apply_patch_binhex(patch)
             elif patch["type"] == "prgbin":
                 apply_patch_prgbin(patch)
             else:
