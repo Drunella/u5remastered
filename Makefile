@@ -58,8 +58,8 @@ build/ef/music.prg build/files/music_rom.bin build/ef/music.map: $(MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(MUSIC_FILES)
 
 # music map
-build/ef/music.inc: build/ef/music.map
-	tools/parsemap.py -v -s ./build/ef/music.map -d build/ef/music.inc -e _play_song
+#build/ef/music.inc: build/ef/music.map
+#	tools/parsemap.py -v -s ./build/ef/music.map -d build/ef/music.inc -e _play_song
 
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
@@ -70,16 +70,16 @@ build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o
 	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
 
 # io map
-build/ef/io-replacement.inc: build/ef/io-replacement.map
-	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e _IO_load_file_entry -e _IO_read_block_entry -e _IO_request_disk_id_entry -e _IO_request_disk_char_entry -e _IO_save_file_entry -e _IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
+#build/ef/io-replacement.inc: build/ef/io-replacement.map
+#	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e _IO_load_file_entry -e _IO_read_block_entry -e _IO_request_disk_id_entry -e _IO_request_disk_char_entry -e _IO_save_file_entry -e _IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
 
 # transfer-load
 build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/transfer-load.map -o $@ -C ./src/ef/transfer-load.cfg $^
 
 # transfer-load map
-build/ef/transfer-load.inc: build/ef/transfer-load.map
-	tools/parsemap.py -v -s ./build/ef/transfer-load.map -d build/ef/transfer-load.inc -e _disk_load_block -e _disk_check_type
+#build/ef/transfer-load.inc: build/ef/transfer-load.map
+#	tools/parsemap.py -v -s ./build/ef/transfer-load.map -d build/ef/transfer-load.inc -e _disk_load_block -e _disk_check_type
 
 # source files
 build/source/files.list:
@@ -87,7 +87,7 @@ build/source/files.list:
 
 # get m.prg	
 build/source/m.prg:
-	c1541 osi.d64 -read m ./build/source/m.prg
+	c1541 disks/osi.d64 -read m ./build/source/m.prg
 
 # disassemble m.prg 
 build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info ./src/ef/music-export.i
@@ -104,11 +104,11 @@ build/files/files.list: build/source/files.list build/ef/io-addendum.prg build/e
 	echo "0x41/music music" >> build/files/files.list
 	
 # patch
-build/files/patched.done: build/files/files.list build/ef/io-replacement.inc build/ef/transfer-load.inc build/ef/transfer-load.prg build/ef/music.inc build/files/music_rom.bin
-	tools/mkpatch_tempsubs.sh ./build/patches ./build/ef/io-replacement.inc ./build/ef/music.inc
-	tools/mkpatch_transfer.sh ./build/patches ./build/ef/transfer-load.inc
-	tools/mkpatch_music.sh ./build/patches ./build/ef/music.inc
-	tools/u5patch.py -v -f ./build/files -a ./patches/*.patch ./build/patches/*.patch
+build/files/patched.done: build/files/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/files/music_rom.bin
+	#tools/mkpatch_tempsubs.sh ./build/patches ./build/ef/io-replacement.inc ./build/ef/music.inc
+	#tools/mkpatch_transfer.sh ./build/patches ./build/ef/transfer-load.inc
+	#tools/mkpatch_music.sh ./build/patches ./build/ef/music.inc
+	tools/u5patch.py -v -l ./build/files/files.list -f ./build/files -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map ./patches/*.patch
 	cp build/files/music_rom.bin build/ef/music_rom.aprg
 	touch ./build/files/patched.done
 	 

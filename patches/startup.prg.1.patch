@@ -1,7 +1,8 @@
-prghex
+type = hex
 ; jsr 0x4c00 -> jump 0x850b
 ; don't write number of drives menu line
 filename = "0x41/startup"
+offset   = 2
 address  = 0x04f5
 original = 20004c
 new      = 4c0b85

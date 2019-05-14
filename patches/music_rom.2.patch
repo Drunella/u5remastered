@@ -1,0 +1,8 @@
+type = symvalue
+# address offset high
+# negative offset to hit the correct place
+filename = "music_rom.bin"
+offset = -0x7fff
+address = symbol(note_data_insert_high)
+oldvalue = 0x79
+newvalue = high(symbol(note_data))

@@ -1,7 +1,8 @@
-prghex
+type = hex
 ; bugfix 8cae: b016 -> b013
 ; check for program disk if abort transfer after disk change
 filename = "0x41/transfer"
+offset = 2
 address = 0x0cae
 original = b016
 new      = b013

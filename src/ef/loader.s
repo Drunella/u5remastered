@@ -253,4 +253,10 @@
         lda #$07
         sta $01
 
+        ; set music return calls
+        lda #$60   ; opcode rts
+        sta $0123
+        sta $0126
+        sta $0129
+
         rts

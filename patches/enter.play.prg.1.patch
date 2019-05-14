@@ -1,7 +1,8 @@
-prghex
+type = hex
 ; at 0x802a: replace lad 0xc8 with lda #0xff: a5c8 -> a9ff
 ; disable c128 check to not install irq handler
 filename = "0x41/enter.play"
+offset   = 2
 address  = 0x002a
 original = a5c8
 new      = a9ff
