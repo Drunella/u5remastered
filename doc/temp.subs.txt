@@ -23,9 +23,9 @@ size=2808
   ========< 0x00006c37      4ca576         jmp 0x76a5                  ; jump to new location
   ========< 0x00006c3a      4c9b76         jmp 0x769b                  ; jump to new location
   ========< 0x00006c3d      4ca776         jmp 0x76a7                  ; jump to new location
-  ========< 0x00006c40      4cb876         jmp 0x76b8       ; music related
-  ========< 0x00006c43      4cc676         jmp 0x76c6                  ; jump to new location
-  ========< 0x00006c46      4cbf76         jmp 0x76bf                  ; jump to new location
+  ========< 0x00006c40      4cb876         jmp 0x76b8       ; play music X: music id
+  ========< 0x00006c43      4cc676         jmp 0x76c6       ; music related
+  ========< 0x00006c46      4cbf76         jmp 0x76bf       ; ctrl+v music on/off
 
 - File Operations --------------------------------------------------------
 
@@ -1408,35 +1408,34 @@ local: (0x72f9)
         |   0x000076b6      d8             cld                         ; clear decimal mode
        .--> 0x000076b7      60             rts                         ; return from subroutine
 
-0x6c40: (0x76b8)
-       ||   0x000076b8      a5c8           lda 0xc8                    ; load accumulator with memory
-       `==< 0x000076ba      10fb           bpl 0x4b2108                ; branch on result plus
-       ,==< 0x000076bc      4c0377         jmp 0x7703       ; c128: jump to second entry
+0x6c40: (0x76b8) play music x=song id
+       ||   0x000076b8      a5c8           lda 0xc8         ; ### replace with lda #$ff
+       `==< 0x000076ba      10fb           bpl 0x4b2108     ; leave if not c128
+       ,==< 0x000076bc      4c0377         jmp 0x7703       ; c128: jump to second entry ### replace with other jump target ###
 
-0x6c46: (0x76bf)
-        |   0x000076bf      adcd03         lda 0x03cd                  ; load accumulator with memory
-        |   0x000076c2      8dcc03         sta 0x03cc                  ; store accumulator in memory
-        |   0x000076c5      60             rts                         ; return from subroutine
+0x6c46: (0x76bf): music related: play next song?
+            0x000076bf      adcd03         lda 0x03cd                  ; load accumulator with memory
+            0x000076c2      8dcc03         sta 0x03cc                  ; store accumulator in memory
+            0x000076c5      60             rts                         ; return from subroutine
 
-0x6c43: (0x76c6)
-        |   0x000076c6      a5c8           lda 0xc8                    ; load accumulator with memory
-      ,===< 0x000076c8      101d           bpl 0x4b2108                ; branch on result plus
-      | |   0x000076ca      a579           lda 0x79                    ; load accumulator with memory
-      | |   0x000076cc      4980           eor #0x80                   ; "exclusive-or" memory with accumulator
-      | |   0x000076ce      8579           sta 0x79                    ; store accumulator in memory
-      | |   0x000076d0      20004c         jsr 0x4c00                  ; jump to new location saving return address
-      | |   0x000076d3      d6ef           dec 0xef,x                  ; decrement memory by one
-      | |   0x000076d5      ecf5ed         cpx 0xedf5                  ; compare memory and index x
-      | |   0x000076d8      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
-      | |   0x000076da      cf0024         dcp 0x2400
-      | |   0x000076dd      79300a         adc 0x0a30,y                ; add memory to accumulator with carry
-     || |   0x000076e0      20004c         jsr 0x4c00                  ; jump to new location saving return address
-     || |   0x000076e3      e6e6           inc 0xe6                    ; increment memory by one
-     || |   0x000076e5      8d004c         sta 0x4c00                  ; store accumulator in memory
-     |  |   0x000076e8      2601           rol 0x01                    ; rotate one bit left (memory or accumulator)
-     `----> 0x000076ea      20004c         jsr 0x4c00                  ; jump to new location saving return address
-        |   0x000076ed      ee8d00         inc 0x008d                  ; increment memory by one
-        `=< 0x000076f0      4c2901         jmp 0x0129                  ; jump to new location
+0x6c43: (0x76c6): ctrl+v music on/off
+            0x000076c6      a5c8           lda 0xc8              ; replace ###
+            0x000076c8      101d           bpl 0x76b7            ; if c128 leave, jumps to rts
+            0x000076ca      a579           lda 0x79                    ; load accumulator with memory
+            0x000076cc      4980           eor #0x80             ; flip value
+            0x000076ce      8579           sta 0x79                    ; store accumulator in memory
+            0x000076d0      20004c         jsr 0x4c00                  ; jump to new location saving return address
+            0x000076d3      d6efecf5ede5 a0 cf00 ; "Volume O"    ; draw text
+            0x000076dc      2479           bit 79
+            0x000076de      300a           bmi 0x76ea            ; bit 7 is negative flag
+            0x000076e0      20004c         jsr 0x4c00            ; draw text
+            0x000076e3      e6e6 8d 00 ; "ff?" (Off)
+            0x000076e7      4c2601         jmp 0x0126            ; music off, rts in method
+            0x000076ea      20004c         jsr 0x4c00            ; draw text
+            0x000076ed      ee8d 00 ; "n?"" (On)
+            0x000076f0      4c2901         jmp 0x0129            ; music on
+
+local:
             0x000076f3      0a             asl a                       ; shift left one bit (memory or accumulator)
             0x000076f4      0a             asl a                       ; shift left one bit (memory or accumulator)
             0x000076f5      0a             asl a                       ; shift left one bit (memory or accumulator)

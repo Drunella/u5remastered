@@ -1,0 +1,1510 @@
+            0x00000123      4c2c01         jmp 0x012c            ; jump table called in m
+            0x00000126      4c4d02         jmp 0x024d            ; jump table called in temp.subs, subs.128, main.subs (sound off?)
+            0x00000129      4c5802         jmp 0x0258            ; jump table called in temp.subs (sound on?)
+
+        ,=< 0x00007200      4c0373         jmp 0x7303            ; initialize
+       ,==< 0x00007203      4cbc73         jmp 0x73bc            ; play music x=song
+      ,===< 0x00007206      4cec73         jmp 0x73ec            ; music off
+     ,====< 0x00007209      4cf573         jmp 0x73f5            ; music on
+    ,=====< 0x0000720c      4c1a74         jmp 0x741a            ; prepare data
+    |||||   0x0000720f      20c47b         jsr 0x7bc4            ; local 0x7c2c (init interrupt)
+    |||||   0x00007212      206902         jsr 0x0269            ; alt 0x0269 (copy complete m to other memory bank)
+    |||||   0x00007215      202301         jsr 0x0123            ; alt 0x0123
+    |||||   0x00007218      60             rts                         ; return from subroutine
+
+variables:
+    |||||   0x00007219      00             brk                   ; master switch -> other segment
+    |||||   0x0000721a      00             brk                         ; force break
+    |||||   0x0000721b      00             brk                         ; force break
+    |||||   0x0000721c      00             brk                         ; force break
+    |||||   0x0000721d      00             brk                         ; force break
+    |||||   0x0000721e      00             brk                         ; force break
+    |||||   0x0000721f      00             brk                         ; force break
+    |||||   0x00007220      00             brk                         ; force break
+    |||||   0x00007221      00             brk                   ; address of sound data modified
+    |||||   0x00007222      00             brk                   ; address of sound data modified
+    |||||   0x00007223      00             brk                         ; force break
+    |||||   0x00007224      00             brk                         ; force break
+    |||||   0x00007225      00             brk                   ; timer low value   -> other segment
+    |||||   0x00007226      00             brk                   ; timer high value  -> other segment
+    |||||   0x00007227      00             brk                   ; song init jump address low
+    |||||   0x00007228      00             brk                   ; song init jump address high
+    |||||   0x00007229      00             brk                   ; 
+    |||||   0x0000722a      00             brk                   ; 
+    |||||   0x0000722b      00             brk                   ; song 1 low address
+    |||||   0x0000722c      00             brk                   ; song 1 high address
+    |||||   0x0000722d      00             brk                   ; song 2 low address 
+    |||||   0x0000722e      00             brk                   ; song 2 high address 
+    |||||   0x0000722f      00             brk                   ; song 3 low address 
+    |||||   0x00007230      00             brk                   ; song 3 high address
+    |||||   0x00007231      00             brk                   ; song 4 low address 
+    |||||   0x00007232      00             brk                   ; song 4 high address
+    |||||   0x00007233      00             brk                   ; song 5 low address 
+    |||||   0x00007234      00             brk                   ; song 5 high address
+    |||||   0x00007235      00             brk                   ; song 6 low address 
+    |||||   0x00007236      00             brk                   ; song 6 high address
+    |||||   0x00007237      00             brk                   ; song 7 low address 
+    |||||   0x00007238      00             brk                   ; song 7 high address
+    |||||   0x00007239      00             brk                   ; song 8 low address 
+    |||||   0x0000723a      00             brk                   ; song 8 high address
+    |||||   0x0000723b      00             brk                   ; song 9 low address 
+    |||||   0x0000723c      00             brk                   ; song 9 high address
+    |||||   0x0000723d      00             brk                   ; song 10 low address 
+    |||||   0x0000723e      00             brk                   ; song 10 high address
+    |||||   0x0000723f      00             brk                   ; song 11 low address 
+    |||||   0x00007240      00             brk                   ; song 11 high address
+    |||||   0x00007241      00             brk                   ; song 12 low address 
+    |||||   0x00007242      00             brk                   ; song 12 high address
+    |||||   0x00007243      00             brk                   ; song 13 low address 
+    |||||   0x00007244      00             brk                   ; song 13 high address
+    |||||   0x00007245      00             brk                   ; song 14 low address 
+    |||||   0x00007246      00             brk                   ; song 14 high address
+    |||||   0x00007247      00             brk                   ; song 15 low address 
+    |||||   0x00007248      00             brk                   ; song 15 high address
+    |||||   0x00007249      00             brk                   ; song 16 low address 
+    |||||   0x0000724a      00             brk                   ; song 16 high address
+    |||||   0x0000724b      00             brk                   
+    |||||   0x0000724c      00             brk                   
+    |||||   0x0000724d      00             brk                   
+    |||||   0x0000724e      00             brk                   
+    |||||   0x0000724f      00             brk                   
+    |||||   0x00007250      00             brk                   
+    |||||   0x00007251      00             brk                   
+    |||||   0x00007252      00             brk                   
+    |||||   0x00007253      00             brk                   
+    |||||   0x00007254      00             brk                   
+    |||||   0x00007255      00             brk                   
+    |||||   0x00007256      00             brk                   
+    |||||   0x00007257      00             brk                   
+    |||||   0x00007258      00             brk                   
+    |||||   0x00007259      00             brk                   
+    |||||   0x0000725a      00             brk                   
+    |||||   0x0000725b      00             brk                   
+    |||||   0x0000725c      00             brk                   
+    |||||   0x0000725d      00             brk                   
+    |||||   0x0000725e      00             brk                   
+    |||||   0x0000725f      00             brk                   
+    |||||   0x00007260      00             brk                   
+    |||||   0x00007261      00             brk                   
+    |||||   0x00007262      00             brk                   
+    |||||   0x00007263      00             brk                   
+    |||||   0x00007264      00             brk                   
+    |||||   0x00007265      00             brk                   
+    |||||   0x00007266      00             brk                   
+    |||||   0x00007267      00             brk                   
+    |||||   0x00007268      00             brk                   
+    |||||   0x00007269      00             brk                   
+    |||||   0x0000726a      00             brk                   
+    |||||   0x0000726b      00             brk                   
+    |||||   0x0000726c      00             brk                   
+    |||||   0x0000726d      00             brk                   
+    |||||   0x0000726e      00             brk                   
+    |||||   0x0000726f      00             brk                   
+    |||||   0x00007270      00             brk                   
+    |||||   0x00007271      00             brk                   
+    |||||   0x00007272      00             brk                   
+    |||||   0x00007273      00             brk                   
+    |||||   0x00007274      00             brk                   
+    |||||   0x00007275      00             brk                   
+    |||||   0x00007276      00             brk                   
+    |||||   0x00007277      00             brk                   
+    |||||   0x00007278      00             brk                   
+    |||||   0x00007279      00             brk                   
+    |||||   0x0000727a      00             brk                   
+    |||||   0x0000727b      00             brk                   
+    |||||   0x0000727c      00             brk                   
+    |||||   0x0000727d      00             brk                   
+    |||||   0x0000727e      00             brk                   
+    |||||   0x0000727f      00             brk                   
+    |||||   0x00007280      00             brk                   
+    |||||   0x00007281      00             brk                   
+    |||||   0x00007282      00             brk                   
+    |||||   0x00007283      00             brk                   
+    |||||   0x00007284      00             brk                   
+    |||||   0x00007285      00             brk                   
+    |||||   0x00007286      00             brk                   
+    |||||   0x00007287      00             brk                   
+    |||||   0x00007288      00             brk                   
+    |||||   0x00007289      00             brk                   
+    |||||   0x0000728a      00             brk                   
+    |||||   0x0000728b      00             brk                   
+    |||||   0x0000728c      00             brk                   
+    |||||   0x0000728d      00             brk                   
+    |||||   0x0000728e      00             brk                   
+    |||||   0x0000728f      00             brk                   
+    |||||   0x00007290      00             brk                   
+    |||||   0x00007291      00             brk                   
+    |||||   0x00007292      00             brk                   
+    |||||   0x00007293      00             brk                   
+    |||||   0x00007294      00             brk                   
+    |||||   0x00007295      00             brk                   
+    |||||   0x00007296      00             brk                   
+    |||||   0x00007297      00             brk                   
+    |||||   0x00007298      00             brk                   
+    |||||   0x00007299      00             brk                   
+    |||||   0x0000729a      00             brk                   
+    |||||   0x0000729b      00             brk                   
+    |||||   0x0000729c      00             brk                   
+    |||||   0x0000729d      00             brk                   
+    |||||   0x0000729e      00             brk                   
+    |||||   0x0000729f      00             brk                   
+    |||||   0x000072a0      00             brk                   
+    |||||   0x000072a1      00             brk                   
+    |||||   0x000072a2      00             brk                   
+    |||||   0x000072a3      00             brk                   
+    |||||   0x000072a4      00             brk                   
+    |||||   0x000072a5      00             brk                   
+    |||||   0x000072a6      00             brk                   
+    |||||   0x000072a7      00             brk                   
+    |||||   0x000072a8      00             brk                   
+    |||||   0x000072a9      00             brk                   
+    |||||   0x000072aa      00             brk                   
+    |||||   0x000072ab      00             brk                   
+    |||||   0x000072ac      00             brk                   
+    |||||   0x000072ad      00             brk                   
+    |||||   0x000072ae      00             brk                   
+    |||||   0x000072af      00             brk                   
+    |||||   0x000072b0      00             brk                   
+    |||||   0x000072b1      00             brk                   
+    |||||   0x000072b2      00             brk                   
+    |||||   0x000072b3      00             brk                   
+    |||||   0x000072b4      00             brk                   
+    |||||   0x000072b5      00             brk                   
+    |||||   0x000072b6      00             brk                   
+    |||||   0x000072b7      00             brk                   
+    |||||   0x000072b8      00             brk                   
+    |||||   0x000072b9      00             brk                   
+    |||||   0x000072ba      00             brk                   
+    |||||   0x000072bb      00             brk                   
+    |||||   0x000072bc      00             brk                   
+    |||||   0x000072bd      00             brk                   
+    |||||   0x000072be      00             brk                   
+    |||||   0x000072bf      00             brk                   
+    |||||   0x000072c0      00             brk                   
+    |||||   0x000072c1      00             brk                   
+    |||||   0x000072c2      00             brk                   
+    |||||   0x000072c3      00             brk                   
+    |||||   0x000072c4      00             brk                   
+    |||||   0x000072c5      00             brk                   
+    |||||   0x000072c6      00             brk                   
+    |||||   0x000072c7      00             brk                   
+    |||||   0x000072c8      00             brk                   
+    |||||   0x000072c9      00             brk                   
+    |||||   0x000072ca      00             brk                   
+    |||||   0x000072cb      00             brk                   
+    |||||   0x000072cc      00             brk                   
+    |||||   0x000072cd      00             brk                   
+    |||||   0x000072ce      00             brk                   
+    |||||   0x000072cf      00             brk                   
+    |||||   0x000072d0      00             brk                   
+    |||||   0x000072d1      00             brk                   
+    |||||   0x000072d2      00             brk                   
+    |||||   0x000072d3      00             brk                   
+    |||||   0x000072d4      00             brk                   
+    |||||   0x000072d5      00             brk                   
+    |||||   0x000072d6      00             brk                   
+    |||||   0x000072d7      00             brk                   
+    |||||   0x000072d8      00             brk                   
+    |||||   0x000072d9      00             brk                   
+    |||||   0x000072da      00             brk                   
+    |||||   0x000072db      00             brk                   
+    |||||   0x000072dc      00             brk                   
+    |||||   0x000072dd      00             brk                   
+    |||||   0x000072de      00             brk                   
+    |||||   0x000072df      00             brk                   
+    |||||   0x000072e0      00             brk                   
+    |||||   0x000072e1      00             brk                   
+    |||||   0x000072e2      00             brk                   
+    |||||   0x000072e3      00             brk                   ;
+    |||||   0x000072e4      00             brk                   ; voice 1 changes
+    |||||   0x000072e5      00             brk                   ; voice 1 gate
+    |||||   0x000072e6      00             brk                   ; voice 2 changes
+    |||||   0x000072e7      00             brk                   ; ?
+    |||||   0x000072e8      00             brk                   ; voice 3 changes
+    |||||   0x000072e9      00             brk                   ; ?
+    |||||   0x000072ea      00             brk                   ; -> values differ (!)
+    |||||   0x000072eb      00             brk                   ; -> values differ (!)
+    |||||   0x000072ec      00             brk                   ; -> values differ (!)
+    |||||   0x000072ed      00             brk                   ; -> values differ (!)
+    |||||   0x000072ee      00             brk                   ; -> values differ (!)
+    |||||   0x000072ef      00             brk                   ; -> values differ (!)
+    |||||   0x000072f0      00             brk                   ;
+    |||||   0x000072f1      00             brk                   ; decision voice 1
+    |||||   0x000072f2      00             brk                   ;
+    |||||   0x000072f3      00             brk                   ; decision voice 2
+    |||||   0x000072f4      00             brk                   ;
+    |||||   0x000072f5      00             brk                   ; decision voice 3
+    |||||   0x000072f6      00             brk                   ; pw voice 1
+    |||||   0x000072f7      00             brk                   ; pw voice 1
+    |||||   0x000072f8      00             brk                   ; pw voice 2
+    |||||   0x000072f9      00             brk                   ; pw voice 2
+    |||||   0x000072fa      00             brk                   ; pw voice 3
+    |||||   0x000072fb      00             brk                   ; pw voice 3 
+    |||||   0x000072fc      00             brk                   ; adsr voice 1
+    |||||   0x000072fd      00             brk                   ; adsr voice 1
+    |||||   0x000072fe      00             brk                   ; adsr voice 2
+    |||||   0x000072ff      00             brk                   ; adsr voice 2
+    |||||   0x00007300      00             brk                   ; adsr voice 3
+    |||||   0x00007301      00             brk                   ; adsr voice 3
+    |||||   0x00007302      00             brk                         ; force break
+
+0x7200: initialize
+            0x00007303      08             php                         ; push processor status on stack
+            0x00007304      78             sei                         ; set interrupt disable status
+            0x00007305      a9b7           lda #0xb7             ; c128 related
+            0x00007307      8d3c03         sta 0x033c                  ; store accumulator in memory
+            0x0000730a      a9c6           lda #0xc6                   ; load accumulator with memory
+            0x0000730c      8d3d03         sta 0x033d                  ; store accumulator in memory
+            0x0000730f      a9a0           lda #0xa0             ; set 50,51 to 7ca0 (beginn of music data)
+            0x00007311      8550           sta 0x50                    ; store accumulator in memory
+            0x00007313      a97c           lda #0x7c                   ; load accumulator with memory
+            0x00007315      8551           sta 0x51                    ; store accumulator in memory
+            0x00007317      a900           lda #0x00                   ; load accumulator with memory
+            0x00007319      8dcd03         sta 0x03cd                  ; store accumulator in memory
+            0x0000731c      8dcc03         sta 0x03cc                  ; store accumulator in memory
+            0x0000731f      a903           lda #0x03                   ; load accumulator with memory
+            0x00007321      8d2172         sta 0x7221                  ; store accumulator in memory
+            0x00007324      a200           ldx #0x00                   ; load index x with memory
+        .-> 0x00007326      bda87b     :   lda 0x7ba8,x                ; load accumulator with memory
+        |   0x00007329      0a             asl a                       ; shift left one bit (memory or accumulator)
+        |   0x0000732a      9dbe7b         sta 0x7bbe,x                ; store accumulator in memory
+        |   0x0000732d      bda87b         lda 0x7ba8,x                ; load accumulator with memory
+        |   0x00007330      0908           ora #0x08                   ; "or" memory with accumulator
+        |   0x00007332      9dbf7b         sta 0x7bbf,x                ; store accumulator in memory
+        |   0x00007335      e8             inx                         ; increment index x by one
+        |   0x00007336      e8             inx                         ; increment index x by one
+        |   0x00007337      ce2172         dec :- 0x7221               ; decrement memory by one
+        `=< 0x0000733a      d0ea           bne 0x421108                ; branch on result not zero
+            0x0000733c      a218           ldx #0x18                   ; load index x with memory
+            0x0000733e      a900           lda #0x00                   ; load accumulator with memory
+        .-> 0x00007340      9d00d4     :   sta 0xd400,x          ; sid register
+        |   0x00007343      ca             dex                         ; decrement index x by one
+        `=< 0x00007344      10fa           bpl :- 0x421108                ; branch on result plus
+            0x00007346      a9ff           lda #0xff                   ; load accumulator with memory
+            0x00007348      8dce03         sta 0x03ce                  ; store accumulator in memory
+            0x0000734b      a550           lda 0x50                    ; load accumulator with memory
+            0x0000734d      8d2172         sta 0x7221                  ; store accumulator in memory
+            0x00007350      a551           lda 0x51                    ; load accumulator with memory
+            0x00007352      8d2272         sta 0x7222                  ; store accumulator in memory
+            0x00007355      a000           ldy #0x00                   ; load index y with memory
+            0x00007357      b150           lda (0x50),y          ; load sound data byte
+            0x00007359      e650           inc 0x50                    ; increment memory by one
+        ,=< 0x0000735b      d002           bne :+ 0x421108                ; branch on result not zero
+        |   0x0000735d      e651           inc 0x51                    ; increment memory by one
+        `-> 0x0000735f      aa         :   tax                   ; sound data byte in X
+        ,=< 0x00007360      f009           beq :+++ 0x421108                ; branch on result zero
+       .--> 0x00007362      e650       :   inc 0x50                    ; increment memory by one
+      ,===< 0x00007364      d002           bne :+ 0x421108                ; branch on result not zero
+      |||   0x00007366      e651           inc 0x51                    ; increment memory by one
+      `---> 0x00007368      ca         :   dex                         ; decrement index x by one
+       `==< 0x00007369      d0f7           bne :-- 0x421108                ; branch on result not zero
+        `-> 0x0000736b      b150       :   lda (0x50),y          ; sound data byte in A
+            0x0000736d      e650           inc 0x50                    ; increment memory by one
+        ,=< 0x0000736f      d002           bne :+ 0x421108                ; branch on result not zero
+        |   0x00007371      e651           inc 0x51                    ; increment memory by one
+        `-> 0x00007373      8d1f72     :   sta 0x721f            ; sound byte in 0x721f (some kind of position data?)
+            0x00007376      aa             tax                         ; transfer accumulator to index x
+        ,=< 0x00007377      f01a           beq :++ 0x421108                ; branch on result zero
+        |   0x00007379      a001           ldy #0x01             ; fill song address database
+       .--> 0x0000737b      18         :   clc                         ; clear carry flag
+       ||   0x0000737c      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x0000737e      6d2172         adc 0x7221                  ; add memory to accumulator with carry
+       ||   0x00007381      992a72         sta 0x722a,y                ; store accumulator in memory
+       ||   0x00007384      88             dey                         ; decrement index y by one
+       ||   0x00007385      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x00007387      6d2272         adc 0x7222                  ; add memory to accumulator with carry
+       ||   0x0000738a      992c72         sta 0x722c,y                ; store accumulator in memory
+       ||   0x0000738d      c8             iny                         ; increment index y by one
+       ||   0x0000738e      c8             iny                         ; increment index y by one
+       ||   0x0000738f      c8             iny                         ; increment index y by one
+       ||   0x00007390      ca             dex                         ; decrement index x by one
+       `==< 0x00007391      d0e8           bne :- 0x421108                ; branch on result not zero
+        `-> 0x00007393      a99a       :   lda #0x9a                   ; load accumulator with memory
+            0x00007395      8d2572         sta 0x7225            ; first timer value low
+            0x00007398      a942           lda #0x42                   ; load accumulator with memory
+            0x0000739a      8d2672         sta 0x7226            ; first timer value high
+            0x0000739d      a900           lda #0x00                   ; load accumulator with memory
+            0x0000739f      8d2372         sta 0x7223                  ; store accumulator in memory
+            0x000073a2      8d2472         sta 0x7224                  ; store accumulator in memory
+            0x000073a5      8d1972         sta 0x7219            ; music_masterswitch -> on
+            0x000073a8      28             plp                         ; pull processor status from stack
+            0x000073a9      a200           ldx #0x00                   ; load index x with memory
+            0x000073ab      a000           ldy #0x00                   ; load index y with memory
+            0x000073ad      ad2372         lda 0x7223                  ; load accumulator with memory
+       ..-> 0x000073b0      cd2372     :   cmp 0x7223                  ; compare memory and accumulator
+      ,===< 0x000073b3      d006           bne :+ 0x421108                ; branch on result not zero
+      |||   0x000073b5      88             dey                         ; decrement index y by one
+      |`==< 0x000073b6      d0f8           bne :- 0x421108                ; branch on result not zero
+      | |   0x000073b8      ca             dex                         ; decrement index x by one
+      | `=< 0x000073b9      d0f5           bne :- 0x421108                ; branch on result not zero
+      `---> 0x000073bb      60         :   rts                         ; return from subroutine
+
+------------------------------------------------------------------------------
+0x7203: forward music
+    |||`--> 0x000073bc      ad1972         lda 0x7219            ; music_masterswitch, off? leave!
+    |||     0x000073bf      302a           bmi 0x0073eb                ; branch on result minus
+    |||     0x000073c1      a579           lda 0x79                    ; load accumulator with memory
+    |||     0x000073c3      1026           bpl 0x0073eb                ; branch on result plus
+    |||     0x000073c5      20da73         jsr 0x73da            ; local 0x73da save variables
+    |||     0x000073c8      201a74         jsr 0x741a            ; 0x720c  ;  prepare data
+    |||     0x000073cb      20a678         jsr 0x78a6            ; local 0x78a6 ; transfer data to sid
+    |||     0x000073ce      ad2572         lda 0x7225                  ; load accumulator with memory
+    |||     0x000073d1      8d06dc         sta 0xdc06            ; timer B
+    |||     0x000073d4      ad2672         lda 0x7226                  ; load accumulator with memory
+    |||     0x000073d7      8d07dc         sta 0xdc07            ; timer B
+local 0x73da: save zp variables: exchange values between 0x9ff0 and 0x50-0x5a
+    |||     0x000073da      a20a           ldx #0x0a                   ; load index x with memory
+    |||     0x000073dc      b550           lda 0x50,x                  ; load accumulator with memory
+    |||     0x000073de      a8             tay                         ; transfer accumulator to index y
+    |||     0x000073df      bdf09f         lda 0x9ff0,x          ; variables behind m.prg
+    |||     0x000073e2      9550           sta 0x50,x                  ; store accumulator in memory
+    |||     0x000073e4      98             tya                         ; transfer index y to accumulator
+    |||     0x000073e5      9df09f         sta 0x9ff0,x          ; variables behind m.prg
+    |||     0x000073e8      ca             dex                         ; decrement index x by one
+    |||     0x000073e9      10f1           bpl 0x0073dc                ; branch on result plus
+    |||     0x000073eb      60             rts                         ; return from subroutine
+
+0x7206: music off
+    ||`---> 0x000073ec      20fb73         jsr 0x73fb            ; local 0x73fb (clear sid control register gate flag)
+    ||      0x000073ef      a9ff           lda #0xff                   ; load accumulator with memory
+    ||      0x000073f1      8d1972         sta 0x7219            ; music_masterswitch 0xff == off
+    ||      0x000073f4      60             rts                         ; return from subroutine
+
+0x7209: music on setting?
+    |`----> 0x000073f5      a900           lda #0x00                   ; load accumulator with memory
+    |       0x000073f7      8d1972         sta 0x7219            ; music_masterswitch 0x00 == on
+    |       0x000073fa      60             rts                         ; return from subroutine
+
+local 0x73fb: (clear sid control register gate flag)
+    |       0x000073fb      a000           ldy #0x00                   ; load index y with memory
+    |       0x000073fd      b9f172         lda 0x72f1,y                ; load accumulator with memory
+    |       0x00007400      29fe           and #0xfe            ; clear GATE bit
+    |       0x00007402      8d04d4         sta 0xd404           ; sid voice 1 control register
+    |       0x00007405      a002           ldy #0x02                   ; load index y with memory
+    |       0x00007407      b9f172         lda 0x72f1,y                ; load accumulator with memory
+    |       0x0000740a      29fe           and #0xfe            ; clear GATE bit
+    |       0x0000740c      8d0bd4         sta 0xd40b           ; sid voice 2 control register
+    |       0x0000740f      a004           ldy #0x04                   ; load index y with memory
+    |       0x00007411      b9f172         lda 0x72f1,y                ; load accumulator with memory
+    |       0x00007414      29fe           and #0xfe            ; clear GATE bit
+    |       0x00007416      8d12d4         sta 0xd412           ; sid voice 3 control register
+    |       0x00007419      60             rts                         ; return from subroutine
+
+0x720c: (prepare data)
+            0x0000741a      ee2372         inc 0x7223            ; counter low
+        ,=< 0x0000741d      d003           bne 0x007422                ; branch on result not zero
+        |   0x0000741f      ee2472         inc 0x7224            ; counter high
+        `-> 0x00007422      a90f           lda #0x0f                   ; load accumulator with memory
+            0x00007424      8d18d4         sta 0xd418           ; sid register (volume)
+            0x00007427      adcc03         lda 0x03cc                  ; load accumulator with memory
+            0x0000742a      297f           and #0x7f                   ; "and" memory with accumulator
+        ,=< 0x0000742c      d003           bne 0x007431                ; branch on result not zero
+       ,==< 0x0000742e      4c8b78         jmp 0x788b           ; local 0x788b (change to song)
+       |`-> 0x00007431      cd1f72         cmp 0x721f                  ; compare memory and accumulator
+       |,=< 0x00007434      f00b           beq 0x007441                ; branch on result zero
+      ,===< 0x00007436      9009           bcc 0x007441                ; branch on carry clear
+      |||   0x00007438      adce03         lda 0x03ce                  ; load accumulator with memory
+      |||   0x0000743b      8dcc03         sta 0x03cc                  ; store accumulator in memory
+     ,====< 0x0000743e      d001           bne 0x007441                ; branch on result not zero
+     ||||   0x00007440      60             rts                         ; return from subroutine
+     ``-`-> 0x00007441      cdce03         cmp 0x03ce                  ; compare memory and accumulator
+       |,=< 0x00007444      d003           bne 0x007449          ; branch to 0x7449
+      ,===< 0x00007446      4c4775         jmp 0x7547            ; branch to 0x7547 (prepare new song or continue?)
+
+local 0x7449: (calculate data)
+      ||`-> 0x00007449      8dce03         sta 0x03ce                  ; store accumulator in memory
+      ||    0x0000744c      0a             asl a                       ; shift left one bit (memory or accumulator)
+      ||    0x0000744d      aa             tax                   ; music id in X multiplied by 2
+      ||    0x0000744e      bd2972         lda 0x7229,x          ; load start address to 50,51 and 0x7221,0x7222
+      ||    0x00007451      8550           sta 0x50                    ; store accumulator in memory
+      ||    0x00007453      8d2172         sta 0x7221                  ; store accumulator in memory
+      ||    0x00007456      bd2a72         lda 0x722a,x                ; load accumulator with memory
+      ||    0x00007459      8551           sta 0x51                    ; store accumulator in memory
+      ||    0x0000745b      8d2272         sta 0x7222                  ; store accumulator in memory
+      ||    0x0000745e      a000           ldy #0x00                   ; load index y with memory
+      ||    0x00007460      b150           lda (0x50),y                ; load accumulator with memory
+      ||    0x00007462      e650           inc 0x50                    ; increment memory by one
+      ||,=< 0x00007464      d002           bne 0x007468                ; branch on result not zero
+      |||   0x00007466      e651           inc 0x51                    ; increment memory by one
+      ||`-> 0x00007468      aa             tax                         ; transfer accumulator to index x
+      ||,=< 0x00007469      f009           beq 0x007474                ; branch on result zero
+     .----> 0x0000746b      e650           inc 0x50                    ; increment memory by one
+    ,=====< 0x0000746d      d002           bne 0x007471                ; branch on result not zero
+    |:|||   0x0000746f      e651           inc 0x51                    ; increment memory by one
+    `-----> 0x00007471      ca             dex                         ; decrement index x by one
+     `====< 0x00007472      d0f7           bne 0x00746b                ; branch on result not zero
+      ||`-> 0x00007474      b150           lda (0x50),y                ; load accumulator with memory
+      ||    0x00007476      e650           inc 0x50                    ; increment memory by one
+      ||,=< 0x00007478      d002           bne 0x00747c                ; branch on result not zero
+      |||   0x0000747a      e651           inc 0x51                    ; increment memory by one
+      ||`-> 0x0000747c      8d1c72         sta 0x721c                  ; store accumulator in memory
+      ||    0x0000747f      a903           lda #0x03                   ; load accumulator with memory
+      ||    0x00007481      cd1c72         cmp 0x721c                  ; compare memory and accumulator
+      ||,=< 0x00007484      9003           bcc 0x007489                ; branch on carry clear
+      |||   0x00007486      ad1c72         lda 0x721c                  ; load accumulator with memory
+      ||`-> 0x00007489      8d1b72         sta 0x721b                  ; store accumulator in memory
+      ||    0x0000748c      ae1c72         ldx 0x721c                  ; load index x with memory
+      ||,=< 0x0000748f      f012           beq 0x0074a3                ; branch on result zero
+     .----> 0x00007491      b150           lda (0x50),y                ; load accumulator with memory
+     :|||   0x00007493      998972         sta 0x7289,y                ; store accumulator in memory
+     :|||   0x00007496      c8             iny                         ; increment index y by one
+     :|||   0x00007497      ca             dex                         ; decrement index x by one
+     `====< 0x00007498      d0f7           bne 0x007491                ; branch on result not zero
+     .----> 0x0000749a      e650           inc 0x50                    ; increment memory by one
+    ,=====< 0x0000749c      d002           bne 0x0074a0                ; branch on result not zero
+    |:|||   0x0000749e      e651           inc 0x51                    ; increment memory by one
+    `-----> 0x000074a0      88             dey                         ; decrement index y by one
+     `====< 0x000074a1      d0f7           bne 0x00749a                ; branch on result not zero
+      ||`-> 0x000074a3      b150           lda (0x50),y                ; load accumulator with memory
+      ||    0x000074a5      e650           inc 0x50                    ; increment memory by one
+      ||,=< 0x000074a7      d002           bne 0x0074ab                ; branch on result not zero
+      |||   0x000074a9      e651           inc 0x51                    ; increment memory by one
+      ||`-> 0x000074ab      8d1d72         sta 0x721d                  ; store accumulator in memory
+      ||    0x000074ae      aa             tax                         ; transfer accumulator to index x
+      ||    0x000074af      a001           ldy #0x01                   ; load index y with memory
+      ||.-> 0x000074b1      18             clc                         ; clear carry flag
+      ||:   0x000074b2      b150           lda (0x50),y                ; load accumulator with memory
+      ||:   0x000074b4      6d2172         adc 0x7221                  ; add memory to accumulator with carry
+      ||:   0x000074b7      994872         sta 0x7248,y                ; store accumulator in memory
+      ||:   0x000074ba      88             dey                         ; decrement index y by one
+      ||:   0x000074bb      b150           lda (0x50),y                ; load accumulator with memory
+      ||:   0x000074bd      6d2272         adc 0x7222                  ; add memory to accumulator with carry
+      ||:   0x000074c0      994a72         sta 0x724a,y                ; store accumulator in memory
+      ||:   0x000074c3      c8             iny                         ; increment index y by one
+      ||:   0x000074c4      c8             iny                         ; increment index y by one
+      ||:   0x000074c5      c8             iny                         ; increment index y by one
+      ||:   0x000074c6      ca             dex                         ; decrement index x by one
+      ||`=< 0x000074c7      d0e8           bne 0x0074b1                ; branch on result not zero
+      ||    0x000074c9      ae1c72         ldx 0x721c                  ; load index x with memory
+      ||,=< 0x000074cc      f031           beq 0x0074ff                ; branch on result zero
+      |||   0x000074ce      ca             dex                         ; decrement index x by one
+      |||   0x000074cf      8e1a72         stx 0x721a                  ; store index x in memory
+     .----> 0x000074d2      ae1a72         ldx 0x721a                  ; load index x with memory
+     :|||   0x000074d5      bd8972         lda 0x7289,x                ; load accumulator with memory
+     :|||   0x000074d8      0a             asl a                       ; shift left one bit (memory or accumulator)
+     :|||   0x000074d9      a8             tay                         ; transfer accumulator to index y
+     :|||   0x000074da      8a             txa                         ; transfer index x to accumulator
+     :|||   0x000074db      0a             asl a                       ; shift left one bit (memory or accumulator)
+     :|||   0x000074dc      aa             tax                         ; transfer accumulator to index x
+     :|||   0x000074dd      b94972         lda 0x7249,y                ; load accumulator with memory
+     :|||   0x000074e0      9552           sta 0x52,x                  ; store accumulator in memory
+     :|||   0x000074e2      b94a72         lda 0x724a,y                ; load accumulator with memory
+     :|||   0x000074e5      9553           sta 0x53,x                  ; store accumulator in memory
+     :|||   0x000074e7      a152           lda (0x52,x)                ; load accumulator with memory
+     :|||   0x000074e9      f652           inc 0x52,x                  ; increment memory by one
+    ,=====< 0x000074eb      d002           bne 0x0074ef                ; branch on result not zero
+    |:|||   0x000074ed      f653           inc 0x53,x                  ; increment memory by one
+    `-----> 0x000074ef      0900           ora #0x00                   ; "or" memory with accumulator
+     :|||   0x000074f1      18             clc                         ; clear carry flag
+     :|||   0x000074f2      7552           adc 0x52,x                  ; add memory to accumulator with carry
+     :|||   0x000074f4      9552           sta 0x52,x                  ; store accumulator in memory
+    ,=====< 0x000074f6      9002           bcc 0x0074fa                ; branch on carry clear
+    |:|||   0x000074f8      f653           inc 0x53,x                  ; increment memory by one
+    `-----> 0x000074fa      ce1a72         dec 0x721a                  ; decrement memory by one
+     `====< 0x000074fd      10d3           bpl 0x0074d2                ; branch on result plus
+      ||`-> 0x000074ff      ae1b72         ldx 0x721b                  ; load index x with memory
+      ||    0x00007502      a000           ldy #0x00                   ; load index y with memory
+      ||    0x00007504      a900           lda #0x00                   ; load accumulator with memory
+      ||    0x00007506      99d272         sta 0x72d2,y                ; store accumulator in memory
+      ||    0x00007509      99ea72         sta 0x72ea,y                ; store accumulator in memory
+      ||    0x0000750c      99eb72         sta 0x72eb,y                ; store accumulator in memory
+      ||    0x0000750f      99c772         sta 0x72c7,y                ; store accumulator in memory
+      ||    0x00007512      99d972         sta 0x72d9,y                ; store accumulator in memory
+      ||    0x00007515      99df72         sta 0x72df,y                ; store accumulator in memory
+      ||    0x00007518      99e472         sta 0x72e4,y                ; store accumulator in memory
+      ||    0x0000751b      99e572         sta 0x72e5,y                ; store accumulator in memory
+      ||    0x0000751e      8dcf03         sta 0x03cf                  ; store accumulator in memory
+      ||    0x00007521      a93c           lda #0x3c                   ; load accumulator with memory
+      ||    0x00007523      99d372         sta 0x72d3,y                ; store accumulator in memory
+      ||    0x00007526      a903           lda #0x03                   ; load accumulator with memory
+      ||    0x00007528      99cc72         sta 0x72cc,y                ; store accumulator in memory
+      ||    0x0000752b      a904           lda #0x04                   ; load accumulator with memory
+      ||    0x0000752d      99cd72         sta 0x72cd,y                ; store accumulator in memory
+      ||    0x00007530      a901           lda #0x01                   ; load accumulator with memory
+      ||    0x00007532      99c672         sta 0x72c6,y                ; store accumulator in memory
+      ||    0x00007535      c8             iny                         ; increment index y by one
+      ||    0x00007536      c8             iny                         ; increment index y by one
+      ||    0x00007537      ca             dex                         ; decrement index x by one
+      ||    0x00007538      d0ca           bne 0x007504                ; branch on result not zero
+      ||    0x0000753a      209878         jsr 0x7898            ; local 0x7898 (some kind of end song?)
+      ||    0x0000753d      a99a           lda #0x9a                   ; load accumulator with memory
+      ||    0x0000753f      8d2572         sta 0x7225            ; timer low value
+      ||    0x00007542      a942           lda #0x42                   ; load accumulator with memory
+      ||    0x00007544      8d2672         sta 0x7226            ; timer high value
+
+local 0x7547: (prepare new song or continue?)
+      `---> 0x00007547      a9ff           lda #0xff                   ; load accumulator with memory
+       |    0x00007549      8d2072         sta 0x7220                  ; store accumulator in memory
+       |    0x0000754c      ae1b72         ldx 0x721b                  ; load index x with memory
+       |    0x0000754f      ca             dex                         ; decrement index x by one
+       |    0x00007550      8e1a72         stx 0x721a                  ; store index x in memory
+
+local 0x7553:
+       |    0x00007553      ad1a72         lda 0x721a                  ; load accumulator with memory
+       |    0x00007556      0a             asl a                       ; shift left one bit (memory or accumulator)
+       |    0x00007557      aa             tax                         ; transfer accumulator to index x
+       |    0x00007558      bdc772         lda 0x72c7,x                ; load accumulator with memory
+       |    0x0000755b      d008           bne 0x007565                ; branch on result not zero
+       |    0x0000755d      8d2072         sta 0x7220                  ; store accumulator in memory
+       |    0x00007560      dec672         dec 0x72c6,x                ; decrement memory by one
+       |    0x00007563      f003           beq 0x007568                ; branch on result zero
+       |    0x00007565      4c4e78         jmp 0x784e            ; local 0x784e (continue same song?)
+
+local 0x7568: (continue after song selection)
+       |    0x00007568      a152           lda (0x52,x)                ; load accumulator with memory
+       |    0x0000756a      f652           inc 0x52,x                  ; increment memory by one
+       |    0x0000756c      d002           bne 0x007570                ; branch on result not zero
+       |    0x0000756e      f653           inc 0x53,x                  ; increment memory by one
+       |    0x00007570      0900           ora #0x00                   ; "or" memory with accumulator
+       |    0x00007572      8d1e72         sta 0x721e                  ; store accumulator in memory
+       |    0x00007575      4a             lsr a                       ; shift right one bit (memory or accumulator)
+       |    0x00007576      b00f           bcs 0x007587                ; branch on carry set
+       |    0x00007578      4a             lsr a                       ; shift right one bit (memory or accumulator)
+       |    0x00007579      b006           bcs 0x007581                ; branch on carry set
+       |    0x0000757b      48             pha                         ; push accumulator on stack
+       |    0x0000757c      bdcc72         lda 0x72cc,x                ; load accumulator with memory
+       |    0x0000757f      9017           bcc 0x007598                ; branch on carry clear
+       |    0x00007581      48             pha                         ; push accumulator on stack
+       |    0x00007582      bdcd72         lda 0x72cd,x                ; load accumulator with memory
+       |    0x00007585      b011           bcs 0x007598                ; branch on carry set
+       |    0x00007587      4a             lsr a                       ; shift right one bit (memory or accumulator)
+       |    0x00007588      9003           bcc 0x00758d                ; branch on carry clear
+       |    0x0000758a      4cfc75         jmp 0x75fc            ; local 0x75fc (select new song)
+       |    0x0000758d      48             pha                         ; push accumulator on stack
+       |    0x0000758e      a152           lda (0x52,x)                ; load accumulator with memory
+       |    0x00007590      f652           inc 0x52,x                  ; increment memory by one
+       |    0x00007592      d002           bne 0x007596                ; branch on result not zero
+       |    0x00007594      f653           inc 0x53,x                  ; increment memory by one
+       |    0x00007596      0900           ora #0x00                   ; "or" memory with accumulator
+       |    0x00007598      a8             tay                         ; transfer accumulator to index y
+       |    0x00007599      b9907b         lda 0x7b90,y          ; intermediate data access
+       |    0x0000759c      9dc672         sta 0x72c6,x                ; store accumulator in memory
+       |    0x0000759f      68             pla                         ; pull accumulator from stack
+       |    0x000075a0      291f           and #0x1f                   ; "and" memory with accumulator
+       |    0x000075a2      d003           bne 0x0075a7                ; branch on result not zero
+       |    0x000075a4      4cef75         jmp 0x75ef            ; local 0x75ef (shortcut no new song)
+       |    0x000075a7      18             clc                         ; clear carry flag
+       |    0x000075a8      7dd372         adc 0x72d3,x                ; add memory to accumulator with carry
+       |    0x000075ab      38             sec                         ; set carry flag
+       |    0x000075ac      e910           sbc #0x10                   ; subtract memory from accumulator with borrow
+       |    0x000075ae      9dd372         sta 0x72d3,x                ; store accumulator in memory
+       |    0x000075b1      18             clc                         ; clear carry flag
+       |    0x000075b2      7dd272         adc 0x72d2,x                ; add memory to accumulator with carry
+       |    0x000075b5      38             sec                         ; set carry flag
+       |    0x000075b6      e915           sbc #0x15                   ; subtract memory from accumulator with borrow
+       |    0x000075b8      a8             tay                         ; transfer accumulator to index y
+       |    0x000075b9      18             clc                         ; clear carry flag
+       |    0x000075ba      b9d07a         lda 0x7ad0,y          ; intermediate data access
+       |    0x000075bd      7dea72         adc 0x72ea,x                ; add memory to accumulator with carry
+       |    0x000075c0      8d2172         sta 0x7221                  ; store accumulator in memory
+       |    0x000075c3      b9307b         lda 0x7b30,y          ; intermediate data access
+       |    0x000075c6      7deb72         adc 0x72eb,x                ; add memory to accumulator with carry
+       |    0x000075c9      8d2272         sta 0x7222                  ; store accumulator in memory
+       |    0x000075cc      bcbe7b         ldy 0x7bbe,x                ; load index y with memory
+       |    0x000075cf      ad2172         lda 0x7221                  ; load accumulator with memory
+       |    0x000075d2      99ae7b         sta 0x7bae,y                ; store accumulator in memory
+       |    0x000075d5      c8             iny                         ; increment index y by one
+       |    0x000075d6      ad2272         lda 0x7222                  ; load accumulator with memory
+       |    0x000075d9      99ae7b         sta 0x7bae,y                ; store accumulator in memory
+       |    0x000075dc      bdd972         lda 0x72d9,x                ; load accumulator with memory
+       |    0x000075df      3005           bmi 0x0075e6                ; branch on result minus
+       |    0x000075e1      a901           lda #0x01                   ; load accumulator with memory
+       |    0x000075e3      9de472         sta 0x72e4,x                ; store accumulator in memory
+       |    0x000075e6      ad1e72         lda 0x721e                  ; load accumulator with memory
+       |    0x000075e9      9dd972         sta 0x72d9,x                ; store accumulator in memory
+       |    0x000075ec      4c4e78         jmp 0x784e            ; local 0x784e (continue same song?)
+
+local 0x75ef: (shortcut no new song)
+       |    0x000075ef      a901           lda #0x01                   ; load accumulator with memory
+       |    0x000075f1      9de572         sta 0x72e5,x                ; store accumulator in memory
+       |    0x000075f4      a900           lda #0x00                   ; load accumulator with memory
+       |    0x000075f6      9dd972         sta 0x72d9,x                ; store accumulator in memory
+       |    0x000075f9      4c4e78         jmp 0x784e            ; local 0x784e (continue same song?)
+
+local 0x75fc: (select new song)
+       ||   0x000075fc      ad1e72         lda 0x721e                  ; load accumulator with memory
+       ||   0x000075ff      4a             lsr a                       ; shift right one bit (memory or accumulator)
+       ||   0x00007600      4a             lsr a                       ; shift right one bit (memory or accumulator)
+       ||   0x00007601      c918           cmp #0x18                   ; compare memory and accumulator
+      ,===< 0x00007603      9017           bcc 0x421108                ; branch on carry clear
+      |||   0x00007605      c930           cmp #0x30                   ; compare memory and accumulator
+     ,====< 0x00007607      9019           bcc 0x421108                ; branch on carry clear
+     ||||   0x00007609      e930           sbc #0x30                   ; subtract memory from accumulator with borrow
+     ||||   0x0000760b      0a             asl a                 ; multiply with 2
+     ||||   0x0000760c      a8             tay                         ; transfer accumulator to index y
+     ||||   0x0000760d      b92b76         lda 0x762b,y          ; data block 32 bytes
+     ||||   0x00007610      8d2772         sta 0x7227                  ; store accumulator in memory
+     ||||   0x00007613      b92c76         lda 0x762c,y                ; load accumulator with memory
+     ||||   0x00007616      8d2872         sta 0x7228                  ; store accumulator in memory
+     ||||   0x00007619      6c2772         jmp (0x7227)          ; dynamic jump to song address
+     |`---> 0x0000761c      9dcc72         sta 0x72cc,x                ; store accumulator in memory
+     | `==< 0x0000761f      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+     `----> 0x00007622      38             sec                         ; set carry flag
+        |   0x00007623      e918           sbc #0x18                   ; subtract memory from accumulator with borrow
+        |   0x00007625      9dcd72         sta 0x72cd,x                ; store accumulator in memory
+        `=< 0x00007628      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+
+data: (probably song addresses?)
+            0x0000762b      2b77                                 ; song 1
+            0x0000762d      a076                                 ; song 2
+            0x0000762f      b076                                 ; song 3
+            0x00007631      1e77                                 ; song 4
+            0x00007633      4b76                                 ; song 5
+            0x00007635      3b77                                 ; song 6
+            0x00007637      4f77                                 ; song 7
+            0x00007639      6077                                 ; song 8
+            0x0000763b      6d77                                 ; song 9
+            0x0000763d      9477                                 ; song 10
+            0x0000763f      8777                                 ; song 11
+            0x00007641      8777                                 ; song 12
+            0x00007643      b177                                 ; song 13
+            0x00007645      0f78                                 ; song 14
+            0x00007646      3b78                                 ; song 15
+            0x00007649      4b78                                 ; song 16
+            
+song 5: (for every song?)
+            0x0000764b      a900           lda #0x00                   ; load accumulator with memory
+            0x0000764d      8559           sta 0x59                    ; store accumulator in memory
+            0x0000764f      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007651      f652           inc 0x52,x                  ; increment memory by one
+            0x00007653      d002           bne 0x007657                ; branch on result not zero
+            0x00007655      f653           inc 0x53,x                  ; increment memory by one
+            0x00007657      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007659      9dd872         sta 0x72d8,x                ; store accumulator in memory
+            0x0000765c      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x0000765d      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x0000765e      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x0000765f      2659           rol 0x59                    ; rotate one bit left (memory or accumulator)
+            0x00007661      69b8           adc #0xb8             ; low address of additional data
+            0x00007663      8558           sta 0x58                    ; store accumulator in memory
+            0x00007665      a559           lda 0x59                    ; load accumulator with memory
+            0x00007667      6979           adc #0x79             ; high address of additional data
+            0x00007669      8559           sta 0x59                    ; store accumulator in memory
+            0x0000766b      a000           ldy #0x00                   ; load index y with memory
+            0x0000766d      b158           lda (0x58),y                ; load accumulator with memory
+            0x0000766f      9dea72         sta 0x72ea,x                ; store accumulator in memory
+            0x00007672      c8             iny                         ; increment index y by one
+            0x00007673      b158           lda (0x58),y                ; load accumulator with memory
+            0x00007675      9deb72         sta 0x72eb,x                ; store accumulator in memory
+            0x00007678      c8             iny                         ; increment index y by one
+            0x00007679      b158           lda (0x58),y                ; load accumulator with memory
+            0x0000767b      9df072         sta 0x72f0,x                ; store accumulator in memory
+            0x0000767e      c8             iny                         ; increment index y by one
+            0x0000767f      b158           lda (0x58),y                ; load accumulator with memory
+            0x00007681      9df172         sta 0x72f1,x                ; store accumulator in memory
+            0x00007684      c8             iny                         ; increment index y by one
+            0x00007685      b158           lda (0x58),y                ; load accumulator with memory
+            0x00007687      9df672         sta 0x72f6,x                ; store accumulator in memory
+            0x0000768a      c8             iny                         ; increment index y by one
+            0x0000768b      b158           lda (0x58),y                ; load accumulator with memory
+            0x0000768d      9df772         sta 0x72f7,x                ; store accumulator in memory
+            0x00007690      c8             iny                         ; increment index y by one
+            0x00007691      b158           lda (0x58),y                ; load accumulator with memory
+            0x00007693      9dfc72         sta 0x72fc,x                ; store accumulator in memory
+            0x00007696      c8             iny                         ; increment index y by one
+            0x00007697      b158           lda (0x58),y                ; load accumulator with memory
+            0x00007699      9dfd72         sta 0x72fd,x                ; store accumulator in memory
+            0x0000769c      c8             iny                         ; increment index y by one
+            0x0000769d      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 2:
+            0x000076a0      a152           lda (0x52,x)                ; load accumulator with memory
+            0x000076a2      f652           inc 0x52,x                  ; increment memory by one
+            0x000076a4      d002           bne 0x0076a8                ; branch on result not zero
+            0x000076a6      f653           inc 0x53,x                  ; increment memory by one
+            0x000076a8      0900           ora #0x00                   ; "or" memory with accumulator
+            0x000076aa      9dd272         sta 0x72d2,x                ; store accumulator in memory
+            0x000076ad      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 3:
+            0x000076b0      a152           lda (0x52,x)                ; load accumulator with memory
+            0x000076b2      f652           inc 0x52,x                  ; increment memory by one
+            0x000076b4      d002           bne 0x0076b8                ; branch on result not zero
+            0x000076b6      f653           inc 0x53,x                  ; increment memory by one
+            0x000076b8      0900           ora #0x00                   ; "or" memory with accumulator
+
+local 0x76ba: (continue from song 3 and 7)
+            0x000076ba      8dc572         sta 0x72c5                  ; store accumulator in memory
+            0x000076bd      8d9172         sta 0x7291                  ; store accumulator in memory
+            0x000076c0      a900           lda #0x00                   ; load accumulator with memory
+            0x000076c2      8d9072         sta 0x7290                  ; store accumulator in memory
+            0x000076c5      8d8f72         sta 0x728f                  ; store accumulator in memory
+            0x000076c8      a926           lda #0x26                   ; load accumulator with memory
+            0x000076ca      8d8e72         sta 0x728e                  ; store accumulator in memory
+            0x000076cd      a9ed           lda #0xed                   ; load accumulator with memory
+            0x000076cf      8d8d72         sta 0x728d                  ; store accumulator in memory
+            0x000076d2      a9aa           lda #0xaa                   ; load accumulator with memory
+            0x000076d4      8d8c72         sta 0x728c                  ; store accumulator in memory
+            0x000076d7      a210           ldx #0x10                   ; load index x with memory
+            0x000076d9      4e9172         lsr 0x7291                  ; shift right one bit (memory or accumulator)
+            0x000076dc      6e9072         ror 0x7290                  ; rotate one bit right (memory or accumulator)
+            0x000076df      6e8f72         ror 0x728f                  ; rotate one bit right (memory or accumulator)
+            0x000076e2      38             sec                         ; set carry flag
+            0x000076e3      ad8c72         lda 0x728c                  ; load accumulator with memory
+            0x000076e6      ed8f72         sbc 0x728f                  ; subtract memory from accumulator with borrow
+            0x000076e9      8d9272         sta 0x7292                  ; store accumulator in memory
+            0x000076ec      ad8d72         lda 0x728d                  ; load accumulator with memory
+            0x000076ef      ed9072         sbc 0x7290                  ; subtract memory from accumulator with borrow
+            0x000076f2      8d9372         sta 0x7293                  ; store accumulator in memory
+            0x000076f5      ad8e72         lda 0x728e                  ; load accumulator with memory
+            0x000076f8      ed9172         sbc 0x7291                  ; subtract memory from accumulator with borrow
+            0x000076fb      8d9472         sta 0x7294                  ; store accumulator in memory
+            0x000076fe      9012           bcc 0x007712                ; branch on carry clear
+            0x00007700      ad9272         lda 0x7292                  ; load accumulator with memory
+            0x00007703      8d8c72         sta 0x728c                  ; store accumulator in memory
+            0x00007706      ad9372         lda 0x7293                  ; load accumulator with memory
+            0x00007709      8d8d72         sta 0x728d                  ; store accumulator in memory
+            0x0000770c      ad9472         lda 0x7294                  ; load accumulator with memory
+            0x0000770f      8d8e72         sta 0x728e                  ; store accumulator in memory
+            0x00007712      2e2572         rol 0x7225            ; timer low value
+            0x00007715      2e2672         rol 0x7226            ; timer high value
+            0x00007718      ca             dex                         ; decrement index x by one
+            0x00007719      d0be           bne 0x0076d9                ; branch on result not zero
+            0x0000771b      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 4:
+            0x0000771e      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007720      f652           inc 0x52,x                  ; increment memory by one
+            0x00007722      d002           bne 0x007726                ; branch on result not zero
+            0x00007724      f653           inc 0x53,x                  ; increment memory by one
+            0x00007726      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007728      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 1:
+            0x0000772b      a152           lda (0x52,x)                ; load accumulator with memory
+            0x0000772d      f652           inc 0x52,x                  ; increment memory by one
+            0x0000772f      d002           bne 0x007733                ; branch on result not zero
+            0x00007731      f653           inc 0x53,x                  ; increment memory by one
+            0x00007733      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007735      9dd372         sta 0x72d3,x                ; store accumulator in memory
+            0x00007738      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 6:
+            0x0000773b      a152           lda (0x52,x)                ; load accumulator with memory
+            0x0000773d      f652           inc 0x52,x                  ; increment memory by one
+            0x0000773f      d002           bne 0x007743                ; branch on result not zero
+            0x00007741      f653           inc 0x53,x                  ; increment memory by one
+            0x00007743      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007745      18             clc                         ; clear carry flag
+            0x00007746      7dd272         adc 0x72d2,x                ; add memory to accumulator with carry
+            0x00007749      9dd272         sta 0x72d2,x                ; store accumulator in memory
+            0x0000774c      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 7:
+            0x0000774f      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007751      f652           inc 0x52,x                  ; increment memory by one
+            0x00007753      d002           bne 0x007757                ; branch on result not zero
+            0x00007755      f653           inc 0x53,x                  ; increment memory by one
+            0x00007757      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007759      18             clc                         ; clear carry flag
+            0x0000775a      6dc572         adc 0x72c5                  ; add memory to accumulator with carry
+            0x0000775d      4cba76         jmp 0x76ba            ; local 0x76ba (continue common song 3, 7)
+song 8:
+            0x00007760      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007762      f652           inc 0x52,x                  ; increment memory by one
+            0x00007764      d002           bne 0x007768                ; branch on result not zero
+            0x00007766      f653           inc 0x53,x                  ; increment memory by one
+            0x00007768      0900           ora #0x00                   ; "or" memory with accumulator
+            0x0000776a      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 9:
+            0x0000776d      a152           lda (0x52,x)                ; load accumulator with memory
+            0x0000776f      f652           inc 0x52,x                  ; increment memory by one
+            0x00007771      d002           bne 0x007775                ; branch on result not zero
+            0x00007773      f653           inc 0x53,x                  ; increment memory by one
+            0x00007775      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007777      8dcf03         sta 0x03cf                  ; store accumulator in memory
+local 0x777a: (continue from song 11, 12)
+            0x0000777a      a152           lda (0x52,x)                ; load accumulator with memory
+            0x0000777c      f652           inc 0x52,x                  ; increment memory by one
+            0x0000777e      d002           bne 0x007782                ; branch on result not zero
+            0x00007780      f653           inc 0x53,x                  ; increment memory by one
+            0x00007782      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007784      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 11, 12:
+            0x00007787      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007789      f652           inc 0x52,x                  ; increment memory by one
+            0x0000778b      d002           bne 0x00778f                ; branch on result not zero
+            0x0000778d      f653           inc 0x53,x                  ; increment memory by one
+            0x0000778f      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007791      4c7a77         jmp 0x777a            ; local 0x777a (continue in song 9)
+song 10:
+            0x00007794      a152           lda (0x52,x)                ; load accumulator with memory
+            0x00007796      f652           inc 0x52,x                  ; increment memory by one
+            0x00007798      d002           bne 0x00779c                ; branch on result not zero
+            0x0000779a      f653           inc 0x53,x                  ; increment memory by one
+            0x0000779c      0900           ora #0x00                   ; "or" memory with accumulator
+            0x0000779e      9deb72         sta 0x72eb,x                ; store accumulator in memory
+            0x000077a1      a152           lda (0x52,x)                ; load accumulator with memory
+            0x000077a3      f652           inc 0x52,x                  ; increment memory by one
+            0x000077a5      d002           bne 0x0077a9                ; branch on result not zero
+            0x000077a7      f653           inc 0x53,x                  ; increment memory by one
+            0x000077a9      0900           ora #0x00                   ; "or" memory with accumulator
+            0x000077ab      9dea72         sta 0x72ea,x                ; store accumulator in memory
+            0x000077ae      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 13:
+            0x000077b1      a152           lda (0x52,x)                ; load accumulator with memory
+            0x000077b3      f652           inc 0x52,x                  ; increment memory by one
+            0x000077b5      d002           bne 0x0077b9                ; branch on result not zero
+            0x000077b7      f653           inc 0x53,x                  ; increment memory by one
+            0x000077b9      0900           ora #0x00                   ; "or" memory with accumulator
+            0x000077bb      cd1d72         cmp 0x721d                  ; compare memory and accumulator
+            0x000077be      b04c           bcs 0x00780c                ; branch on carry set
+            0x000077c0      bcdf72         ldy 0x72df,x                ; load index y with memory
+            0x000077c3      c007           cpy #0x07                   ; compare memory and index y
+            0x000077c5      b045           bcs 0x00780c                ; branch on carry set
+            0x000077c7      48             pha                         ; push accumulator on stack
+            0x000077c8      8a             txa                         ; transfer index x to accumulator
+            0x000077c9      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x000077ca      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x000077cb      7ddf72         adc 0x72df,x                ; add memory to accumulator with carry
+            0x000077ce      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x000077cf      a8             tay                         ; transfer accumulator to index y
+            0x000077d0      b552           lda 0x52,x                  ; load accumulator with memory
+            0x000077d2      999572         sta 0x7295,y                ; store accumulator in memory
+            0x000077d5      b553           lda 0x53,x                  ; load accumulator with memory
+            0x000077d7      999672         sta 0x7296,y                ; store accumulator in memory
+            0x000077da      fedf72         inc 0x72df,x                ; increment memory by one
+            0x000077dd      68             pla                         ; pull accumulator from stack
+            0x000077de      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x000077df      a8             tay                         ; transfer accumulator to index y
+            0x000077e0      b94972         lda 0x7249,y                ; load accumulator with memory
+            0x000077e3      9552           sta 0x52,x                  ; store accumulator in memory
+            0x000077e5      b94a72         lda 0x724a,y                ; load accumulator with memory
+            0x000077e8      9553           sta 0x53,x                  ; store accumulator in memory
+            0x000077ea      a93c           lda #0x3c                   ; load accumulator with memory
+            0x000077ec      9dd372         sta 0x72d3,x                ; store accumulator in memory
+            0x000077ef      a903           lda #0x03                   ; load accumulator with memory
+            0x000077f1      9dcc72         sta 0x72cc,x                ; store accumulator in memory
+            0x000077f4      a904           lda #0x04                   ; load accumulator with memory
+            0x000077f6      9dcd72         sta 0x72cd,x                ; store accumulator in memory
+            0x000077f9      a152           lda (0x52,x)                ; load accumulator with memory
+            0x000077fb      f652           inc 0x52,x                  ; increment memory by one
+            0x000077fd      d002           bne 0x007801                ; branch on result not zero
+            0x000077ff      f653           inc 0x53,x                  ; increment memory by one
+            0x00007801      0900           ora #0x00                   ; "or" memory with accumulator
+            0x00007803      18             clc                         ; clear carry flag
+            0x00007804      7552           adc 0x52,x                  ; add memory to accumulator with carry
+            0x00007806      9552           sta 0x52,x                  ; store accumulator in memory
+            0x00007808      9002           bcc 0x00780c                ; branch on carry clear
+            0x0000780a      f653           inc 0x53,x                  ; increment memory by one
+            0x0000780c      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 14:
+            0x0000780f      bcdf72         ldy 0x72df,x                ; load index y with memory
+            0x00007812      f027           beq 0x00783b                ; branch on result zero
+            0x00007814      dedf72         dec 0x72df,x                ; decrement memory by one
+            0x00007817      8a             txa                         ; transfer index x to accumulator
+            0x00007818      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x00007819      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x0000781a      7ddf72         adc 0x72df,x                ; add memory to accumulator with carry
+            0x0000781d      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x0000781e      a8             tay                         ; transfer accumulator to index y
+            0x0000781f      b99572         lda 0x7295,y                ; load accumulator with memory
+            0x00007822      9552           sta 0x52,x                  ; store accumulator in memory
+            0x00007824      b99672         lda 0x7296,y                ; load accumulator with memory
+            0x00007827      9553           sta 0x53,x                  ; store accumulator in memory
+            0x00007829      a93c           lda #0x3c                   ; load accumulator with memory
+            0x0000782b      9dd372         sta 0x72d3,x                ; store accumulator in memory
+            0x0000782e      a903           lda #0x03                   ; load accumulator with memory
+            0x00007830      9dcc72         sta 0x72cc,x                ; store accumulator in memory
+            0x00007833      a904           lda #0x04                   ; load accumulator with memory
+            0x00007835      9dcd72         sta 0x72cd,x                ; store accumulator in memory
+            0x00007838      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+song 15:
+            0x0000783b      a9ff           lda #0xff                   ; load accumulator with memory
+            0x0000783d      9dc772         sta 0x72c7,x                ; store accumulator in memory
+            0x00007840      a9ff           lda #0xff                   ; load accumulator with memory
+            0x00007842      9de572         sta 0x72e5,x                ; store accumulator in memory
+            0x00007845      ad1a72         lda 0x721a                  ; load accumulator with memory
+            0x00007848      4c6278         jmp 0x7862            ; local 0x7862 (continue song 15)
+
+song 16:
+            0x0000784b      4c6875         jmp 0x7568            ; local 0x7568 (continue after song selection)
+
+local 0x784e: (continue same song)
+            0x0000784e      bdc672         lda 0x72c6,x                ; load accumulator with memory
+            0x00007851      ddf072         cmp 0x72f0,x                ; compare memory and accumulator
+            0x00007854      9002           bcc 0x007858                ; branch on carry clear
+            0x00007856      d00a           bne 0x007862                ; branch on result not zero
+            0x00007858      bdd972         lda 0x72d9,x                ; load accumulator with memory
+            0x0000785b      3005           bmi 0x007862                ; branch on result minus
+            0x0000785d      a9ff           lda #0xff                   ; load accumulator with memory
+            0x0000785f      9de572         sta 0x72e5,x                ; store accumulator in memory
+
+local 0x7862: (continue from song 15, 16)
+            0x00007862      ce1a72         dec 0x721a                  ; decrement memory by one
+            0x00007865      3003           bmi 0x00786a                ; branch on result minus
+            0x00007867      4c5375         jmp 0x7553            ; local 0x7553
+            0x0000786a      ad2072         lda 0x7220                  ; load accumulator with memory
+            0x0000786d      f01b           beq 0x00788a                ; branch on result zero
+            0x0000786f      adcd03         lda 0x03cd                  ; load accumulator with memory
+            0x00007872      d003           bne 0x007877                ; branch on result not zero
+            0x00007874      4c8b78         jmp 0x788b            ; local 0x788b
+            0x00007877      cd1f72         cmp 0x721f                  ; compare memory and accumulator
+            0x0000787a      f008           beq 0x007884                ; branch on result zero
+            0x0000787c      9006           bcc 0x007884                ; branch on carry clear
+            0x0000787e      adce03         lda 0x03ce                  ; load accumulator with memory
+            0x00007881      8dcd03         sta 0x03cd                  ; store accumulator in memory
+            0x00007884      8dcc03         sta 0x03cc                  ; store accumulator in memory
+            0x00007887      4c4974         jmp 0x7449            ; local 0x7449 (continue in song)
+            0x0000788a      60             rts                         ; return from subroutine
+
+
+local 0x788b: (change to song)
+            0x0000788b      adce03         lda 0x03ce                  ; load accumulator with memory
+        ,=< 0x0000788e      f015           beq 0x421108          ; if zero leave (no song?)
+        |   0x00007890      a900           lda #0x00                   ; load accumulator with memory
+        |   0x00007892      8dcc03         sta 0x03cc                  ; store accumulator in memory
+        |   0x00007895      8dce03         sta 0x03ce                  ; store accumulator in memory
+local 0x7898: (some kind of end song?)
+        |   0x00007898      a00f           ldy #0x0f                   ; load index y with memory
+       .--> 0x0000789a      a900           lda #0x00                   ; load accumulator with memory
+       ||   0x0000789c      99ae7b         sta 0x7bae,y                ; store accumulator in memory
+       ||   0x0000789f      88             dey                         ; decrement index y by one
+       `==< 0x000078a0      10f8           bpl 0x421108                ; branch on result plus
+        |   0x000078a2      20fb73         jsr 0x73fb            ; local 0x73fb (clear sid control register gate flag)
+        `-> 0x000078a5      60             rts                         ; return from subroutine
+
+------------------------------------------------------------------------------
+
+local 0x78a6: transfer data to sid
+            0x000078a6      a200           ldx #0x00                   ; load index x with memory
+            0x000078a8      bde472         lda 0x72e4,x                ; load accumulator with memory
+        ,=< 0x000078ab      f032           beq 0x0078df                ; branch on result zero
+        |   0x000078ad      adae7b         lda 0x7bae                  ; load accumulator with memory
+        |   0x000078b0      8d00d4         sta 0xd400            ; sid register
+        |   0x000078b3      adaf7b         lda 0x7baf                  ; load accumulator with memory
+        |   0x000078b6      8d01d4         sta 0xd401            ; sid register
+        |   0x000078b9      bdfc72         lda 0x72fc,x          
+        |   0x000078bc      8d05d4         sta 0xd405            ; sid register
+        |   0x000078bf      bdfd72         lda 0x72fd,x                ; load accumulator with memory
+        |   0x000078c2      8d06d4         sta 0xd406            ; sid register
+        |   0x000078c5      bdf672         lda 0x72f6,x                ; load accumulator with memory
+        |   0x000078c8      8d02d4         sta 0xd402            ; sid register
+        |   0x000078cb      bdf772         lda 0x72f7,x                ; load accumulator with memory
+        |   0x000078ce      8d03d4         sta 0xd403            ; sid register
+        |   0x000078d1      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x000078d4      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x000078d6      8d04d4         sta 0xd404            ; sid register
+        |   0x000078d9      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x000078dc      8d04d4         sta 0xd404            ; sid register
+        `-> 0x000078df      bde572         lda 0x72e5,x                ; load accumulator with memory
+        ,=< 0x000078e2      f008           beq 0x0078ec                ; branch on result zero
+        |   0x000078e4      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x000078e7      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x000078e9      8d04d4         sta 0xd404            ; sid register
+        `-> 0x000078ec      a202           ldx #0x02                   ; load index x with memory
+            0x000078ee      bde472         lda 0x72e4,x                ; load accumulator with memory
+        ,=< 0x000078f1      f032           beq 0x007925                ; branch on result zero
+        |   0x000078f3      adb07b         lda 0x7bb0                  ; load accumulator with memory
+        |   0x000078f6      8d07d4         sta 0xd407            ; sid register
+        |   0x000078f9      adb17b         lda 0x7bb1                  ; load accumulator with memory
+        |   0x000078fc      8d08d4         sta 0xd408            ; sid register
+        |   0x000078ff      bdfc72         lda 0x72fc,x                ; load accumulator with memory
+        |   0x00007902      8d0cd4         sta 0xd40c            ; sid register
+        |   0x00007905      bdfd72         lda 0x72fd,x                ; load accumulator with memory
+        |   0x00007908      8d0dd4         sta 0xd40d            ; sid register
+        |   0x0000790b      bdf672         lda 0x72f6,x                ; load accumulator with memory
+        |   0x0000790e      8d09d4         sta 0xd409            ; sid register
+        |   0x00007911      bdf772         lda 0x72f7,x                ; load accumulator with memory
+        |   0x00007914      8d0ad4         sta 0xd40a            ; sid register
+        |   0x00007917      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x0000791a      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x0000791c      8d0bd4         sta 0xd40b            ; sid register
+        |   0x0000791f      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x00007922      8d0bd4         sta 0xd40b            ; sid register
+        `-> 0x00007925      bde572         lda 0x72e5,x                ; load accumulator with memory
+        ,=< 0x00007928      f008           beq 0x007932                ; branch on result zero
+        |   0x0000792a      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x0000792d      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x0000792f      8d0bd4         sta 0xd40b            ; sid register
+        `-> 0x00007932      a204           ldx #0x04                   ; load index x with memory
+            0x00007934      bde472         lda 0x72e4,x                ; load accumulator with memory
+        ,=< 0x00007937      f032           beq 0x00796b                ; branch on result zero
+        |   0x00007939      adb27b         lda 0x7bb2                  ; load accumulator with memory
+        |   0x0000793c      8d0ed4         sta 0xd40e            ; sid register
+        |   0x0000793f      adb37b         lda 0x7bb3                  ; load accumulator with memory
+        |   0x00007942      8d0fd4         sta 0xd40f            ; sid register
+        |   0x00007945      bdfc72         lda 0x72fc,x                ; load accumulator with memory
+        |   0x00007948      8d13d4         sta 0xd413            ; sid register
+        |   0x0000794b      bdfd72         lda 0x72fd,x                ; load accumulator with memory
+        |   0x0000794e      8d14d4         sta 0xd414            ; sid register
+        |   0x00007951      bdf672         lda 0x72f6,x                ; load accumulator with memory
+        |   0x00007954      8d10d4         sta 0xd410            ; sid register
+        |   0x00007957      bdf772         lda 0x72f7,x                ; load accumulator with memory
+        |   0x0000795a      8d11d4         sta 0xd411            ; sid register
+        |   0x0000795d      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x00007960      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x00007962      8d12d4         sta 0xd412            ; sid register
+        |   0x00007965      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x00007968      8d12d4         sta 0xd412            ; sid register
+        `-> 0x0000796b      bde572         lda 0x72e5,x                ; load accumulator with memory
+        ,=< 0x0000796e      f008           beq 0x007978                ; branch on result zero
+        |   0x00007970      bdf172         lda 0x72f1,x                ; load accumulator with memory
+        |   0x00007973      29fe           and #0xfe                   ; "and" memory with accumulator
+        |   0x00007975      8d12d4         sta 0xd412            ; sid register
+        `-> 0x00007978      a900           lda #0x00                   ; load accumulator with memory
+            0x0000797a      a200           ldx #0x00                   ; load index x with memory
+            0x0000797c      9de472         sta 0x72e4,x                ; store accumulator in memory
+            0x0000797f      9de672         sta 0x72e6,x                ; store accumulator in memory
+            0x00007982      9de872         sta 0x72e8,x                ; store accumulator in memory
+            0x00007985      9de572         sta 0x72e5,x                ; store accumulator in memory
+            0x00007988      9de772         sta 0x72e7,x                ; store accumulator in memory
+            0x0000798b      9de972         sta 0x72e9,x                ; store accumulator in memory
+            0x0000798e      60             rts                         ; return from subroutine
+
+local 798f: scan keyboard     (not necessary)
+            0x0000798f      a905           lda #0x05                   ; load accumulator with memory
+            0x00007991      8d06d5         sta 0xd506           ; c128 RAM configuration register
+            0x00007994      a210           ldx #0x10                   ; load index x with memory
+            0x00007996      bd200a         lda 0x0a20,x         ; Maximum  keyboard  buffer  size
+            0x00007999      9de09f         sta 0x9fe0,x         ; variables behind m.prg
+            0x0000799c      ca             dex                         ; decrement index x by one
+            0x0000799d      10f7           bpl 0x007996                ; branch on result plus
+            0x0000799f      209fff         jsr 0xff9f           ; Scan Keyboard
+            0x000079a2      a210           ldx #0x10                   ; load index x with memory
+            0x000079a4      ec010a         cpx 0x0a01                  ; compare memory and index x
+            0x000079a7      d009           bne 0x0079b2                ; branch on result not zero
+            0x000079a9      bde09f         lda 0x9fe0,x                ; load accumulator with memory
+            0x000079ac      9d200a         sta 0x0a20,x                ; store accumulator in memory
+            0x000079af      ca             dex                         ; decrement index x by one
+            0x000079b0      10f7           bpl 0x0079a9                ; branch on result plus
+            0x000079b2      a904           lda #0x04                   ; load accumulator with memory
+            0x000079b4      8d06d5         sta 0xd506           ; c128 RAM configuration register
+            0x000079b7      60             rts                         ; return from subroutine
+
+data: (purpose unclear)
+            0x000079b8      00             brk                         
+            0x000079b9      00             brk                         
+            0x000079ba      00             brk                         
+            0x000079bb      00             brk                         
+            0x000079bc      00             brk                         
+            0x000079bd      00             brk                         
+            0x000079be      00             brk                         
+            0x000079bf      00             brk                         
+            0x000079c0      fdff00         sbc 0x00ff,x                
+            0x000079c3      1100           ora (0x00),y                
+            0x000079c5      08             php                         
+            0x000079c6      0909           ora #0x09                   
+            0x000079c8      fdff00         sbc 0x00ff,x                
+            0x000079cb      1100           ora (0x00),y                
+            0x000079cd      08             php                         
+            0x000079ce      0a             asl a                       
+            0x000079cf      0a             asl a                       
+            0x000079d0      0400           nop 0x00                    
+            0x000079d2      0311           slo (0x11,x)
+            0x000079d4      00             brk                         
+            0x000079d5      08             php                         
+            0x000079d6      0c0cfe         nop 0xfe0c                  
+            0x000079d9      ff0321         isb 0x2103,x
+            0x000079dc      00             brk                         
+            0x000079dd      08             php                         
+            0x000079de      0396           slo (0x96,x)
+            0x000079e0      02             hlt
+            0x000079e1      00             brk                         
+            0x000079e2      0321           slo (0x21,x)
+            0x000079e4      00             brk                         
+            0x000079e5      08             php                         
+            0x000079e6      04c7           nop 0xc7                    
+            0x000079e8      02             hlt
+            0x000079e9      00             brk                         
+            0x000079ea      0321           slo (0x21,x)
+            0x000079ec      00             brk                         
+            0x000079ed      08             php                         
+            0x000079ee      04d7           nop 0xd7                    
+            0x000079f0      0400           nop 0x00                    
+            0x000079f2      0321           slo (0x21,x)
+            0x000079f4      00             brk                         
+            0x000079f5      08             php                         
+            0x000079f6      04d8           nop 0xd8                    
+            0x000079f8      0400           nop 0x00                    
+            0x000079fa      0121           ora (0x21,x)                
+            0x000079fc      00             brk                         
+            0x000079fd      08             php                         
+            0x000079fe      04d9           nop 0xd9                    
+            0x00007a00      0300           slo (0x00,x)
+            0x00007a02      0321           slo (0x21,x)
+            0x00007a04      00             brk                         
+            0x00007a05      08             php                         
+            0x00007a06      06c9           asl 0xc9                    
+            0x00007a08      0300           slo (0x00,x)
+            0x00007a0a      0321           slo (0x21,x)
+            0x00007a0c      00             brk                         
+            0x00007a0d      08             php                         
+            0x00007a0e      0959           ora #0x59                   
+            0x00007a10      02             hlt
+            0x00007a11      00             brk                         
+            0x00007a12      0321           slo (0x21,x)
+            0x00007a14      00             brk                         
+            0x00007a15      08             php                         
+            0x00007a16      0a             asl a                       
+            0x00007a17      3a             nop                         
+            0x00007a18      0300           slo (0x00,x)
+            0x00007a1a      0321           slo (0x21,x)
+            0x00007a1c      00             brk                         
+            0x00007a1d      08             php                         
+            0x00007a1e      0a             asl a                       
+            0x00007a1f      8a             txa                         
+            0x00007a20      0500           ora 0x00                    
+            0x00007a22      0121           ora (0x21,x)                
+            0x00007a24      00             brk                         
+            0x00007a25      08             php                         
+            0x00007a26      32             hlt
+            0x00007a27      f3fb           isb (0xfb),y
+            0x00007a29      ff0441         isb 0x4104,x
+            0x00007a2c      a002           ldy #0x02                   
+            0x00007a2e      0467           nop 0x67                    
+            0x00007a30      02             hlt
+            0x00007a31      00             brk                         
+            0x00007a32      00             brk                         
+            0x00007a33      4100           eor (0x00,x)                
+            0x00007a35      0c04c9         nop 0xc904                  
+            0x00007a38      0300           slo (0x00,x)
+            0x00007a3a      02             hlt
+            0x00007a3b      4100           eor (0x00,x)                
+            0x00007a3d      02             hlt
+            0x00007a3e      04d9           nop 0xd9                    
+            0x00007a40      0300           slo (0x00,x)
+            0x00007a42      0341           slo (0x41,x)
+            0x00007a44      00             brk                         
+            0x00007a45      0406           nop 0x06                    
+            0x00007a47      c9fe           cmp #0xfe                   
+            0x00007a49      ff0341         isb 0x4103,x
+            0x00007a4c      00             brk                         
+            0x00007a4d      0309           slo (0x09,x)
+            0x00007a4f      4903           eor #0x03                   
+            0x00007a51      00             brk                         
+            0x00007a52      02             hlt
+            0x00007a53      4155           eor (0x55,x)                
+            0x00007a55      050a           ora 0x0a                    
+            0x00007a57      00             brk                         
+            0x00007a58      0400           nop 0x00                    
+            0x00007a5a      0341           slo (0x41,x)
+            0x00007a5c      5505           eor 0x05,x                  
+            0x00007a5e      0c0c02         nop 0x020c                  
+            0x00007a61      00             brk                         
+            0x00007a62      0341           slo (0x41,x)
+            0x00007a64      00             brk                         
+            0x00007a65      040c           nop 0x0c                    
+            0x00007a67      3c0100         nop 0x0001,x                
+            0x00007a6a      0141           ora (0x41,x)                
+            0x00007a6c      00             brk                         
+            0x00007a6d      02             hlt
+            0x00007a6e      1488           nop 0x88,x                  
+            0x00007a70      0500           ora 0x00                    
+            0x00007a72      0141           ora (0x41,x)                
+            0x00007a74      00             brk                         
+            0x00007a75      08             php                         
+            0x00007a76      32             hlt
+            0x00007a77      f3fe           isb (0xfe),y
+            0x00007a79      ff0351         isb 0x5103,x
+            0x00007a7c      00             brk                         
+            0x00007a7d      08             php                         
+            0x00007a7e      03c6           slo (0xc6,x)
+            0x00007a80      fbff04         isb 0x04ff,y
+            0x00007a83      5100           eor (0x00),y                
+            0x00007a85      0404           nop 0x04                    
+            0x00007a87      c703           dcp 0x03
+            0x00007a89      00             brk                         
+            0x00007a8a      02             hlt
+            0x00007a8b      5100           eor (0x00),y                
+            0x00007a8d      08             php                         
+            0x00007a8e      04d9           nop 0xd9                    
+            0x00007a90      0300           slo (0x00,x)
+            0x00007a92      0351           slo (0x51,x)
+            0x00007a94      8000           nop #0x00                   
+            0x00007a96      06c9           asl 0xc9                    
+            0x00007a98      0300           slo (0x00,x)
+            0x00007a9a      02             hlt
+            0x00007a9b      5155           eor (0x55),y                
+            0x00007a9d      050a           ora 0x0a                    
+            0x00007a9f      00             brk                         
+            0x00007aa0      ffff04         isb 0x04ff,x
+            0x00007aa3      5180           eor (0x80),y                
+            0x00007aa5      00             brk                         
+            0x00007aa6      0b0b           anc #0x0b
+            0x00007aa8      0400           nop 0x00                    
+            0x00007aaa      0151           ora (0x51,x)                
+            0x00007aac      5505           eor 0x05,x                  
+            0x00007aae      0c0c01         nop 0x010c                  
+            0x00007ab1      00             brk                         
+            0x00007ab2      0151           ora (0x51,x)                
+            0x00007ab4      00             brk                         
+            0x00007ab5      02             hlt
+            0x00007ab6      1488           nop 0x88,x                  
+            0x00007ab8      0500           ora 0x00                    
+            0x00007aba      0151           ora (0x51,x)                
+            0x00007abc      00             brk                         
+            0x00007abd      08             php                         
+            0x00007abe      32             hlt
+            0x00007abf      f302           isb (0x02),y
+            0x00007ac1      00             brk                         
+            0x00007ac2      02             hlt
+            0x00007ac3      51c0           eor (0xc0),y                
+            0x00007ac5      00             brk                         
+            0x00007ac6      f38c           isb (0x8c),y
+            0x00007ac8      02             hlt
+            0x00007ac9      00             brk                         
+            0x00007aca      0381           slo (0x81,x)
+            0x00007acc      00             brk                         
+            0x00007acd      08             php                         
+            0x00007ace      0a             asl a                       
+            0x00007acf      00             brk                         
+            0x00007ad0      b8             clv                         
+            0x00007ad1      d2             hlt
+            0x00007ad2      ee0b2a         inc 0x2a0b                  
+            0x00007ad5      4b6e           asr #0x6e
+            0x00007ad7      93bae4         sha 0xe4ba,x
+            0x00007ada      103f           bpl 0x007b1b                
+            0x00007adc      70a4           bvs 0x007a82                
+            0x00007ade      dc1755         nop 0x5517,x                
+            0x00007ae1      97dd           sax 0xdd,y
+            0x00007ae3      2775           rla 0x75
+            0x00007ae5      c8             iny                         
+            0x00007ae6      207de0         jsr 0xe07d                  
+            0x00007ae9      49b8           eor #0xb8                   
+            0x00007aeb      2da92d         and 0x2da9                  
+            0x00007aee      b94dea         lda 0xea4d,y                
+            0x00007af1      9040           bcc 0x007b33                
+            0x00007af3      fa             nop                         
+            0x00007af4      c091           cpy #0x91                   
+            0x00007af6      6f5a53         rra 0x535a
+            0x00007af9      5b729a         sre 0x9a72,y
+            0x00007afc      d4             nop 0x10,x                  
+            0x00007afe      80f5           nop #0xf5                   
+            0x00007b00      8023           nop #0x23                   
+            0x00007b02      deb4a6         dec 0xa6b4,x                
+            0x00007b05      b5e4           lda 0xe4,x                  
+            0x00007b07      34a7           nop 0xa7,x                  
+            0x00007b09      40             rti                         
+            0x00007b0a      00             brk                         
+            0x00007b0b      ea             nop                         
+            0x00007b0c      00             brk                         
+            0x00007b0d      45bc           eor 0xbc                    
+            0x00007b0f      68             pla                         
+            0x00007b10      4c6bc8         jmp 0xc86b
+            0x00007b13      68             pla                         
+            0x00007b14      4f8000         sre 0x0080
+            0x00007b17      d400           nop 0x00,x                  
+            0x00007b19      8a             txa                         
+            0x00007b1a      79d097         adc 0x97d0,y                
+            0x00007b1d      d590           cmp 0x90,x                  
+            0x00007b1f      d09d           bne 0x007abe                
+            0x00007b21      ffffa7         isb 0xa7ff,x
+            0x00007b24      00             brk                         
+            0x00007b25      15f1           ora 0xf1,x                  
+            0x00007b27      ffffff         isb 0xffff,x
+            0x00007b2a      ffffff         isb 0xffff,x
+            0x00007b2d      ffffff         isb 0xffff,x
+            0x00007b30      0101           ora (0x01,x)                
+            0x00007b32      0102           ora (0x02,x)                
+            0x00007b34      02             hlt
+            0x00007b35      02             hlt
+            0x00007b36      02             hlt
+            0x00007b37      02             hlt
+            0x00007b38      02             hlt
+            0x00007b39      02             hlt
+            0x00007b3a      0303           slo (0x03,x)
+            0x00007b3c      0303           slo (0x03,x)
+            0x00007b3e      0304           slo (0x04,x)
+            0x00007b40      0404           nop 0x04                    
+            0x00007b42      0405           nop 0x05                    
+            0x00007b44      0505           ora 0x05                    
+            0x00007b46      0606           asl 0x06                    
+            0x00007b48      0607           asl 0x07                    
+            0x00007b4a      0708           slo 0x08
+            0x00007b4c      08             php                         
+            0x00007b4d      0909           ora #0x09                   
+            0x00007b4f      0a             asl a                       
+            0x00007b50      0a             asl a                       
+            0x00007b51      0b0c           anc #0x0c
+            0x00007b53      0c0d0e         nop 0x0e0d                  
+            0x00007b56      0f1011         slo 0x1110
+            0x00007b59      12             hlt
+            0x00007b5a      1314           slo (0x14),y
+            0x00007b5c      1517           ora 0x17,x                  
+            0x00007b5e      18             clc                         
+            0x00007b5f      191b1d         ora 0x1d1b,y                
+            0x00007b62      1e2022         asl 0x2220,x                
+            0x00007b65      2426           bit 0x26                    
+            0x00007b67      292b           and #0x2b                   
+            0x00007b69      2e3133         rol 0x3331                  
+            0x00007b6c      373a           rla 0x3a,x
+            0x00007b6e      3d4145         and 0x4541,x                
+            0x00007b71      494d           eor #0x4d                   
+            0x00007b73      52             hlt
+            0x00007b74      575c           sre 0x5c,x
+            0x00007b76      62             hlt
+            0x00007b77      676e           rra 0x6e
+            0x00007b79      747b           nop 0x7b,x                  
+            0x00007b7b      828a           nop #0x8a                   
+            0x00007b7d      92             hlt
+            0x00007b7e      9ba4ae         shs 0xaea4,y
+            0x00007b81      b8             clv                         
+            0x00007b82      c3cf           dcp (0xcf,x)
+            0x00007b84      dce9f6         nop 0xf6e9,x                
+            0x00007b87      ffffff         isb 0xffff,x
+            0x00007b8a      ffffff         isb 0xffff,x
+            0x00007b8d      ffffff         isb 0xffff,x
+            0x00007b90      c060           cpy #0x60                   
+            0x00007b92      3018           bmi 0x007bac                
+            0x00007b94      0c0603         nop 0x0306                  
+            0x00007b97      ffff90         isb 0x90ff,x
+            0x00007b9a      48             pha                         
+            0x00007b9b      2412           bit 0x12                    
+            0x00007b9d      09ff           ora #0xff                   
+            0x00007b9f      ff8040         isb 0x4080,x
+            0x00007ba2      201008         jsr 0x0810                  
+            0x00007ba5      0402           nop 0x02                    
+            0x00007ba7      01
+
+variables:
+            0x00007ba8      00                             ; ?? voice 1 (initialized)
+            0x00007ba9      00                             ; ?? voice 1 (initialized)
+            0x00007baa      01                             ; ?? voice 2 (initialized)
+            0x00007bab      01                             ; ?? voice 2 (initialized)
+            0x00007bac      02                             ; ?? voice 3 (initialized)
+            0x00007bad      02                             ; ?? voice 3 (initialized)
+            0x00007bae      00                             ; freq voice 1
+            0x00007baf      00                             ; freq voice 1
+            0x00007bb0      00                             ; freq voice 2
+            0x00007bb1      00                             ; freq voice 2
+            0x00007bb2      00                             ; freq voice 3
+            0x00007bb3      00                             ; freq voice 3
+            0x00007bb4      00                             
+            0x00007bb5      00                             
+            0x00007bb6      00                             
+            0x00007bb7      00                             
+            0x00007bb8      00                             
+            0x00007bb9      00                             
+            0x00007bba      00                             
+            0x00007bbb      00                             
+            0x00007bbc      00                             
+            0x00007bbd      00                             
+            0x00007bbe      00                             ; ?? voice 1
+            0x00007bbf      00                             ; ?? voice 1
+            0x00007bc0      00                             ; ?? voice 2
+            0x00007bc1      00                             ; ?? voice 2
+            0x00007bc2      00                             ; ?? voice 3
+            0x00007bc3      00                             ; ?? voice 3
+
+------------------------------------------------------------------------------
+init copied routines
+
+local 0x7c2c: init interrupt and other routine to 0x0123 and 0x220
+            0x00007bc4      a251           ldx #0x51                   ; load index x with memory
+            0x00007bc6      bdda7b         lda 0x7bda,x                ; load accumulator with memory
+            0x00007bc9      9d2201         sta 0x0122,x                ; store accumulator in memory
+            0x00007bcc      ca             dex                         ; decrement index x by one
+            0x00007bcd      d0f7           bne 0x007bc6                ; branch on result not zero
+            0x00007bcf      a272           ldx #0x72                   ; load index x with memory
+            0x00007bd1      bd2b7c         lda 0x7c2b,x                ; load accumulator with memory
+            0x00007bd4      9d1f02         sta 0x021f,x                ; store accumulator in memory
+            0x00007bd7      ca             dex                         ; decrement index x by one
+            0x00007bd8      d0f7           bne 0x007bd1                ; branch on result not zero
+            0x00007bda      60             rts                         ; return from subroutine
+
+local: copied jump routine with jump table
+0x0123      0x00007bdb      4c2c01         jmp 0x012c            ; jump table init
+0x0126      0x00007bde      4c4d02         jmp 0x024d            ; jump table music off
+0x0129      0x00007be1      4c5802         jmp 0x0258            ; jump table music on
+
+0x012c: (initialize)
+            0x00007be4      08             php                         ; push processor status on stack
+            0x00007be5      78             sei                         ; set interrupt disable status
+            0x00007be6      ad00ff         lda 0xff00                  ; load accumulator with memory
+            0x00007be9      48             pha                         ; push accumulator on stack
+            0x00007bea      a97e           lda #0x7e                   ; load accumulator with memory
+            0x00007bec      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007bef      20da73         jsr 0x73da            ; local 0x73da (swap zp variables)
+            0x00007bf2      200072         jsr 0x7200            ; 0x7200 (initialize)
+            0x00007bf5      20da73         jsr 0x73da            ; local 0x73da (swap zp variables)
+0x140: (activate timer and interrupt)
+            0x00007bf8      a982           lda #0x82                   ; load accumulator with memory
+            0x00007bfa      8d0ddc         sta 0xdc0d            ; interrupt control
+            0x00007bfd      a901           lda #0x01                   ; load accumulator with memory
+            0x00007bff      8d0fdc         sta 0xdc0f            ; timer
+            0x00007c02      a900           lda #0x00                   ; load accumulator with memory
+            0x00007c04      8d1ad0         sta 0xd01a            ; interrupt, disable video interrupts
+            0x00007c07      a929           lda #0x29                   ; load accumulator with memory
+            0x00007c09      8d1403         sta 0x0314                  ; store accumulator in memory
+            0x00007c0c      a902           lda #0x02                   ; load accumulator with memory
+            0x00007c0e      8d1503         sta 0x0315                  ; store accumulator in memory
+            0x00007c11      a220           ldx #0x20                   ; load index x with memory
+            0x00007c13      a002           ldy #0x02                   ; load index y with memory
+            0x00007c15      8efeff         stx 0xfffe                  ; store index x in memory
+            0x00007c18      8cffff         sty 0xffff                  ; store index y in memory
+            0x00007c1b      a93f           lda #0x3f                   ; load accumulator with memory
+            0x00007c1d      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c20      8efeff         stx 0xfffe                  ; store index x in memory
+            0x00007c23      8cffff         sty 0xffff                  ; store index y in memory
+            0x00007c26      68             pla                         ; pull accumulator from stack
+            0x00007c27      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c2a      28             plp                         ; pull processor status from stack
+0x0172      0x00007c2b      60             rts                         ; return from subroutine
+
+irq routine:
+0x0220      0x00007c2c      48             pha                         ; push accumulator on stack
+0x0221      0x00007c2d      8a             txa                         ; transfer index x to accumulator
+     2      0x00007c2e      48             pha                         ; push accumulator on stack
+     3      0x00007c2f      98             tya                         ; transfer index y to accumulator
+     4      0x00007c30      48             pha                         ; push accumulator on stack
+     5      0x00007c31      ad00ff         lda 0xff00                  ; load accumulator with memory
+     8      0x00007c34      48             pha                         ; push accumulator on stack
+     9      0x00007c35      d8             cld                         ; clear decimal mode
+            0x00007c36      a97e           lda #0x7e                   ; load accumulator with memory
+            0x00007c38      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c3b      ad0ddc         lda 0xdc0d            ; load timer value
+            0x00007c3e      1007           bpl 0x007c47          ; no interrupt, branch
+            0x00007c40      2902           and #0x02                   ; "and" memory with accumulator
+            0x00007c42      f003           beq 0x007c47          ; no timer B underflow, branch
+            0x00007c44      200372         jsr 0x7203            ; 0x7203 (continue music)
+            0x00007c47      a94e           lda #0x4e                   ; load accumulator with memory
+            0x00007c49      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c4c      208f79         jsr 0x798f            ; local 0x798f (scan keyboard)
+            0x00007c4f      68             pla                         ; pull accumulator from stack
+            0x00007c50      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c53      68             pla                         ; pull accumulator from stack
+            0x00007c54      a8             tay                         ; transfer accumulator to index y
+            0x00007c55      68             pla                         ; pull accumulator from stack
+            0x00007c56      aa             tax                         ; transfer accumulator to index x
+            0x00007c57      68             pla                         ; pull accumulator from stack
+            0x00007c58      40             rti                         ; return from interrupt
+
+0x0126: (music off)
+0x024d      0x00007c59      a97e           lda #0x7e                   ; load accumulator with memory
+            0x00007c5b      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c5e      20ec73         jsr 0x73ec            ; 0x7206
+            0x00007c61      4c8c02         jmp 0x028c            ; external jump
+            
+0x0129: (music on)
+0x0258      0x00007c64      08             php                         ; push processor status on stack
+            0x00007c65      78             sei                         ; set interrupt disable status
+            0x00007c66      ad00ff         lda 0xff00                  ; load accumulator with memory
+            0x00007c69      48             pha                         ; push accumulator on stack
+            0x00007c6a      a97e           lda #0x7e                   ; load accumulator with memory
+            0x00007c6c      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00007c6f      20f573         jsr 0x73f5            ; 0x7209
+            0x00007c72      4c4001         jmp 0x0140            ; external jump
+
+local: copies the full m.prg and more to other bank (0x7200 to 0xa0ff/0xa1ff)
+0x0269      0x00007c75      a900           lda #0x00             ; set 50,51 to 0x7200
+            0x00007c77      8550           sta 0x50              
+            0x00007c79      a972           lda #0x72             
+            0x00007c7b      8551           sta 0x51              
+            0x00007c7d      a000           ldy #0x00             ; init Y
+            0x00007c7f      a23f           ldx #0x3f             ; bank memory
+            0x00007c81      8e00ff         stx 0xff00                  ; store index x in memory
+            0x00007c84      b150           lda (0x50),y          ; load A from source
+            0x00007c86      a27f           ldx #0x7f             ; bank memory
+            0x00007c88      8e00ff         stx 0xff00            
+            0x00007c8b      9150           sta (0x50),y          ; store A to destination (same address)
+            0x00007c8d      c8             iny                   ; inc Y (one page)
+            0x00007c8e      d0ef           bne 0x007c7f          ; if finished
+            0x00007c90      e651           inc 0x51              ; inc high address
+            0x00007c92      a551           lda 0x51              ; and compare if finished (0xa1) => ca 2f00 data
+            0x00007c94      c9a1           cmp #0xa1             
+            0x00007c96      90e7           bcc 0x007c7f          ; if not finished, branch
+0x028c: (leave and bank memory)
+            0x00007c98      a00e           ldy #0x0e                   ; load index y with memory
+            0x00007c9a      8c00ff         sty 0xff00                  ; store index y in memory
+            0x00007c9d      60             rts                         ; return from subroutine
+
+------------------------------------------------------------------------------
+
+data
+            0x00007c9e      f001           beq 0x007ca1          
+

@@ -1,0 +1,1302 @@
+  |||||||   0x00009500      ba             tsx                         ; transfer stack pointer to index x
+  |||||||   0x00009501      8e5f9f         stx 0x9f5f                  ; store index x in memory
+  ========< 0x00009504      4c8d96         jmp 0x968d                  ; jump to new location
+  |||||||   0x00009507      8040           nop #0x40                   ; no operation
+  |||||||   0x00009509      201008         jsr 0x0810                  ; jump to new location saving return address
+  |||||||   0x0000950c      0402           nop 0x02                    ; no operation
+  |||||||   0x0000950e      011b           ora (0x1b,x)                ; "or" memory with accumulator
+  |||||||   0x00009510      67b3           rra 0xb3
+  |||||||   0x00009512      ff9595         isb 0x9595,x
+  |||||||   0x00009515      9595           sta 0x95,x                  ; store accumulator in memory
+  |||||||   0x00009517      00             brk                         ; force break
+  |||||||   0x00009518      1326           slo (0x26),y
+  |||||||   0x0000951a      39ffff         and 0xffff,y                ; "and" memory with accumulator
+  |||||||   0x0000951d      4fbc4f         sre 0x4fbc
+  |||||||   0x00009520      4f4fb8         sre 0xb84f
+  |||||||   0x00009523      4f4f4f         sre 0x4f4f
+  |||||||   0x00009526      4f4f4f         sre 0x4f4f
+  |||||||   0x00009529      4f4f4f         sre 0x4f4f
+  |||||||   0x0000952c      ffffff         isb 0xffff,x
+  |||||||   0x0000952f      ff4f44         isb 0x444f,x
+  |||||||   0x00009532      ae9344         ldx 0x4493                  ; load index x with memory
+  |||||||   0x00009535      4444           nop 0x44                    ; no operation
+  |||||||   0x00009537      9dad5c         sta 0x5cad,x                ; store accumulator in memory
+  |||||||   0x0000953a      5d4f44         eor 0x444f,x                ; "exclusive-or" memory with accumulator
+  |||||||   0x0000953d      af4fff         lax 0xff4f
+  |||||||   0x00009540      ffffff         isb 0xffff,x
+  |||||||   0x00009543      4b44           asr #0x44
+  |||||||   0x00009545      4444           nop 0x44                    ; no operation
+  |||||||   0x00009547      4444           nop 0x44                    ; no operation
+  |||||||   0x00009549      4444           nop 0x44                    ; no operation
+  |||||||   0x0000954b      4444           nop 0x44                    ; no operation
+  |||||||   0x0000954d      44b8           nop 0xb8                    ; no operation
+  |||||||   0x0000954f      4444           nop 0x44                    ; no operation
+  |||||||   0x00009551      4fffff         sre 0xffff
+  |||||||   0x00009554      ffff4f         isb 0x4fff,x
+  |||||||   0x00009557      abac           lxa #0xac
+  |||||||   0x00009559      4444           nop 0x44                    ; no operation
+  |||||||   0x0000955b      4444           nop 0x44                    ; no operation
+  |||||||   0x0000955d      4444           nop 0x44                    ; no operation
+  |||||||   0x0000955f      445b           nop 0x5b                    ; no operation
+  |||||||   0x00009561      4f4444         sre 0x4444
+  |||||||   0x00009564      4fffff         sre 0xffff
+  |||||||   0x00009567      2124           and (0x24,x)                ; "and" memory with accumulator
+  |||||||   0x00009569      0506           ora 0x06                    ; "or" memory with accumulator
+  |||||||   0x0000956b      0605           asl 0x05                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000956d      0606           asl 0x06                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000956f      052e           ora 0x2e                    ; "or" memory with accumulator
+  |||||||   0x00009571      0505           ora 0x05                    ; "or" memory with accumulator
+  ||`=====< 0x00009573      4c054c         jmp 0x4c05                  ; jump to new location
+  || ||||   0x00009576      0505           ora 0x05                    ; "or" memory with accumulator
+  || ||||   0x00009578      052e           ora 0x2e                    ; "or" memory with accumulator
+  || ||||   0x0000957a      0522           ora 0x22                    ; "or" memory with accumulator
+  || ||||   0x0000957c      2121           and (0x21,x)                ; "and" memory with accumulator
+  || ||||   0x0000957e      2121           and (0x21,x)                ; "and" memory with accumulator
+  || ||||   0x00009580      2121           and (0x21,x)                ; "and" memory with accumulator
+  || ||||   0x00009582      2405           bit 0x05                    ; test bits in memory with accumulator
+  || ||||   0x00009584      054c           ora 0x4c                    ; "or" memory with accumulator
+  || ||||   0x00009586      0505           ora 0x05                    ; "or" memory with accumulator
+  || ||||   0x00009588      054c           ora 0x4c                    ; "or" memory with accumulator
+  || ||||   0x0000958a      0505           ora 0x05                    ; "or" memory with accumulator
+  || ||||   0x0000958c      052e           ora 0x2e                    ; "or" memory with accumulator
+  || ||||   0x0000958e      0505           ora 0x05                    ; "or" memory with accumulator
+  || ||||   0x00009590      0606           asl 0x06                    ; shift left one bit (memory or accumulator)
+  || ||||   0x00009592      0606           asl 0x06                    ; shift left one bit (memory or accumulator)
+  || ||||   0x00009594      0522           ora 0x22                    ; "or" memory with accumulator
+  || ||||   0x00009596      2105           and (0x05,x)                ; "and" memory with accumulator
+  || `====< 0x00009598      4c0505         jmp 0x0505                  ; jump to new location
+  ||  |||   0x0000959b      054c           ora 0x4c                    ; "or" memory with accumulator
+  ||  |||   0x0000959d      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x0000959f      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095a1      0506           ora 0x06                    ; "or" memory with accumulator
+  ||  |||   0x000095a3      08             php                         ; push processor status on stack
+  ||  |||   0x000095a4      08             php                         ; push processor status on stack
+  ||  |||   0x000095a5      0605           asl 0x05                    ; shift left one bit (memory or accumulator)
+  ||  |||   0x000095a7      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095a9      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095ab      054c           ora 0x4c                    ; "or" memory with accumulator
+  ||  |||   0x000095ad      054c           ora 0x4c                    ; "or" memory with accumulator
+  ||  |||   0x000095af      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095b1      2e0561         rol 0x6105                  ; rotate one bit left (memory or accumulator)
+  ||  |||   0x000095b4      6408           nop 0x08                    ; no operation
+  ||  |||   0x000095b6      0605           asl 0x05                    ; shift left one bit (memory or accumulator)
+  ||  |||   0x000095b8      6365           rra (0x65,x)
+  ||  |||   0x000095ba      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095bc      0609           asl 0x09                    ; shift left one bit (memory or accumulator)
+  ||  |||   0x000095be      0909           ora #0x09                   ; "or" memory with accumulator
+  ||  |||   0x000095c0      0605           asl 0x05                    ; shift left one bit (memory or accumulator)
+  ||  |||   0x000095c2      0909           ora #0x09                   ; "or" memory with accumulator
+  ||  |||   0x000095c4      0910           ora #0x10                   ; "or" memory with accumulator
+  || ||||   0x000095c6      06d4           asl 0xd4                    ; shift left one bit (memory or accumulator)
+  || ||||   0x000095c8      0505           ora 0x05                    ; "or" memory with accumulator
+  || ||||   0x000095ca      6365           rra (0x65,x)
+  || ||||   0x000095cc      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095ce      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095d0      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095d2      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095d4      0506           ora 0x06                    ; "or" memory with accumulator
+  ||  |||   0x000095d6      0923           ora #0x23                   ; "or" memory with accumulator
+  ||  |||   0x000095d8      2509           and 0x09                    ; "and" memory with accumulator
+  ||  |||   0x000095da      62             hlt
+  ||  |||   0x000095db      6405           nop 0x05                    ; no operation
+  ||  |||   0x000095dd      1d0505         ora 0x0505,x                ; "or" memory with accumulator
+  ||  |||   0x000095e0      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095e2      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095e4      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095e6      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095e8      0521           ora 0x21                    ; "or" memory with accumulator
+  ||  |||   0x000095ea      2509           and 0x09                    ; "and" memory with accumulator
+  ||  |||   0x000095ec      0908           ora #0x08                   ; "or" memory with accumulator
+  ||  |||   0x000095ee      62             hlt
+  ||  |||   0x000095ef      6169           adc (0x69,x)                ; add memory to accumulator with carry
+  ||  |||   0x000095f1      6164           adc (0x64,x)                ; add memory to accumulator with carry
+  ||  |||   0x000095f3      0605           asl 0x05                    ; shift left one bit (memory or accumulator)
+  ||  |||   0x000095f5      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095f7      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x000095f9      0909           ora #0x09                   ; "or" memory with accumulator
+  ||  |||   0x000095fb      0509           ora 0x09                    ; "or" memory with accumulator
+  ||  |||   0x000095fd      0909           ora #0x09                   ; "or" memory with accumulator
+  ||  |||   0x000095ff      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009601      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009603      054d           ora 0x4d                    ; "or" memory with accumulator
+  ||  |||   0x00009605      4db144         eor 0x44b1                  ; "exclusive-or" memory with accumulator
+  ||  |||   0x00009608      fa             nop                         ; no operation
+  ||  |||   0x00009609      44bf           nop 0xbf                    ; no operation
+  ||  |||   0x0000960b      4d4d05         eor 0x054d                  ; "exclusive-or" memory with accumulator
+  ||  |||   0x0000960e      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009610      2e052e         rol 0x2e05                  ; rotate one bit left (memory or accumulator)
+  ||  |||   0x00009613      05a1           ora 0xa1                    ; "or" memory with accumulator
+  ||  |||   0x00009615      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009617      4dabac         eor 0xacab                  ; "exclusive-or" memory with accumulator
+  ||  |||   0x0000961a      4444           nop 0x44                    ; no operation
+  ||  |||   0x0000961c      4492           nop 0x92                    ; no operation
+  ||  |||   0x0000961e      444d           nop 0x4d                    ; no operation
+  ||  |||   0x00009620      052e           ora 0x2e                    ; "or" memory with accumulator
+  ||  |||   0x00009622      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009624      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009626      0522           ora 0x22                    ; "or" memory with accumulator
+  ||  |||   0x00009628      2405           bit 0x05                    ; test bits in memory with accumulator
+  ||  |||   0x0000962a      4d4444         eor 0x4444                  ; "exclusive-or" memory with accumulator
+  ||  |||   0x0000962d      4491           nop 0x91                    ; no operation
+  ||  |||   0x0000962f      9495           sty 0x95,x                  ; store index y in memory
+  ||  |||   0x00009631      964d           stx 0x4d,y                  ; store index x in memory
+  ||  |||   0x00009633      052e           ora 0x2e                    ; "or" memory with accumulator
+  ||  |||   0x00009635      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009637      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009639      2e0522         rol 0x2205                  ; rotate one bit left (memory or accumulator)
+  ||  |||   0x0000963c      244d           bit 0x4d                    ; test bits in memory with accumulator
+  ||  |||   0x0000963e      a944           lda #0x44                   ; load accumulator with memory
+  ||  |||   0x00009640      4444           nop 0x44                    ; no operation
+  ||  |||   0x00009642      4444           nop 0x44                    ; no operation
+  ||  |||   0x00009644      444d           nop 0x4d                    ; no operation
+  ||  |||   0x00009646      0505           ora 0x05                    ; "or" memory with accumulator
+  ||  |||   0x00009648      2e0505         rol 0x0505                  ; rotate one bit left (memory or accumulator)
+  ||  |||   0x0000964b      6996           adc #0x96                   ; add memory to accumulator with carry
+  ||  |||   0x0000964d      a04b           ldy #0x4b                   ; load index y with memory
+  || .----> 0x0000964f      b160           lda (0x60),y                ; load accumulator with memory
+  || ||||   0x00009651      9940bf         sta 0xbf40,y                ; store accumulator in memory
+  || ||||   0x00009654      88             dey                         ; decrement index y by one
+  || `====< 0x00009655      10f8           bpl 0x4cc108                ; branch on result plus
+  ||  |||   0x00009657      a20f           ldx #0x0f                   ; load index x with memory
+  || .----> 0x00009659      bd603f         lda 0x3f60,x                ; load accumulator with memory
+  ||,=====< 0x0000965c      f016           beq 0x4cc108                ; branch on result zero
+  |||||||   0x0000965e      bc503f         ldy 0x3f50,x                ; load index y with memory
+  |||||||   0x00009661      b91795         lda 0x9517,y                ; load accumulator with memory
+  |||||||   0x00009664      18             clc                         ; clear carry flag
+  |||||||   0x00009665      7d403f         adc 0x3f40,x                ; add memory to accumulator with carry
+  |||||||   0x00009668      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009669      bd703f         lda 0x3f70,x                ; load accumulator with memory
+  |||||||   0x0000966c      998cbf         sta 0xbf8c,y                ; store accumulator in memory
+  |||||||   0x0000966f      a900           lda #0x00                   ; load accumulator with memory
+  |||||||   0x00009671      9940bf         sta 0xbf40,y                ; store accumulator in memory
+  ||`-----> 0x00009674      ca             dex                         ; decrement index x by one
+  || `====< 0x00009675      10e2           bpl 0x4cc108                ; branch on result plus
+  ||  |||   0x00009677      60             rts                         ; return from subroutine
+  ||  |||   0x00009678      4e4c96         lsr 0x964c                  ; shift right one bit (memory or accumulator)
+  ||  |||   0x0000967b      6e4b96         ror 0x964b                  ; rotate one bit right (memory or accumulator)
+  || ,====< 0x0000967e      9008           bcc 0x4cc108                ; branch on carry clear
+  || ||||   0x00009680      ad4c96         lda 0x964c                  ; load accumulator with memory
+  || ||||   0x00009683      49b4           eor #0xb4                   ; "exclusive-or" memory with accumulator
+  || ||||   0x00009685      8d4c96         sta 0x964c                  ; store accumulator in memory
+  || `----> 0x00009688      ad4b96         lda 0x964b                  ; load accumulator with memory
+  ||  |||   0x0000968b      60             rts                         ; return from subroutine
+  ||  |||   0x0000968c      00             brk                         ; force break
+  ---.----> 0x0000968d      a9ff           lda #0xff                   ; load accumulator with memory
+  || ||||   0x0000968f      8578           sta 0x78                    ; store accumulator in memory
+  || ||||   0x00009691      a9ba           lda #0xba                   ; load accumulator with memory
+  || ||||   0x00009693      8588           sta 0x88                    ; store accumulator in memory
+  || ||||   0x00009695      a99a           lda #0x9a                   ; load accumulator with memory
+  || ||||   0x00009697      8589           sta 0x89                    ; store accumulator in memory
+  || ||||   0x00009699      ad1c4c         lda 0x4c1c                  ; load accumulator with memory
+  || ||||   0x0000969c      8d803f         sta 0x3f80                  ; store accumulator in memory
+  || ||||   0x0000969f      ad1d4c         lda 0x4c1d                  ; load accumulator with memory
+  || ||||   0x000096a2      8d813f         sta 0x3f81                  ; store accumulator in memory
+  || ||||   0x000096a5      a9bc           lda #0xbc                   ; load accumulator with memory
+  || ||||   0x000096a7      8d1c4c         sta 0x4c1c                  ; store accumulator in memory
+  || ||||   0x000096aa      a99d           lda #0x9d                   ; load accumulator with memory
+  || ||||   0x000096ac      8d1d4c         sta 0x4c1d                  ; store accumulator in memory
+  ||.-----> 0x000096af      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  |||||||   0x000096b2      20c396         jsr 0x96c3                  ; jump to new location saving return address
+  ||`=====< 0x000096b5      4caf96         jmp 0x96af                  ; jump to new location
+  || ||||   0x000096b8      e688           inc 0x88                    ; increment memory by one
+  ||,=====< 0x000096ba      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x000096bc      e689           inc 0x89                    ; increment memory by one
+  ||`-----> 0x000096be      a200           ldx #0x00                   ; load index x with memory
+  || ||||   0x000096c0      a188           lda (0x88,x)                ; load accumulator with memory
+  || ||||   0x000096c2      60             rts                         ; return from subroutine
+  || ||||   0x000096c3      297f           and #0x7f                   ; "and" memory with accumulator
+  || ||||   0x000096c5      0a             asl a                       ; shift left one bit (memory or accumulator)
+  || ||||   0x000096c6      a8             tay                         ; transfer accumulator to index y
+  || ||||   0x000096c7      b9d196         lda 0x96d1,y                ; load accumulator with memory
+  || ||||   0x000096ca      48             pha                         ; push accumulator on stack
+  || ||||   0x000096cb      b9d096         lda 0x96d0,y                ; load accumulator with memory
+  || ||||   0x000096ce      48             pha                         ; push accumulator on stack
+  || ||||   0x000096cf      60             rts                         ; return from subroutine
+  || ||||   0x000096d0      ed9607         sbc 0x0796                  ; subtract memory from accumulator with borrow
+  || ||||   0x000096d3      9711           sax 0x11,y
+  || ||||   0x000096d5      9736           sax 0x36,y
+  || ||||   0x000096d7      974a           sax 0x4a,y
+  || ||||   0x000096d9      97cd           sax 0xcd,y
+  || ||||   0x000096db      973f           sax 0x3f,y
+  || ||||   0x000096dd      98             tya                         ; transfer index y to accumulator
+  || ||||   0x000096de      4e98ff         lsr 0xff98                  ; shift right one bit (memory or accumulator)
+  || ||||   0x000096e1      98             tya                         ; transfer index y to accumulator
+  || ||||   0x000096e2      a799           lax 0x99
+  || ||||   0x000096e4      ac99c1         ldy 0xc199                  ; load index y with memory
+  || ||||   0x000096e7      99349a         sta 0x9a34,y                ; store accumulator in memory
+  || ||||   0x000096ea      939a42         sha 0x429a,x
+  || ||||   0x000096ed      9a             txs                         ; transfer index x to stack pointer
+  || ||||   0x000096ee      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x000096f1      a8             tay                         ; transfer accumulator to index y
+  || ||||   0x000096f2      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x000096f5      99603f         sta 0x3f60,y                ; store accumulator in memory
+  || ||||   0x000096f8      99703f         sta 0x3f70,y                ; store accumulator in memory
+  || ||||   0x000096fb      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x000096fe      99403f         sta 0x3f40,y                ; store accumulator in memory
+  || ||||   0x00009701      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x00009704      99503f         sta 0x3f50,y                ; store accumulator in memory
+  || ||||   0x00009707      60             rts                         ; return from subroutine
+  || ||||   0x00009708      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x0000970b      a8             tay                         ; transfer accumulator to index y
+  || ||||   0x0000970c      a900           lda #0x00                   ; load accumulator with memory
+  || ||||   0x0000970e      99603f         sta 0x3f60,y                ; store accumulator in memory
+  || ||||   0x00009711      60             rts                         ; return from subroutine
+  || ||||   0x00009712      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x00009715      a8             tay                         ; transfer accumulator to index y
+  || ||||   0x00009716      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  || ||||   0x00009719      aa             tax                         ; transfer accumulator to index x
+  || ||||   0x0000971a      b9403f         lda 0x3f40,y                ; load accumulator with memory
+  || ||||   0x0000971d      18             clc                         ; clear carry flag
+  || ||||   0x0000971e      7d2f97         adc 0x972f,x                ; add memory to accumulator with carry
+  || ||||   0x00009721      99403f         sta 0x3f40,y                ; store accumulator in memory
+  || ||||   0x00009724      b9503f         lda 0x3f50,y                ; load accumulator with memory
+  || ||||   0x00009727      18             clc                         ; clear carry flag
+  || ||||   0x00009728      7d3397         adc 0x9733,x                ; add memory to accumulator with carry
+  || ||||   0x0000972b      99503f         sta 0x3f50,y                ; store accumulator in memory
+  || ||||   0x0000972e      60             rts                         ; return from subroutine
+  || ||||   0x0000972f      00             brk                         ; force break
+  || ||||   0x00009730      00             brk                         ; force break
+  || ||||   0x00009731      01ff           ora (0xff,x)                ; "or" memory with accumulator
+  || ||||   0x00009733      ff0100         isb 0x0001,x
+  || ||||   0x00009736      00             brk                         ; force break
+  || ||||   0x00009737      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  ||.-----> 0x0000973a      4a             lsr a                       ; shift right one bit (memory or accumulator)
+  |||||||   0x0000973b      4a             lsr a                       ; shift right one bit (memory or accumulator)
+  ========< 0x0000973c      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x0000973e      a901           lda #0x01                   ; load accumulator with memory
+  --------> 0x00009740      48             pha                         ; push accumulator on stack
+  |||||||   0x00009741      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
+  |||||||   0x00009744      68             pla                         ; pull accumulator from stack
+  |||||||   0x00009745      38             sec                         ; set carry flag
+  |||||||   0x00009746      e901           sbc #0x01                   ; subtract memory from accumulator with borrow
+  ========< 0x00009748      d0f6           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x0000974a      60             rts                         ; return from subroutine
+  |||||||   0x0000974b      a9a0           lda #0xa0                   ; load accumulator with memory
+  |||||||   0x0000974d      85fc           sta 0xfc                    ; store accumulator in memory
+  |||||||   0x0000974f      a9c0           lda #0xc0                   ; load accumulator with memory
+  |||||||   0x00009751      85fd           sta 0xfd                    ; store accumulator in memory
+  |||||||   0x00009753      a980           lda #0x80                   ; load accumulator with memory
+  |||||||   0x00009755      858a           sta 0x8a                    ; store accumulator in memory
+  |||||||   0x00009757      a9db           lda #0xdb                   ; load accumulator with memory
+  |||||||   0x00009759      858b           sta 0x8b                    ; store accumulator in memory
+  |||||||   0x0000975b      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x0000975e      a01f           ldy #0x1f                   ; load index y with memory
+  --------> 0x00009760      b1fc           lda (0xfc),y                ; load accumulator with memory
+  |||||||   0x00009762      918a           sta (0x8a),y                ; store accumulator in memory
+  |||||||   0x00009764      88             dey                         ; decrement index y by one
+  ========< 0x00009765      10f9           bpl 0x4cc108                ; branch on result plus
+  |||||||   0x00009767      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  |||||||   0x0000976a      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  |||||||   0x0000976d      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x0000976e      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  |||||||   0x00009771      aa             tax                         ; transfer accumulator to index x
+  |||||||   0x00009772      98             tya                         ; transfer index y to accumulator
+  |||||||   0x00009773      7d1795         adc 0x9517,x                ; add memory to accumulator with carry
+  |||||||   0x00009776      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009777      a9dc           lda #0xdc                   ; load accumulator with memory
+  |||||||   0x00009779      9160           sta (0x60),y                ; store accumulator in memory
+  |||||||   0x0000977b      8ccd97         sty 0x97cd                  ; store index y in memory
+  |||||||   0x0000977e      a91f           lda #0x1f                   ; load accumulator with memory
+  --------> 0x00009780      48             pha                         ; push accumulator on stack
+  |||||||   0x00009781      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009782      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x00009785      a955           lda #0x55                   ; load accumulator with memory
+  |||||||   0x00009787      918a           sta (0x8a),y                ; store accumulator in memory
+  |||||||   0x00009789      20c797         jsr 0x97c7                  ; jump to new location saving return address
+  |||||||   0x0000978c      a9d5           lda #0xd5                   ; load accumulator with memory
+  |||||||   0x0000978e      918a           sta (0x8a),y                ; store accumulator in memory
+  |||||||   0x00009790      98             tya                         ; transfer index y to accumulator
+  |||||||   0x00009791      18             clc                         ; clear carry flag
+  |||||||   0x00009792      6907           adc #0x07                   ; add memory to accumulator with carry
+  |||||||   0x00009794      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009795      c017           cpy #0x17                   ; compare memory and index y
+  ========< 0x00009797      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x00009799      a00f           ldy #0x0f                   ; load index y with memory
+  --------> 0x0000979b      a9ff           lda #0xff                   ; load accumulator with memory
+  |||||||   0x0000979d      918a           sta (0x8a),y                ; store accumulator in memory
+  |||||||   0x0000979f      20c797         jsr 0x97c7                  ; jump to new location saving return address
+  |||||||   0x000097a2      a9ff           lda #0xff                   ; load accumulator with memory
+  |||||||   0x000097a4      918a           sta (0x8a),y                ; store accumulator in memory
+  |||||||   0x000097a6      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  |||||||   0x000097a9      a58a           lda 0x8a                    ; load accumulator with memory
+  |||||||   0x000097ab      48             pha                         ; push accumulator on stack
+  |||||||   0x000097ac      a58b           lda 0x8b                    ; load accumulator with memory
+  |||||||   0x000097ae      48             pha                         ; push accumulator on stack
+  |||||||   0x000097af      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
+  |||||||   0x000097b2      68             pla                         ; pull accumulator from stack
+  |||||||   0x000097b3      858b           sta 0x8b                    ; store accumulator in memory
+  |||||||   0x000097b5      68             pla                         ; pull accumulator from stack
+  |||||||   0x000097b6      858a           sta 0x8a                    ; store accumulator in memory
+  |||||||   0x000097b8      68             pla                         ; pull accumulator from stack
+  |||||||   0x000097b9      38             sec                         ; set carry flag
+  |||||||   0x000097ba      e901           sbc #0x01                   ; subtract memory from accumulator with borrow
+  |||||||   0x000097bc      c917           cmp #0x17                   ; compare memory and accumulator
+  ========< 0x000097be      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x000097c0      a90f           lda #0x0f                   ; load accumulator with memory
+  --------> 0x000097c2      c909           cmp #0x09                   ; compare memory and accumulator
+  ========< 0x000097c4      b0ba           bcs 0x4cc108                ; branch on carry set
+  |||||||   0x000097c6      60             rts                         ; return from subroutine
+  |||||||   0x000097c7      98             tya                         ; transfer index y to accumulator
+  |||||||   0x000097c8      38             sec                         ; set carry flag
+  |||||||   0x000097c9      e908           sbc #0x08                   ; subtract memory from accumulator with borrow
+  |||||||   0x000097cb      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x000097cc      60             rts                         ; return from subroutine
+  |||||||   0x000097cd      00             brk                         ; force break
+  |||||||   0x000097ce      a9a0           lda #0xa0                   ; load accumulator with memory
+  |||||||   0x000097d0      858a           sta 0x8a                    ; store accumulator in memory
+  |||||||   0x000097d2      a9c0           lda #0xc0                   ; load accumulator with memory
+  |||||||   0x000097d4      858b           sta 0x8b                    ; store accumulator in memory
+  |||||||   0x000097d6      a980           lda #0x80                   ; load accumulator with memory
+  |||||||   0x000097d8      858c           sta 0x8c                    ; store accumulator in memory
+  |||||||   0x000097da      a9db           lda #0xdb                   ; load accumulator with memory
+  |||||||   0x000097dc      858d           sta 0x8d                    ; store accumulator in memory
+  |||||||   0x000097de      a900           lda #0x00                   ; load accumulator with memory
+  --------> 0x000097e0      48             pha                         ; push accumulator on stack
+  |||||||   0x000097e1      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x000097e2      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x000097e5      b18a           lda (0x8a),y                ; load accumulator with memory
+  |||||||   0x000097e7      918c           sta (0x8c),y                ; store accumulator in memory
+  |||||||   0x000097e9      203a98         jsr 0x983a                  ; jump to new location saving return address
+  |||||||   0x000097ec      b18a           lda (0x8a),y                ; load accumulator with memory
+  |||||||   0x000097ee      918c           sta (0x8c),y                ; store accumulator in memory
+  |||||||   0x000097f0      98             tya                         ; transfer index y to accumulator
+  |||||||   0x000097f1      38             sec                         ; set carry flag
+  |||||||   0x000097f2      e907           sbc #0x07                   ; subtract memory from accumulator with borrow
+  |||||||   0x000097f4      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x000097f5      c008           cpy #0x08                   ; compare memory and index y
+  ========< 0x000097f7      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x000097f9      a010           ldy #0x10                   ; load index y with memory
+  --------> 0x000097fb      a9ff           lda #0xff                   ; load accumulator with memory
+  |||||||   0x000097fd      918c           sta (0x8c),y                ; store accumulator in memory
+  |||||||   0x000097ff      203a98         jsr 0x983a                  ; jump to new location saving return address
+  |||||||   0x00009802      a9ff           lda #0xff                   ; load accumulator with memory
+  |||||||   0x00009804      918c           sta (0x8c),y                ; store accumulator in memory
+  |||||||   0x00009806      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  |||||||   0x00009809      a58a           lda 0x8a                    ; load accumulator with memory
+  |||||||   0x0000980b      48             pha                         ; push accumulator on stack
+  |||||||   0x0000980c      a58b           lda 0x8b                    ; load accumulator with memory
+  |||||||   0x0000980e      48             pha                         ; push accumulator on stack
+  |||||||   0x0000980f      a58c           lda 0x8c                    ; load accumulator with memory
+  |||||||   0x00009811      48             pha                         ; push accumulator on stack
+  |||||||   0x00009812      a58d           lda 0x8d                    ; load accumulator with memory
+  |||||||   0x00009814      48             pha                         ; push accumulator on stack
+  |||||||   0x00009815      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
+  |||||||   0x00009818      68             pla                         ; pull accumulator from stack
+  |||||||   0x00009819      858d           sta 0x8d                    ; store accumulator in memory
+  |||||||   0x0000981b      68             pla                         ; pull accumulator from stack
+  |||||||   0x0000981c      858c           sta 0x8c                    ; store accumulator in memory
+  |||||||   0x0000981e      68             pla                         ; pull accumulator from stack
+  |||||||   0x0000981f      858b           sta 0x8b                    ; store accumulator in memory
+  |||||||   0x00009821      68             pla                         ; pull accumulator from stack
+  |||||||   0x00009822      858a           sta 0x8a                    ; store accumulator in memory
+  |||||||   0x00009824      68             pla                         ; pull accumulator from stack
+  |||||||   0x00009825      18             clc                         ; clear carry flag
+  |||||||   0x00009826      6901           adc #0x01                   ; add memory to accumulator with carry
+  |||||||   0x00009828      c908           cmp #0x08                   ; compare memory and accumulator
+  ========< 0x0000982a      d002           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x0000982c      a910           lda #0x10                   ; load accumulator with memory
+  --------> 0x0000982e      c917           cmp #0x17                   ; compare memory and accumulator
+  ========< 0x00009830      90ae           bcc 0x4cc108                ; branch on carry clear
+  |||||||   0x00009832      accd97         ldy 0x97cd                  ; load index y with memory
+  |||||||   0x00009835      a905           lda #0x05                   ; load accumulator with memory
+  |||||||   0x00009837      9160           sta (0x60),y                ; store accumulator in memory
+  |||||||   0x00009839      60             rts                         ; return from subroutine
+  |||||||   0x0000983a      98             tya                         ; transfer index y to accumulator
+  |||||||   0x0000983b      18             clc                         ; clear carry flag
+  |||||||   0x0000983c      6908           adc #0x08                   ; add memory to accumulator with carry
+  |||||||   0x0000983e      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x0000983f      60             rts                         ; return from subroutine
+  |||||||   0x00009840      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  |||||||   0x00009843      aa             tax                         ; transfer accumulator to index x
+  |||||||   0x00009844      bd0f95         lda 0x950f,x                ; load accumulator with memory
+  |||||||   0x00009847      8560           sta 0x60                    ; store accumulator in memory
+  |||||||   0x00009849      bd1395         lda 0x9513,x                ; load accumulator with memory
+  |||||||   0x0000984c      8561           sta 0x61                    ; store accumulator in memory
+  |||||||   0x0000984e      60             rts                         ; return from subroutine
+  |||||||   0x0000984f      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x00009852      20b896         jsr 0x96b8                  ; jump to new location saving return address
+  |||||||   0x00009855      8d7a98         sta 0x987a                  ; store accumulator in memory
+  |||||||   0x00009858      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009859      b9603f         lda 0x3f60,y                ; load accumulator with memory
+  |||||||   0x0000985c      8de898         sta 0x98e8                  ; store accumulator in memory
+  |||||||   0x0000985f      858a           sta 0x8a                    ; store accumulator in memory
+  |||||||   0x00009861      a900           lda #0x00                   ; load accumulator with memory
+  |||||||   0x00009863      99603f         sta 0x3f60,y                ; store accumulator in memory
+  |||||||   0x00009866      a907           lda #0x07                   ; load accumulator with memory
+  |||||||   0x00009868      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000986a      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x0000986b      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000986d      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x0000986e      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+  |||||||   0x00009870      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x00009871      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+  |||||||   0x00009873      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x00009874      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+  |||||||   0x00009876      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x00009877      858b           sta 0x8b                    ; store accumulator in memory
+  |||||||   0x00009879      a200           ldx #0x00                   ; load index x with memory
+  |||||||   0x0000987b      bc503f         ldy 0x3f50,x                ; load index y with memory
+  |||||||   0x0000987e      b91795         lda 0x9517,y                ; load accumulator with memory
+  |||||||   0x00009881      18             clc                         ; clear carry flag
+  |||||||   0x00009882      7d403f         adc 0x3f40,x                ; add memory to accumulator with carry
+  |||||||   0x00009885      8ded98         sta 0x98ed                  ; store accumulator in memory
+  |||||||   0x00009888      a8             tay                         ; transfer accumulator to index y
+  |||||||   0x00009889      b160           lda (0x60),y                ; load accumulator with memory
+  |||||||   0x0000988b      8def98         sta 0x98ef                  ; store accumulator in memory
+  |||||||   0x0000988e      aa             tax                         ; transfer accumulator to index x
+  |||||||   0x0000988f      a9f6           lda #0xf6                   ; load accumulator with memory
+  |||||||   0x00009891      9160           sta (0x60),y                ; store accumulator in memory
+  |||||||   0x00009893      86fe           stx 0xfe                    ; store index x in memory
+  |||||||   0x00009895      a906           lda #0x06                   ; load accumulator with memory
+  |||||||   0x00009897      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+  |||||||   0x00009899      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x0000989a      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000989c      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x0000989d      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+  |||||||   0x0000989f      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x000098a0      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+  |||||||   0x000098a2      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x000098a3      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+  |||||||   0x000098a5      2a             rol a                       ; rotate one bit left (memory or accumulator)
+  |||||||   0x000098a6      85ff           sta 0xff                    ; store accumulator in memory
+  |||||||   0x000098a8      a01f           ldy #0x1f                   ; load index y with memory
+  --------> 0x000098aa      b9c0de         lda 0xdec0,y                ; load accumulator with memory
+  |||||||   0x000098ad      99e03f         sta 0x3fe0,y                ; store accumulator in memory
+  |||||||   0x000098b0      b1fe           lda (0xfe),y                ; load accumulator with memory
+  |||||||   0x000098b2      99c0de         sta 0xdec0,y                ; store accumulator in memory
+  |||||||   0x000098b5      88             dey                         ; decrement index y by one
+  ========< 0x000098b6      10f2           bpl 0x4cc108                ; branch on result plus
+  |||||||   0x000098b8      848e           sty 0x8e                    ; store index y in memory
+  --------> 0x000098ba      209299         jsr 0x9992                  ; jump to new location saving return address
+  |||||||   0x000098bd      bd0795         lda 0x9507,x                ; load accumulator with memory
+  |||||||   0x000098c0      49ff           eor #0xff                   ; "exclusive-or" memory with accumulator
+  |||||||   0x000098c2      39c0de         and 0xdec0,y                ; "and" memory with accumulator
+  |||||||   0x000098c5      8dce98         sta 0x98ce                  ; store accumulator in memory
+  |||||||   0x000098c8      b18a           lda (0x8a),y                ; load accumulator with memory
+  |||||||   0x000098ca      3d0795         and 0x9507,x                ; "and" memory with accumulator
+  |||||||   0x000098cd      09ff           ora #0xff                   ; "or" memory with accumulator
+  |||||||   0x000098cf      99c0de         sta 0xdec0,y                ; store accumulator in memory
+  |||||||   0x000098d2      a58e           lda 0x8e                    ; load accumulator with memory
+  |||||||   0x000098d4      290f           and #0x0f                   ; "and" memory with accumulator
+  ========< 0x000098d6      d006           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x000098d8      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
+  |||||||   0x000098db      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  --------> 0x000098de      c68e           dec 0x8e                    ; decrement memory by one
+  ========< 0x000098e0      d0d8           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x000098e2      a000           ldy #0x00                   ; load index y with memory
+  |||||||   0x000098e4      b188           lda (0x88),y                ; load accumulator with memory
+  |||||||   0x000098e6      aa             tax                         ; transfer accumulator to index x
+  |||||||   0x000098e7      a900           lda #0x00                   ; load accumulator with memory
+  |||||||   0x000098e9      9d603f         sta 0x3f60,x                ; store accumulator in memory
+  |||||||   0x000098ec      a000           ldy #0x00                   ; load index y with memory
+  |||||||   0x000098ee      a9ff           lda #0xff                   ; load accumulator with memory
+  |||||||   0x000098f0      9160           sta (0x60),y                ; store accumulator in memory
+  |||||||   0x000098f2      a01f           ldy #0x1f                   ; load index y with memory
+  --------> 0x000098f4      b9e03f         lda 0x3fe0,y                ; load accumulator with memory
+  |||||||   0x000098f7      99c0de         sta 0xdec0,y                ; store accumulator in memory
+  |||||||   0x000098fa      88             dey                         ; decrement index y by one
+  ========< 0x000098fb      10f7           bpl 0x4cc108                ; branch on result plus
+  `=======< 0x000098fd      4c036c         jmp 0x6c03                  ; jump to new location
+   ||||||   0x00009900      20066c         jsr 0x6c06                  ; jump to new location saving return address
+   ||||||   0x00009903      20b896         jsr 0x96b8                  ; jump to new location saving return address
+   ||||||   0x00009906      aa             tax                         ; transfer accumulator to index x
+   ||||||   0x00009907      bc503f         ldy 0x3f50,x                ; load index y with memory
+   ||||||   0x0000990a      bd403f         lda 0x3f40,x                ; load accumulator with memory
+   ||||||   0x0000990d      18             clc                         ; clear carry flag
+   ||||||   0x0000990e      791795         adc 0x9517,y                ; add memory to accumulator with carry
+   ||||||   0x00009911      a8             tay                         ; transfer accumulator to index y
+   ||||||   0x00009912      b160           lda (0x60),y                ; load accumulator with memory
+   ||||||   0x00009914      858a           sta 0x8a                    ; store accumulator in memory
+   ||||||   0x00009916      a906           lda #0x06                   ; load accumulator with memory
+   ||||||   0x00009918      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+   ||||||   0x0000991a      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x0000991b      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+   ||||||   0x0000991d      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x0000991e      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009920      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009921      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009923      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009924      068a           asl 0x8a                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009926      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009927      858b           sta 0x8b                    ; store accumulator in memory
+   ||||||   0x00009929      bc603f         ldy 0x3f60,x                ; load index y with memory
+   ||||||   0x0000992c      a91d           lda #0x1d                   ; load accumulator with memory
+   ||||||   0x0000992e      9d603f         sta 0x3f60,x                ; store accumulator in memory
+   ||||||   0x00009931      9d703f         sta 0x3f70,x                ; store accumulator in memory
+   ||||||   0x00009934      84fe           sty 0xfe                    ; store index y in memory
+   ||||||   0x00009936      a907           lda #0x07                   ; load accumulator with memory
+   ||||||   0x00009938      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+   ||||||   0x0000993a      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x0000993b      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+   ||||||   0x0000993d      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x0000993e      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009940      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009941      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009943      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009944      06fe           asl 0xfe                    ; shift left one bit (memory or accumulator)
+   ||||||   0x00009946      2a             rol a                       ; rotate one bit left (memory or accumulator)
+   ||||||   0x00009947      85ff           sta 0xff                    ; store accumulator in memory
+   ||||||   0x00009949      a01f           ldy #0x1f                   ; load index y with memory
+  .-------> 0x0000994b      b9a0e3         lda 0xe3a0,y                ; load accumulator with memory
+  |||||||   0x0000994e      99e03f         sta 0x3fe0,y                ; store accumulator in memory
+  |||||||   0x00009951      b1fe           lda (0xfe),y                ; load accumulator with memory
+  |||||||   0x00009953      99a0e3         sta 0xe3a0,y                ; store accumulator in memory
+  |||||||   0x00009956      88             dey                         ; decrement index y by one
+  `=======< 0x00009957      10f2           bpl 0x4cc108                ; branch on result plus
+   ||||||   0x00009959      848e           sty 0x8e                    ; store index y in memory
+  .-------> 0x0000995b      209299         jsr 0x9992                  ; jump to new location saving return address
+  |||||||   0x0000995e      bd0795         lda 0x9507,x                ; load accumulator with memory
+  |||||||   0x00009961      49ff           eor #0xff                   ; "exclusive-or" memory with accumulator
+  |||||||   0x00009963      39a0e3         and 0xe3a0,y                ; "and" memory with accumulator
+  |||||||   0x00009966      8d6f99         sta 0x996f                  ; store accumulator in memory
+  |||||||   0x00009969      b18a           lda (0x8a),y                ; load accumulator with memory
+  |||||||   0x0000996b      3d0795         and 0x9507,x                ; "and" memory with accumulator
+  |||||||   0x0000996e      09ff           ora #0xff                   ; "or" memory with accumulator
+  |||||||   0x00009970      99a0e3         sta 0xe3a0,y                ; store accumulator in memory
+  |||||||   0x00009973      a58e           lda 0x8e                    ; load accumulator with memory
+  |||||||   0x00009975      290f           and #0x0f                   ; "and" memory with accumulator
+  ========< 0x00009977      d006           bne 0x4cc108                ; branch on result not zero
+  |||||||   0x00009979      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
+  |||||||   0x0000997c      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  --------> 0x0000997f      c68e           dec 0x8e                    ; decrement memory by one
+  `=======< 0x00009981      d0d8           bne 0x4cc108                ; branch on result not zero
+   ||||||   0x00009983      a01f           ldy #0x1f                   ; load index y with memory
+  .-------> 0x00009985      b9e03f         lda 0x3fe0,y                ; load accumulator with memory
+  |||||||   0x00009988      99a0e3         sta 0xe3a0,y                ; store accumulator in memory
+  |||||||   0x0000998b      88             dey                         ; decrement index y by one
+  `=======< 0x0000998c      10f7           bpl 0x4cc108                ; branch on result plus
+   `======< 0x0000998e      4c036c         jmp 0x6c03                  ; jump to new location
+    |||||   0x00009991      69ad           adc #0xad                   ; add memory to accumulator with carry
+    |||||   0x00009993      9199           sta (0x99),y                ; store accumulator in memory
+    |||||   0x00009995      4a             lsr a                       ; shift right one bit (memory or accumulator)
+   ,======< 0x00009996      9002           bcc 0x4cc108                ; branch on carry clear
+   ||||||   0x00009998      49b8           eor #0xb8                   ; "exclusive-or" memory with accumulator
+   `------> 0x0000999a      8d9199         sta 0x9991                  ; store accumulator in memory
+    |||||   0x0000999d      2907           and #0x07                   ; "and" memory with accumulator
+    |||||   0x0000999f      aa             tax                         ; transfer accumulator to index x
+    |||||   0x000099a0      ad9199         lda 0x9991                  ; load accumulator with memory
+    |||||   0x000099a3      4a             lsr a                       ; shift right one bit (memory or accumulator)
+    |||||   0x000099a4      4a             lsr a                       ; shift right one bit (memory or accumulator)
+    |||||   0x000099a5      4a             lsr a                       ; shift right one bit (memory or accumulator)
+    |||||   0x000099a6      a8             tay                         ; transfer accumulator to index y
+    |||||   0x000099a7      60             rts                         ; return from subroutine
+    |||||   0x000099a8      68             pla                         ; pull accumulator from stack
+    |||||   0x000099a9      68             pla                         ; pull accumulator from stack
+    |`====< 0x000099aa      4c8d96         jmp 0x968d                  ; jump to new location
+    | |||   0x000099ad      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x000099b0      48             pha                         ; push accumulator on stack
+    | |||   0x000099b1      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x000099b4      a8             tay                         ; transfer accumulator to index y
+    | |||   0x000099b5      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x000099b8      aa             tax                         ; transfer accumulator to index x
+    | |||   0x000099b9      98             tya                         ; transfer index y to accumulator
+    | |||   0x000099ba      7d1795         adc 0x9517,x                ; add memory to accumulator with carry
+    | |||   0x000099bd      a8             tay                         ; transfer accumulator to index y
+    | |||   0x000099be      68             pla                         ; pull accumulator from stack
+    | |||   0x000099bf      9160           sta (0x60),y                ; store accumulator in memory
+    | |||   0x000099c1      60             rts                         ; return from subroutine
+    | |||   0x000099c2      a589           lda 0x89                    ; load accumulator with memory
+    | |||   0x000099c4      48             pha                         ; push accumulator on stack
+    | |||   0x000099c5      a588           lda 0x88                    ; load accumulator with memory
+    | |||   0x000099c7      48             pha                         ; push accumulator on stack
+    | |||   0x000099c8      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x000099cb      aa             tax                         ; transfer accumulator to index x
+    | |||   0x000099cc      bd403f         lda 0x3f40,x                ; load accumulator with memory
+    | |||   0x000099cf      858a           sta 0x8a                    ; store accumulator in memory
+    | |||   0x000099d1      bd503f         lda 0x3f50,x                ; load accumulator with memory
+    | |||   0x000099d4      18             clc                         ; clear carry flag
+    | |||   0x000099d5      6907           adc #0x07                   ; add memory to accumulator with carry
+    | |||   0x000099d7      858b           sta 0x8b                    ; store accumulator in memory
+    | |||   0x000099d9      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x000099dc      aa             tax                         ; transfer accumulator to index x
+    | |||   0x000099dd      bd403f         lda 0x3f40,x                ; load accumulator with memory
+    | |||   0x000099e0      48             pha                         ; push accumulator on stack
+    | |||   0x000099e1      858c           sta 0x8c                    ; store accumulator in memory
+    | |||   0x000099e3      bd503f         lda 0x3f50,x                ; load accumulator with memory
+    | |||   0x000099e6      18             clc                         ; clear carry flag
+    | |||   0x000099e7      6907           adc #0x07                   ; add memory to accumulator with carry
+    | |||   0x000099e9      48             pha                         ; push accumulator on stack
+    | |||   0x000099ea      858d           sta 0x8d                    ; store accumulator in memory
+    | |||   0x000099ec      a200           ldx #0x00                   ; load index x with memory
+    |.----> 0x000099ee      bd00be         lda 0xbe00,x                ; load accumulator with memory
+    |||||   0x000099f1      9d0010         sta 0x1000,x                ; store accumulator in memory
+    |||||   0x000099f4      bd00bf         lda 0xbf00,x                ; load accumulator with memory
+    |||||   0x000099f7      9d0011         sta 0x1100,x                ; store accumulator in memory
+    |||||   0x000099fa      ca             dex                         ; decrement index x by one
+    |`====< 0x000099fb      d0f1           bne 0x4cc108                ; branch on result not zero
+    | |||   0x000099fd      a960           lda #0x60                   ; load accumulator with memory
+    | |||   0x000099ff      8d0380         sta 0x8003                  ; store accumulator in memory
+    | |||   0x00009a02      a900           lda #0x00                   ; load accumulator with memory
+    | |||   0x00009a04      200c6c         jsr 0x6c0c                  ; jump to new location saving return address
+    | |||   0x00009a07      a94c           lda #0x4c                   ; load accumulator with memory
+    | |||   0x00009a09      8d0380         sta 0x8003                  ; store accumulator in memory
+    | |||   0x00009a0c      a200           ldx #0x00                   ; load index x with memory
+    |.----> 0x00009a0e      bd0010         lda 0x1000,x                ; load accumulator with memory
+    |||||   0x00009a11      9d00be         sta 0xbe00,x                ; store accumulator in memory
+    |||||   0x00009a14      bd0011         lda 0x1100,x                ; load accumulator with memory
+    |||||   0x00009a17      9d00bf         sta 0xbf00,x                ; store accumulator in memory
+    |||||   0x00009a1a      ca             dex                         ; decrement index x by one
+    |`====< 0x00009a1b      d0f1           bne 0x4cc108                ; branch on result not zero
+    | |||   0x00009a1d      68             pla                         ; pull accumulator from stack
+    | |||   0x00009a1e      a8             tay                         ; transfer accumulator to index y
+    | |||   0x00009a1f      68             pla                         ; pull accumulator from stack
+    | |||   0x00009a20      aa             tax                         ; transfer accumulator to index x
+    | |||   0x00009a21      a902           lda #0x02                   ; load accumulator with memory
+    | |||   0x00009a23      38             sec                         ; set carry flag
+    | |||   0x00009a24      6678           ror 0x78                    ; rotate one bit right (memory or accumulator)
+    | |||   0x00009a26      a90d           lda #0x0d                   ; load accumulator with memory
+    | |||   0x00009a28      204b4c         jsr 0x4c4b                  ; jump to new location saving return address
+    | |||   0x00009a2b      68             pla                         ; pull accumulator from stack
+    | |||   0x00009a2c      8588           sta 0x88                    ; store accumulator in memory
+    | |||   0x00009a2e      68             pla                         ; pull accumulator from stack
+    | |||   0x00009a2f      8589           sta 0x89                    ; store accumulator in memory
+    | |||   0x00009a31      201b9e         jsr 0x9e1b                  ; jump to new location saving return address
+    | |||   0x00009a34      60             rts                         ; return from subroutine
+    | |||   0x00009a35      a20f           ldx #0x0f                   ; load index x with memory
+    | |||   0x00009a37      a900           lda #0x00                   ; load accumulator with memory
+    |.----> 0x00009a39      9d603f         sta 0x3f60,x                ; store accumulator in memory
+    |||||   0x00009a3c      ca             dex                         ; decrement index x by one
+    |`====< 0x00009a3d      10fa           bpl 0x4cc108                ; branch on result plus
+    | |||   0x00009a3f      204d96         jsr 0x964d                  ; jump to new location saving return address
+    | |||   0x00009a42      60             rts                         ; return from subroutine
+    | |||   0x00009a43      20b896         jsr 0x96b8                  ; jump to new location saving return address
+    | |||   0x00009a46      a917           lda #0x17                   ; load accumulator with memory
+    | |||   0x00009a48      85ca           sta 0xca                    ; store accumulator in memory
+    | |||   0x00009a4a      a901           lda #0x01                   ; load accumulator with memory
+    | |||   0x00009a4c      85c9           sta 0xc9                    ; store accumulator in memory
+    | |||   0x00009a4e      a588           lda 0x88                    ; load accumulator with memory
+    | |||   0x00009a50      858a           sta 0x8a                    ; store accumulator in memory
+    | |||   0x00009a52      a589           lda 0x89                    ; load accumulator with memory
+    | |||   0x00009a54      858b           sta 0x8b                    ; store accumulator in memory
+    |||||   0x00009a56      a0ff           ldy #0xff                   ; load index y with memory
+   .------> 0x00009a58      c8             iny                         ; increment index y by one
+   ||||||   0x00009a59      20b896         jsr 0x96b8                  ; jump to new location saving return address
+   `======< 0x00009a5c      d0fa           bne 0x4cc108                ; branch on result not zero
+    |||||   0x00009a5e      98             tya                         ; transfer index y to accumulator
+    |||||   0x00009a5f      49ff           eor #0xff                   ; "exclusive-or" memory with accumulator
+    |||||   0x00009a61      18             clc                         ; clear carry flag
+    |||||   0x00009a62      6927           adc #0x27                   ; add memory to accumulator with carry
+    |||||   0x00009a64      4a             lsr a                       ; shift right one bit (memory or accumulator)
+    |||||   0x00009a65      aa             tax                         ; transfer accumulator to index x
+    |||||   0x00009a66      ca             dex                         ; decrement index x by one
+    |||||   0x00009a67      a902           lda #0x02                   ; load accumulator with memory
+   .------> 0x00009a69      20034c         jsr 0x4c03                  ; jump to new location saving return address
+   ||||||   0x00009a6c      ca             dex                         ; decrement index x by one
+   `======< 0x00009a6d      d0fa           bne 0x4cc108                ; branch on result not zero
+    |||||   0x00009a6f      a91e           lda #0x1e                   ; load accumulator with memory
+    |||||   0x00009a71      20034c         jsr 0x4c03                  ; jump to new location saving return address
+    |||||   0x00009a74      a000           ldy #0x00                   ; load index y with memory
+   .------> 0x00009a76      b18a           lda (0x8a),y                ; load accumulator with memory
+  ,=======< 0x00009a78      f006           beq 0x4cc108                ; branch on result zero
+  |||||||   0x00009a7a      20034c         jsr 0x4c03                  ; jump to new location saving return address
+  |||||||   0x00009a7d      c8             iny                         ; increment index y by one
+  |`======< 0x00009a7e      d0f6           bne 0x4cc108                ; branch on result not zero
+  `-------> 0x00009a80      a91c           lda #0x1c                   ; load accumulator with memory
+    |||||   0x00009a82      20034c         jsr 0x4c03                  ; jump to new location saving return address
+   .------> 0x00009a85      a5c9           lda 0xc9                    ; load accumulator with memory
+   ||||||   0x00009a87      c927           cmp #0x27                   ; compare memory and accumulator
+  ,=======< 0x00009a89      f008           beq 0x4cc108                ; branch on result zero
+  |||||||   0x00009a8b      a902           lda #0x02                   ; load accumulator with memory
+  |||||||   0x00009a8d      20034c         jsr 0x4c03                  ; jump to new location saving return address
+  |`======< 0x00009a90      4c859a         jmp 0x9a85                  ; jump to new location
+  `-------> 0x00009a93      60             rts                         ; return from subroutine
+    |||||   0x00009a94      201297         jsr 0x9712                  ; jump to new location saving return address
+    |||||   0x00009a97      a907           lda #0x07                   ; load accumulator with memory
+    `=====< 0x00009a99      4c3a97         jmp 0x973a                  ; jump to new location
+     ||||   0x00009a9c      60             rts                         ; return from subroutine
+     ||||   0x00009a9d      a2b7           ldx #0xb7                   ; load index x with memory
+    .-----> 0x00009a9f      bd0014         lda 0x1400,x                ; load accumulator with memory
+    |||||   0x00009aa2      8db09a         sta 0x9ab0                  ; store accumulator in memory
+    |||||   0x00009aa5      bdc014         lda 0x14c0,x                ; load accumulator with memory
+    |||||   0x00009aa8      8db19a         sta 0x9ab1                  ; store accumulator in memory
+    |||||   0x00009aab      a980           lda #0x80                   ; load accumulator with memory
+    |||||   0x00009aad      a026           ldy #0x26                   ; load index y with memory
+   .------> 0x00009aaf      99ffff         sta 0xffff,y                ; store accumulator in memory
+   ||||||   0x00009ab2      88             dey                         ; decrement index y by one
+   `======< 0x00009ab3      d0fa           bne 0x4cc108                ; branch on result not zero
+    |||||   0x00009ab5      ca             dex                         ; decrement index x by one
+    |||||   0x00009ab6      e078           cpx #0x78                   ; compare memory and index x
+    `=====< 0x00009ab8      d0e5           bne 0x4cc108                ; branch on result not zero
+     ||||   0x00009aba      60             rts                         ; return from subroutine
+     ||||   0x00009abb      8ed4e8         stx 0xe8d4                  ; store index x in memory
+     ||||   0x00009abe      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
+     ||||   0x00009ac0      d3f5           dcp (0xf5),y
+     ||||   0x00009ac2      ededef         sbc 0xefed                  ; subtract memory from accumulator with borrow
+     ||||   0x00009ac5      eee9ee         inc 0xeee9                  ; increment memory by one
+     ||||   0x00009ac8      e700           isb 0x00
+     ||||   0x00009aca      8600           stx 0x00                    ; store index x in memory
+     ||||   0x00009acc      8c800a         sty 0x0a80                  ; store index y in memory
+     ||||   0x00009acf      1a             nop                         ; no operation
+     ||||   0x00009ad0      0303           slo (0x03,x)
+     ||||   0x00009ad2      8350           sax (0x50,x)
+      |||   0x00009ad4      8009           nop #0x09                   ; no operation
+      |||   0x00009ad6      1604           asl 0x04,x                  ; shift left one bit (memory or accumulator)
+      |||   0x00009ad8      02             hlt
+      |||   0x00009ad9      8709           sax 0x09
+      |||   0x00009adb      831e           sax (0x1e,x)
+      |||   0x00009add      8109           sta (0x09,x)                ; store accumulator in memory
+      |||   0x00009adf      8308           sax (0x08,x)
+      |||   0x00009ae1      810a           sta (0x0a,x)                ; store accumulator in memory
+      |||   0x00009ae3      8000           nop #0x00                   ; no operation
+     ,====< 0x00009ae5      5003           bvc 0x4cc108                ; branch on overflow clear
+     ||||   0x00009ae7      02             hlt
+     ||||   0x00009ae8      831e           sax (0x1e,x)
+     `----> 0x00009aea      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009aed      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009af0      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009af3      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009af6      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009af9      8200           nop #0x00                   ; no operation
+      |||   0x00009afb      02             hlt
+      |||   0x00009afc      8a             txa                         ; transfer index x to accumulator
+      |||   0x00009afd      9e0901         shx 0x0109,y
+      |||   0x00009b00      8306           sax (0x06,x)
+      |||   0x00009b02      8200           nop #0x00                   ; no operation
+      |||   0x00009b04      02             hlt
+      |||   0x00009b05      8a             txa                         ; transfer index x to accumulator
+      |||   0x00009b06      9d0901         sta 0x0109,x                ; store accumulator in memory
+      |||   0x00009b09      8306           sax (0x06,x)
+      |||   0x00009b0b      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009b0e      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009b11      830a           sax (0x0a,x)
+      |||   0x00009b13      8a             txa                         ; transfer index x to accumulator
+      |||   0x00009b14      440d           nop 0x0d                    ; no operation
+      |||   0x00009b16      02             hlt
+      |||   0x00009b17      830a           sax (0x0a,x)
+      |||   0x00009b19      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009b1c      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009b1f      8d0002         sta 0x0200                  ; store accumulator in memory
+      |||   0x00009b22      830f           sax (0x0f,x)
+      |||   0x00009b24      8006           nop #0x06                   ; no operation
+      |||   0x00009b26      050f           ora 0x0f                    ; "or" memory with accumulator
+      |||   0x00009b28      0183           ora (0x83,x)                ; "or" memory with accumulator
+      |||   0x00009b2a      0f8106         slo 0x0681
+      |||   0x00009b2d      830f           sax (0x0f,x)
+      |||   0x00009b2f      8007           nop #0x07                   ; no operation
+      |||   0x00009b31      060f           asl 0x0f                    ; shift left one bit (memory or accumulator)
+      |||   0x00009b33      0183           ora (0x83,x)                ; "or" memory with accumulator
+      |||   0x00009b35      0f8107         slo 0x0781
+      |||   0x00009b38      8100           sta (0x00,x)                ; store accumulator in memory
+      |||   0x00009b3a      8000           nop #0x00                   ; no operation
+      |`==< 0x00009b3c      4c0f02         jmp 0x020f                  ; jump to new location
+      | |   0x00009b3f      831e           sax (0x1e,x)
+      | |   0x00009b41      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b44      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b47      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b4a      830a           sax (0x0a,x)
+      | |   0x00009b4c      8a             txa                         ; transfer index x to accumulator
+      | |   0x00009b4d      b8             clv                         ; clear overflow flag
+      | |   0x00009b4e      0d0283         ora 0x8302                  ; "or" memory with accumulator
+      | |   0x00009b51      0a             asl a                       ; shift left one bit (memory or accumulator)
+      | |   0x00009b52      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b55      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b58      8200           nop #0x00                   ; no operation
+      | |   0x00009b5a      038a           slo (0x8a,x)
+      | |   0x00009b5c      9e0901         shx 0x0109,y
+      | |   0x00009b5f      831e           sax (0x1e,x)
+      | |   0x00009b61      8a             txa                         ; transfer index x to accumulator
+      | |   0x00009b62      9d0901         sta 0x0109,x                ; store accumulator in memory
+      | |   0x00009b65      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b68      8d0003         sta 0x0300                  ; store accumulator in memory
+      | |   0x00009b6b      8d0000         sta 0x0000                  ; store accumulator in memory
+      | |   0x00009b6e      830f           sax (0x0f,x)
+      | |   0x00009b70      8a             txa                         ; transfer index x to accumulator
+      | |   0x00009b71      4407           nop 0x07                    ; no operation
+      | |   0x00009b73      00             brk                         ; force break
+      | |   0x00009b74      830f           sax (0x0f,x)
+      | |   0x00009b76      8d0000         sta 0x0000                  ; store accumulator in memory
+      | |   0x00009b79      8100           sta (0x00,x)                ; store accumulator in memory
+      | |   0x00009b7b      8305           sax (0x05,x)
+      | |   0x00009b7d      8a             txa                         ; transfer index x to accumulator
+      | |   0x00009b7e      b8             clv                         ; clear overflow flag
+      | |   0x00009b7f      0700           slo 0x00
+      | |   0x00009b81      8328           sax (0x28,x)
+      | |   0x00009b83      8ed4e8         stx 0xe8d4                  ; store index x in memory
+      | |   0x00009b86      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
+      | |   0x00009b88      ca             dex                         ; decrement index x by one
+      | |   0x00009b89      eff5f2         isb 0xf2f5
+      | |   0x00009b8c      eee5f9         inc 0xf9e5                  ; increment memory by one
+      | |   0x00009b8f      00             brk                         ; force break
+      | |   0x00009b90      8601           stx 0x01                    ; store index x in memory
+      | |   0x00009b92      8c8332         sty 0x3283                  ; store index y in memory
+      | |   0x00009b95      8000           nop #0x00                   ; no operation
+      | |   0x00009b97      4c0000         jmp 0x0000                  ; jump to new location
+      | |   0x00009b9a      830f           sax (0x0f,x)
+      | |   0x00009b9c      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009b9f      8d0001         sta 0x0100                  ; store accumulator in memory
+      | |   0x00009ba2      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009ba5      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009ba8      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bab      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bae      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bb1      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bb4      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bb7      8d0001         sta 0x0100                  ; store accumulator in memory
+      | |   0x00009bba      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bbd      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bc0      8323           sax (0x23,x)
+      | |   0x00009bc2      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bc5      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bc8      8303           sax (0x03,x)
+      | |   0x00009bca      8d0002         sta 0x0200                  ; store accumulator in memory
+      | |   0x00009bcd      833c           sax (0x3c,x)
+      | |   0x00009bcf      840d           sty 0x0d                    ; store index y in memory
+      | |   0x00009bd1      0183           ora (0x83,x)                ; "or" memory with accumulator
+      | |   0x00009bd3      148d           nop 0x8d,x                  ; no operation
+      | |   0x00009bd5      00             brk                         ; force break
+      | |   0x00009bd6      00             brk                         ; force break
+      | |   0x00009bd7      8100           sta (0x00,x)                ; store accumulator in memory
+      | |   0x00009bd9      8319           sax (0x19,x)
+      | |   0x00009bdb      8583           sta 0x83                    ; store accumulator in memory
+      | |   0x00009bdd      28             plp                         ; pull processor status from stack
+      | |   0x00009bde      8ed4e8         stx 0xe8d4                  ; store index x in memory
+      | |   0x00009be1      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
+      | |   0x00009be3      c1f2           cmp (0xf2,x)                ; compare memory and accumulator
+      | |   0x00009be5      f2             hlt
+      | |   0x00009be6      e9f6           sbc #0xf6                   ; subtract memory from accumulator with borrow
+      | |   0x00009be8      e1ec           sbc (0xec,x)                ; subtract memory from accumulator with borrow
+      | |   0x00009bea      00             brk                         ; force break
+      | |   0x00009beb      8602           stx 0x02                    ; store index x in memory
+      | |   0x00009bed      8c8346         sty 0x4683                  ; store index y in memory
+      | |   0x00009bf0      8001           nop #0x01                   ; no operation
+      | |   0x00009bf2      4404           nop 0x04                    ; no operation
+      | |   0x00009bf4      00             brk                         ; force break
+      | |   0x00009bf5      830f           sax (0x0f,x)
+      | |   0x00009bf7      8d0103         sta 0x0301                  ; store accumulator in memory
+      | |   0x00009bfa      8d0101         sta 0x0101                  ; store accumulator in memory
+      | |   0x00009bfd      8d0101         sta 0x0101                  ; store accumulator in memory
+      | |   0x00009c00      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c03      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c06      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c09      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c0c      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c0f      8d0101         sta 0x0101                  ; store accumulator in memory
+      | |   0x00009c12      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c15      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c18      8d0102         sta 0x0201                  ; store accumulator in memory
+      | |   0x00009c1b      8346           sax (0x46,x)
+      | |   0x00009c1d      8409           sty 0x09                    ; store index y in memory
+      | |   0x00009c1f      0183           ora (0x83,x)                ; "or" memory with accumulator
+      | |   0x00009c21      198000         ora 0x0080,y                ; "or" memory with accumulator
+      | `=< 0x00009c24      4c0901         jmp 0x0109                  ; jump to new location
+      |     0x00009c27      8306           sax (0x06,x)
+      |     0x00009c29      8d0001         sta 0x0100                  ; store accumulator in memory
+      |     0x00009c2c      858d           sta 0x8d                    ; store accumulator in memory
+      |     0x00009c2e      0100           ora (0x00,x)                ; "or" memory with accumulator
+      |     0x00009c30      8d0103         sta 0x0301                  ; store accumulator in memory
+      |     0x00009c33      8332           sax (0x32,x)
+      |     0x00009c35      8d0001         sta 0x0100                  ; store accumulator in memory
+      |     0x00009c38      8d0002         sta 0x0200                  ; store accumulator in memory
+      |     0x00009c3b      8200           nop #0x00                   ; no operation
+      |     0x00009c3d      02             hlt
+      |     0x00009c3e      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009c41      8003           nop #0x03                   ; no operation
+      |     0x00009c43      fc0601         nop 0x0106,x                ; no operation
+      |     0x00009c46      8703           sax 0x03
+      |     0x00009c48      8306           sax (0x06,x)
+      |     0x00009c4a      8004           nop #0x04                   ; no operation
+      |     0x00009c4c      fc0502         nop 0x0205,x                ; no operation
+      |     0x00009c4f      8704           sax 0x04
+      |     0x00009c51      8306           sax (0x06,x)
+      |     0x00009c53      8005           nop #0x05                   ; no operation
+      |     0x00009c55      fc0700         nop 0x0007,x                ; no operation
+      |     0x00009c58      8705           sax 0x05
+      |     0x00009c5a      830f           sax (0x0f,x)
+      |     0x00009c5c      8d0302         sta 0x0203                  ; store accumulator in memory
+      |     0x00009c5f      8306           sax (0x06,x)
+      |     0x00009c61      8d0402         sta 0x0204                  ; store accumulator in memory
+      |     0x00009c64      8306           sax (0x06,x)
+      |     0x00009c66      8d0502         sta 0x0205                  ; store accumulator in memory
+      |     0x00009c69      8306           sax (0x06,x)
+      |     0x00009c6b      8d0103         sta 0x0301                  ; store accumulator in memory
+      |     0x00009c6e      831e           sax (0x1e,x)
+      |     0x00009c70      8b03           ane #0x03
+      |     0x00009c72      0181           ora (0x81,x)                ; "or" memory with accumulator
+      |     0x00009c74      0180           ora (0x80,x)                ; "or" memory with accumulator
+      |     0x00009c76      0b1e           anc #0x1e
+      |     0x00009c78      0a             asl a                       ; shift left one bit (memory or accumulator)
+      |     0x00009c79      02             hlt
+      |     0x00009c7a      8314           sax (0x14,x)
+      |     0x00009c7c      8d0003         sta 0x0300                  ; store accumulator in memory
+      |     0x00009c7f      8d0003         sta 0x0300                  ; store accumulator in memory
+      |     0x00009c82      8d0000         sta 0x0000                  ; store accumulator in memory
+      |     0x00009c85      830f           sax (0x0f,x)
+      |     0x00009c87      8d0503         sta 0x0305                  ; store accumulator in memory
+      |     0x00009c8a      8d0403         sta 0x0304                  ; store accumulator in memory
+      |     0x00009c8d      8d0303         sta 0x0303                  ; store accumulator in memory
+      |     0x00009c90      88             dey                         ; decrement index y by one
+      |     0x00009c91      0581           ora 0x81                    ; "or" memory with accumulator
+      |     0x00009c93      0583           ora 0x83                    ; "or" memory with accumulator
+      |     0x00009c95      0188           ora (0x88,x)                ; "or" memory with accumulator
+      |     0x00009c97      0481           nop 0x81                    ; no operation
+      |     0x00009c99      0483           nop 0x83                    ; no operation
+      |     0x00009c9b      0188           ora (0x88,x)                ; "or" memory with accumulator
+      |     0x00009c9d      0381           slo (0x81,x)
+      |     0x00009c9f      0383           slo (0x83,x)
+      |     0x00009ca1      068d           asl 0x8d                    ; shift left one bit (memory or accumulator)
+      |     0x00009ca3      00             brk                         ; force break
+      |     0x00009ca4      018d           ora (0x8d,x)                ; "or" memory with accumulator
+      |     0x00009ca6      00             brk                         ; force break
+      |     0x00009ca7      02             hlt
+      |     0x00009ca8      8323           sax (0x23,x)
+      |     0x00009caa      810b           sta (0x0b,x)                ; store accumulator in memory
+      |     0x00009cac      8001           nop #0x01                   ; no operation
+      |     0x00009cae      440a           nop 0x0a                    ; no operation
+      |     0x00009cb0      02             hlt
+      |     0x00009cb1      8323           sax (0x23,x)
+      |     0x00009cb3      8d0002         sta 0x0200                  ; store accumulator in memory
+      |     0x00009cb6      8d0000         sta 0x0000                  ; store accumulator in memory
+      |     0x00009cb9      830c           sax (0x0c,x)
+      |     0x00009cbb      8200           nop #0x00                   ; no operation
+      |     0x00009cbd      02             hlt
+      |     0x00009cbe      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cc1      8200           nop #0x00                   ; no operation
+      |     0x00009cc3      02             hlt
+      |     0x00009cc4      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cc7      8200           nop #0x00                   ; no operation
+      |     0x00009cc9      02             hlt
+      |     0x00009cca      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009ccd      8200           nop #0x00                   ; no operation
+      |     0x00009ccf      02             hlt
+      |     0x00009cd0      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cd3      8200           nop #0x00                   ; no operation
+      |     0x00009cd5      02             hlt
+      |     0x00009cd6      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cd9      8200           nop #0x00                   ; no operation
+      |     0x00009cdb      02             hlt
+      |     0x00009cdc      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cdf      8200           nop #0x00                   ; no operation
+      |     0x00009ce1      00             brk                         ; force break
+      |     0x00009ce2      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009ce5      8200           nop #0x00                   ; no operation
+      |     0x00009ce7      02             hlt
+      |     0x00009ce8      8d0100         sta 0x0001                  ; store accumulator in memory
+      |     0x00009ceb      8200           nop #0x00                   ; no operation
+      |     0x00009ced      00             brk                         ; force break
+      |     0x00009cee      8d0102         sta 0x0201                  ; store accumulator in memory
+      |     0x00009cf1      8100           sta (0x00,x)                ; store accumulator in memory
+      |     0x00009cf3      8308           sax (0x08,x)
+      |     0x00009cf5      8d0100         sta 0x0001                  ; store accumulator in memory
+      |     0x00009cf8      8101           sta (0x01,x)                ; store accumulator in memory
+      |     0x00009cfa      8332           sax (0x32,x)
+      |     0x00009cfc      8ed4e8         stx 0xe8d4                  ; store index x in memory
+      |     0x00009cff      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
+      |     0x00009d01      d7e5           dcp 0xe5,x
+      |     0x00009d03      ece3ef         cpx 0xefe3                  ; compare memory and index x
+      |     0x00009d06      ede9ee         sbc 0xeee9                  ; subtract memory from accumulator with borrow
+      |     0x00009d09      e700           isb 0x00
+      |     0x00009d0b      8603           stx 0x03                    ; store index x in memory
+      |     0x00009d0d      8c8002         sty 0x0280                  ; store index y in memory
+      | ,=< 0x00009d10      5002           bvc 0x4cc108                ; branch on overflow clear
+      | |   0x00009d12      02             hlt
+      | |   0x00009d13      8346           sax (0x46,x)
+      |     0x00009d15      8d0202         sta 0x0202                  ; store accumulator in memory
+      |     0x00009d18      8d0201         sta 0x0102                  ; store accumulator in memory
+      |     0x00009d1b      8d0202         sta 0x0202                  ; store accumulator in memory
+      |     0x00009d1e      8102           sta (0x02,x)                ; store accumulator in memory
+      |     0x00009d20      8328           sax (0x28,x)
+      |     0x00009d22      8002           nop #0x02                   ; no operation
+      | ,=< 0x00009d24      5008           bvc 0x4cc108                ; branch on overflow clear
+      | |   0x00009d26      0383           slo (0x83,x)
+      | |   0x00009d28      12             hlt
+      | |   0x00009d29      8d0200         sta 0x0002                  ; store accumulator in memory
+      | |   0x00009d2c      8d0200         sta 0x0002                  ; store accumulator in memory
+      |     0x00009d2f      8d0202         sta 0x0202                  ; store accumulator in memory
+      |     0x00009d32      8319           sax (0x19,x)
+      |     0x00009d34      8d0202         sta 0x0202                  ; store accumulator in memory
+      |     0x00009d37      8d0200         sta 0x0002                  ; store accumulator in memory
+      |     0x00009d3a      831e           sax (0x1e,x)
+      |     0x00009d3c      8d0201         sta 0x0102                  ; store accumulator in memory
+      |     0x00009d3f      8d0202         sta 0x0202                  ; store accumulator in memory
+      |     0x00009d42      8102           sta (0x02,x)                ; store accumulator in memory
+      |     0x00009d44      800c           nop #0x0c                   ; no operation
+      |     0x00009d46      32             hlt
+      |     0x00009d47      0b01           anc #0x01
+      |     0x00009d49      8328           sax (0x28,x)
+      |     0x00009d4b      8000           nop #0x00                   ; no operation
+      `===< 0x00009d4d      4c0803         jmp 0x0308                  ; jump to new location
+            0x00009d50      8314           sax (0x14,x)
+            0x00009d52      8200           nop #0x00                   ; no operation
+            0x00009d54      00             brk                         ; force break
+            0x00009d55      8001           nop #0x01                   ; no operation
+            0x00009d57      4408           nop 0x08                    ; no operation
+            0x00009d59      0383           slo (0x83,x)
+            0x00009d5b      0a             asl a                       ; shift left one bit (memory or accumulator)
+            0x00009d5c      810c           sta (0x0c,x)                ; store accumulator in memory
+            0x00009d5e      8002           nop #0x02                   ; no operation
+        ,=< 0x00009d60      500b           bvc 0x4cc108                ; branch on overflow clear
+        |   0x00009d62      0183           ora (0x83,x)                ; "or" memory with accumulator
+        |   0x00009d64      0a             asl a                       ; shift left one bit (memory or accumulator)
+        |   0x00009d65      8d0203         sta 0x0302                  ; store accumulator in memory
+        |   0x00009d68      8d0203         sta 0x0302                  ; store accumulator in memory
+        |   0x00009d6b      8d0203         sta 0x0302                  ; store accumulator in memory
+            0x00009d6e      830f           sax (0x0f,x)
+            0x00009d70      8d0103         sta 0x0301                  ; store accumulator in memory
+            0x00009d73      8d0100         sta 0x0001                  ; store accumulator in memory
+            0x00009d76      8201           nop #0x01                   ; no operation
+            0x00009d78      038d           slo (0x8d,x)
+            0x00009d7a      00             brk                         ; force break
+            0x00009d7b      0382           slo (0x82,x)
+            0x00009d7d      0100           ora (0x00,x)                ; "or" memory with accumulator
+            0x00009d7f      8d0003         sta 0x0300                  ; store accumulator in memory
+            0x00009d82      8101           sta (0x01,x)                ; store accumulator in memory
+            0x00009d84      800a           nop #0x0a                   ; no operation
+            0x00009d86      1a             nop                         ; no operation
+            0x00009d87      0601           asl 0x01                    ; shift left one bit (memory or accumulator)
+            0x00009d89      830a           sax (0x0a,x)
+            0x00009d8b      8d0201         sta 0x0102                  ; store accumulator in memory
+            0x00009d8e      8d0203         sta 0x0302                  ; store accumulator in memory
+            0x00009d91      8332           sax (0x32,x)
+            0x00009d93      8202           nop #0x02                   ; no operation
+            0x00009d95      02             hlt
+            0x00009d96      8d0002         sta 0x0200                  ; store accumulator in memory
+            0x00009d99      8202           nop #0x02                   ; no operation
+            0x00009d9b      00             brk                         ; force break
+            0x00009d9c      8d0002         sta 0x0200                  ; store accumulator in memory
+            0x00009d9f      8202           nop #0x02                   ; no operation
+            0x00009da1      02             hlt
+            0x00009da2      8d0002         sta 0x0200                  ; store accumulator in memory
+            0x00009da5      8d0202         sta 0x0202                  ; store accumulator in memory
+            0x00009da8      8100           sta (0x00,x)                ; store accumulator in memory
+            0x00009daa      800d           nop #0x0d                   ; no operation
+            0x00009dac      3109           and (0x09),y                ; "and" memory with accumulator
+            0x00009dae      02             hlt
+            0x00009daf      8d0202         sta 0x0202                  ; store accumulator in memory
+            0x00009db2      8102           sta (0x02,x)                ; store accumulator in memory
+            0x00009db4      800c           nop #0x0c                   ; no operation
+            0x00009db6      32             hlt
+            0x00009db7      0b01           anc #0x01
+            0x00009db9      838c           sax (0x8c,x)
+            0x00009dbb      8920           nop #0x20                   ; no operation
+            0x00009dbd      244c           bit 0x4c                    ; test bits in memory with accumulator
+            0x00009dbf      ee8c96         inc 0x968c                  ; increment memory by one
+            0x00009dc2      a04b           ldy #0x4b                   ; load index y with memory
+        .-> 0x00009dc4      8cdf9d         sty 0x9ddf                  ; store index y in memory
+        |   0x00009dc7      b160           lda (0x60),y                ; load accumulator with memory
+        |   0x00009dc9      29fc           and #0xfc                   ; "and" memory with accumulator
+        |   0x00009dcb      c9d4           cmp #0xd4                   ; compare memory and accumulator
+       ,==< 0x00009dcd      d014           bne 0x4cc108                ; branch on result not zero
+       ||   0x00009dcf      207896         jsr 0x9678                  ; jump to new location saving return address
+       ||   0x00009dd2      2907           and #0x07                   ; "and" memory with accumulator
+       ||   0x00009dd4      0908           ora #0x08                   ; "or" memory with accumulator
+       ||   0x00009dd6      aa             tax                         ; transfer accumulator to index x
+     ..---> 0x00009dd7      a008           ldy #0x08                   ; load index y with memory
+     ||||   0x00009dd9      a901           lda #0x01                   ; load accumulator with memory
+     ||||   0x00009ddb      204b4c         jsr 0x4c4b                  ; jump to new location saving return address
+     ||||   0x00009dde      a000           ldy #0x00                   ; load index y with memory
+    ,=====< 0x00009de0      4cfd9d         jmp 0x9dfd                  ; jump to new location
+    |||`--> 0x00009de3      c9f8           cmp #0xf8                   ; compare memory and accumulator
+    |||,==< 0x00009de5      d016           bne 0x4cc108                ; branch on result not zero
+    |||||   0x00009de7      ad8c96         lda 0x968c                  ; load accumulator with memory
+    |||||   0x00009dea      2903           and #0x03                   ; "and" memory with accumulator
+   ,======< 0x00009dec      d00f           bne 0x4cc108                ; branch on result not zero
+   ||||||   0x00009dee      a20c           ldx #0x0c                   ; load index x with memory
+   ||||||   0x00009df0      a900           lda #0x00                   ; load accumulator with memory
+   ||||||   0x00009df2      4980           eor #0x80                   ; "exclusive-or" memory with accumulator
+   ||||||   0x00009df4      8df19d         sta 0x9df1                  ; store accumulator in memory
+   ||`====< 0x00009df7      30de           bmi 0x4cc108                ; branch on result minus
+   || |||   0x00009df9      a20a           ldx #0x0a                   ; load index x with memory
+   || `===< 0x00009dfb      d0da           bne 0x4cc108                ; branch on result not zero
+   ``--`--> 0x00009dfd      88             dey                         ; decrement index y by one
+        `=< 0x00009dfe      10c4           bpl 0x4cc108                ; branch on result plus
+            0x00009e00      a20f           ldx #0x0f                   ; load index x with memory
+        .-> 0x00009e02      bd603f         lda 0x3f60,x                ; load accumulator with memory
+        |   0x00009e05      c934           cmp #0x34                   ; compare memory and accumulator
+       ,==< 0x00009e07      900c           bcc 0x4cc108                ; branch on carry clear
+       ||   0x00009e09      207896         jsr 0x9678                  ; jump to new location saving return address
+       ||   0x00009e0c      2903           and #0x03                   ; "and" memory with accumulator
+       ||   0x00009e0e      18             clc                         ; clear carry flag
+       ||   0x00009e0f      7d603f         adc 0x3f60,x                ; add memory to accumulator with carry
+       ||   0x00009e12      9d703f         sta 0x3f70,x                ; store accumulator in memory
+       `--> 0x00009e15      ca             dex                         ; decrement index x by one
+        `=< 0x00009e16      10ea           bpl 0x4cc108                ; branch on result plus
+            0x00009e18      204d96         jsr 0x964d                  ; jump to new location saving return address
+            0x00009e1b      a908           lda #0x08                   ; load accumulator with memory
+            0x00009e1d      8556           sta 0x56                    ; store accumulator in memory
+            0x00009e1f      a934           lda #0x34                   ; load accumulator with memory
+            0x00009e21      8557           sta 0x57                    ; store accumulator in memory
+            0x00009e23      a938           lda #0x38                   ; load accumulator with memory
+            0x00009e25      8558           sta 0x58                    ; store accumulator in memory
+            0x00009e27      a935           lda #0x35                   ; load accumulator with memory
+            0x00009e29      8559           sta 0x59                    ; store accumulator in memory
+            0x00009e2b      a981           lda #0x81                   ; load accumulator with memory
+            0x00009e2d      8552           sta 0x52                    ; store accumulator in memory
+            0x00009e2f      a906           lda #0x06                   ; load accumulator with memory
+            0x00009e31      8553           sta 0x53                    ; store accumulator in memory
+            0x00009e33      a900           lda #0x00                   ; load accumulator with memory
+            0x00009e35      855b           sta 0x5b                    ; store accumulator in memory
+            0x00009e37      a913           lda #0x13                   ; load accumulator with memory
+            0x00009e39      855c           sta 0x5c                    ; store accumulator in memory
+            0x00009e3b      a5c8           lda 0xc8                    ; load accumulator with memory
+        ,=< 0x00009e3d      1004           bpl 0x4cc108                ; branch on result plus
+        |   0x00009e3f      78             sei                         ; set interrupt disable status
+        |   0x00009e40      20891d         jsr 0x1d89                  ; jump to new location saving return address
+        `-> 0x00009e43      20066c         jsr 0x6c06                  ; jump to new location saving return address
+        .-> 0x00009e46      a45b           ldy 0x5b                    ; load index y with memory
+       .--> 0x00009e48      a908           lda #0x08                   ; load accumulator with memory
+       ||   0x00009e4a      8d819e         sta 0x9e81                  ; store accumulator in memory
+       ||   0x00009e4d      a9c0           lda #0xc0                   ; load accumulator with memory
+       ||   0x00009e4f      8d949e         sta 0x9e94                  ; store accumulator in memory
+       ||   0x00009e52      b940bf         lda 0xbf40,y                ; load accumulator with memory
+      ,===< 0x00009e55      d01d           bne 0x4cc108                ; branch on result not zero
+      |||   0x00009e57      b98cbf         lda 0xbf8c,y                ; load accumulator with memory
+      |||   0x00009e5a      c9f8           cmp #0xf8                   ; compare memory and accumulator
+     ,====< 0x00009e5c      d004           bne 0x4cc108                ; branch on result not zero
+     ||||   0x00009e5e      a904           lda #0x04                   ; load accumulator with memory
+    ,=====< 0x00009e60      d012           bne 0x4cc108                ; branch on result not zero
+    |`----> 0x00009e62      c9ff           cmp #0xff                   ; compare memory and accumulator
+    |,====< 0x00009e64      d004           bne 0x4cc108                ; branch on result not zero
+    |||||   0x00009e66      a900           lda #0x00                   ; load accumulator with memory
+   ,======< 0x00009e68      f00a           beq 0x4cc108                ; branch on result zero
+   ||`----> 0x00009e6a      a20c           ldx #0x0c                   ; load index x with memory
+   || |||   0x00009e6c      8e819e         stx 0x9e81                  ; store index x in memory
+   || |||   0x00009e6f      a2e0           ldx #0xe0                   ; load index x with memory
+   || |||   0x00009e71      8e949e         stx 0x9e94                  ; store index x in memory
+   ``-`---> 0x00009e74      8550           sta 0x50                    ; store accumulator in memory
+       ||   0x00009e76      a900           lda #0x00                   ; load accumulator with memory
+       ||   0x00009e78      0650           asl 0x50                    ; shift left one bit (memory or accumulator)
+       ||   0x00009e7a      2a             rol a                       ; rotate one bit left (memory or accumulator)
+       ||   0x00009e7b      0650           asl 0x50                    ; shift left one bit (memory or accumulator)
+       ||   0x00009e7d      2a             rol a                       ; rotate one bit left (memory or accumulator)
+       ||   0x00009e7e      8555           sta 0x55                    ; store accumulator in memory
+       ||   0x00009e80      6908           adc #0x08                   ; add memory to accumulator with carry
+       ||   0x00009e82      8551           sta 0x51                    ; store accumulator in memory
+       ||   0x00009e84      a550           lda 0x50                    ; load accumulator with memory
+       ||   0x00009e86      0a             asl a                       ; shift left one bit (memory or accumulator)
+       ||   0x00009e87      2655           rol 0x55                    ; rotate one bit left (memory or accumulator)
+       ||   0x00009e89      0a             asl a                       ; shift left one bit (memory or accumulator)
+       ||   0x00009e8a      2655           rol 0x55                    ; rotate one bit left (memory or accumulator)
+       ||   0x00009e8c      0a             asl a                       ; shift left one bit (memory or accumulator)
+       ||   0x00009e8d      2655           rol 0x55                    ; rotate one bit left (memory or accumulator)
+       ||   0x00009e8f      8554           sta 0x54                    ; store accumulator in memory
+       ||   0x00009e91      a555           lda 0x55                    ; load accumulator with memory
+       ||   0x00009e93      69c0           adc #0xc0                   ; add memory to accumulator with carry
+       ||   0x00009e95      8555           sta 0x55                    ; store accumulator in memory
+       ||   0x00009e97      a000           ldy #0x00                   ; load index y with memory
+       ||   0x00009e99      b154           lda (0x54),y                ; load accumulator with memory
+       ||   0x00009e9b      9156           sta (0x56),y                ; store accumulator in memory
+       ||   0x00009e9d      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x00009e9f      9152           sta (0x52),y                ; store accumulator in memory
+       ||   0x00009ea1      c8             iny                         ; increment index y by one
+       ||   0x00009ea2      b154           lda (0x54),y                ; load accumulator with memory
+       ||   0x00009ea4      9156           sta (0x56),y                ; store accumulator in memory
+       ||   0x00009ea6      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x00009ea8      9152           sta (0x52),y                ; store accumulator in memory
+       ||   0x00009eaa      c8             iny                         ; increment index y by one
+       ||   0x00009eab      b154           lda (0x54),y                ; load accumulator with memory
+       ||   0x00009ead      9156           sta (0x56),y                ; store accumulator in memory
+       ||   0x00009eaf      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x00009eb1      a028           ldy #0x28                   ; load index y with memory
+       ||   0x00009eb3      9152           sta (0x52),y                ; store accumulator in memory
+       ||   0x00009eb5      a003           ldy #0x03                   ; load index y with memory
+       ||   0x00009eb7      b154           lda (0x54),y                ; load accumulator with memory
+       ||   0x00009eb9      9156           sta (0x56),y                ; store accumulator in memory
+       ||   0x00009ebb      b150           lda (0x50),y                ; load accumulator with memory
+       ||   0x00009ebd      a029           ldy #0x29                   ; load index y with memory
+       ||   0x00009ebf      9152           sta (0x52),y                ; store accumulator in memory
+       ||   0x00009ec1      a004           ldy #0x04                   ; load index y with memory
+       ||   0x00009ec3      20609f         jsr 0x9f60                  ; jump to new location saving return address
+       ||   0x00009ec6      20639f         jsr 0x9f63                  ; jump to new location saving return address
+       ||   0x00009ec9      20789f         jsr 0x9f78                  ; jump to new location saving return address
+       ||   0x00009ecc      a556           lda 0x56                    ; load accumulator with memory
+       ||   0x00009ece      18             clc                         ; clear carry flag
+       ||   0x00009ecf      6910           adc #0x10                   ; add memory to accumulator with carry
+       ||   0x00009ed1      8556           sta 0x56                    ; store accumulator in memory
+      ,===< 0x00009ed3      9003           bcc 0x4cc108                ; branch on carry clear
+      |||   0x00009ed5      e657           inc 0x57                    ; increment memory by one
+      |||   0x00009ed7      18             clc                         ; clear carry flag
+      `---> 0x00009ed8      a558           lda 0x58                    ; load accumulator with memory
+       ||   0x00009eda      6910           adc #0x10                   ; add memory to accumulator with carry
+       ||   0x00009edc      8558           sta 0x58                    ; store accumulator in memory
+      ,===< 0x00009ede      9003           bcc 0x4cc108                ; branch on carry clear
+      |||   0x00009ee0      e659           inc 0x59                    ; increment memory by one
+      |||   0x00009ee2      18             clc                         ; clear carry flag
+      `---> 0x00009ee3      a552           lda 0x52                    ; load accumulator with memory
+       ||   0x00009ee5      6902           adc #0x02                   ; add memory to accumulator with carry
+       ||   0x00009ee7      8552           sta 0x52                    ; store accumulator in memory
+      ,===< 0x00009ee9      9002           bcc 0x4cc108                ; branch on carry clear
+      |||   0x00009eeb      e653           inc 0x53                    ; increment memory by one
+      `---> 0x00009eed      e65b           inc 0x5b                    ; increment memory by one
+       ||   0x00009eef      a45b           ldy 0x5b                    ; load index y with memory
+       ||   0x00009ef1      c45c           cpy 0x5c                    ; compare memory and index y
+      ,===< 0x00009ef3      b003           bcs 0x4cc108                ; branch on carry set
+      |`==< 0x00009ef5      4c489e         jmp 0x9e48                  ; jump to new location
+      `---> 0x00009ef8      a5c8           lda 0xc8                    ; load accumulator with memory
+       ,==< 0x00009efa      1008           bpl 0x4cc108                ; branch on result plus
+       ||   0x00009efc      20891d         jsr 0x1d89                  ; jump to new location saving return address
+       ||   0x00009eff      58             cli                         ; clear interrupt disable bit
+       ||   0x00009f00      78             sei                         ; set interrupt disable status
+       ||   0x00009f01      20891d         jsr 0x1d89                  ; jump to new location saving return address
+       `--> 0x00009f04      a556           lda 0x56                    ; load accumulator with memory
+        |   0x00009f06      18             clc                         ; clear carry flag
+        |   0x00009f07      6950           adc #0x50                   ; add memory to accumulator with carry
+        |   0x00009f09      8556           sta 0x56                    ; store accumulator in memory
+        |   0x00009f0b      a557           lda 0x57                    ; load accumulator with memory
+        |   0x00009f0d      6901           adc #0x01                   ; add memory to accumulator with carry
+        |   0x00009f0f      8557           sta 0x57                    ; store accumulator in memory
+        |   0x00009f11      a558           lda 0x58                    ; load accumulator with memory
+        |   0x00009f13      6950           adc #0x50                   ; add memory to accumulator with carry
+        |   0x00009f15      8558           sta 0x58                    ; store accumulator in memory
+        |   0x00009f17      a559           lda 0x59                    ; load accumulator with memory
+        |   0x00009f19      6901           adc #0x01                   ; add memory to accumulator with carry
+        |   0x00009f1b      8559           sta 0x59                    ; store accumulator in memory
+        |   0x00009f1d      a552           lda 0x52                    ; load accumulator with memory
+        |   0x00009f1f      692a           adc #0x2a                   ; add memory to accumulator with carry
+        |   0x00009f21      8552           sta 0x52                    ; store accumulator in memory
+       ,==< 0x00009f23      9002           bcc 0x4cc108                ; branch on carry clear
+       ||   0x00009f25      e653           inc 0x53                    ; increment memory by one
+       `--> 0x00009f27      a55c           lda 0x5c                    ; load accumulator with memory
+        |   0x00009f29      18             clc                         ; clear carry flag
+        |   0x00009f2a      6913           adc #0x13                   ; add memory to accumulator with carry
+        |   0x00009f2c      855c           sta 0x5c                    ; store accumulator in memory
+        |   0x00009f2e      c95a           cmp #0x5a                   ; compare memory and accumulator
+       ,==< 0x00009f30      b003           bcs 0x4cc108                ; branch on carry set
+       |`=< 0x00009f32      4c469e         jmp 0x9e46                  ; jump to new location
+       `--> 0x00009f35      a906           lda #0x06                   ; load accumulator with memory
+            0x00009f37      8501           sta 0x01                    ; store accumulator in memory
+            0x00009f39      a90e           lda #0x0e                   ; load accumulator with memory
+            0x00009f3b      8d00ff         sta 0xff00                  ; store accumulator in memory
+            0x00009f3e      a5c8           lda 0xc8                    ; load accumulator with memory
+        ,=< 0x00009f40      1003           bpl 0x4cc108                ; branch on result plus
+        |   0x00009f42      20891d         jsr 0x1d89                  ; jump to new location saving return address
+        `-> 0x00009f45      58             cli                         ; clear interrupt disable bit
+            0x00009f46      200380         jsr 0x8003                  ; jump to new location saving return address
+            0x00009f49      20e4ff         jsr 0xffe4                  ; jump to new location saving return address
+        ,=< 0x00009f4c      f010           beq 0x4cc108                ; branch on result zero
+        |   0x00009f4e      ae5f9f         ldx 0x9f5f                  ; load index x with memory
+        |   0x00009f51      9a             txs                         ; transfer index x to stack pointer
+        |   0x00009f52      ad803f         lda 0x3f80                  ; load accumulator with memory
+        |   0x00009f55      8d1c4c         sta 0x4c1c                  ; store accumulator in memory
+        |   0x00009f58      ad813f         lda 0x3f81                  ; load accumulator with memory
+        |   0x00009f5b      8d1d4c         sta 0x4c1d                  ; store accumulator in memory
+        `-> 0x00009f5e      60             rts                         ; return from subroutine
+            0x00009f5f      00             brk                         ; force break
+            0x00009f60      20639f         jsr 0x9f63                  ; jump to new location saving return address
+            0x00009f63      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f65      9156           sta (0x56),y                ; store accumulator in memory
+            0x00009f67      c8             iny                         ; increment index y by one
+            0x00009f68      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f6a      9156           sta (0x56),y                ; store accumulator in memory
+            0x00009f6c      c8             iny                         ; increment index y by one
+            0x00009f6d      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f6f      9156           sta (0x56),y                ; store accumulator in memory
+            0x00009f71      c8             iny                         ; increment index y by one
+            0x00009f72      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f74      9156           sta (0x56),y                ; store accumulator in memory
+            0x00009f76      c8             iny                         ; increment index y by one
+            0x00009f77      60             rts                         ; return from subroutine
+            0x00009f78      207b9f         jsr 0x9f7b                  ; jump to new location saving return address
+            0x00009f7b      207e9f         jsr 0x9f7e                  ; jump to new location saving return address
+            0x00009f7e      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f80      9158           sta (0x58),y                ; store accumulator in memory
+            0x00009f82      c8             iny                         ; increment index y by one
+            0x00009f83      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f85      9158           sta (0x58),y                ; store accumulator in memory
+            0x00009f87      c8             iny                         ; increment index y by one
+            0x00009f88      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f8a      9158           sta (0x58),y                ; store accumulator in memory
+            0x00009f8c      c8             iny                         ; increment index y by one
+            0x00009f8d      b154           lda (0x54),y                ; load accumulator with memory
+            0x00009f8f      9158           sta (0x58),y                ; store accumulator in memory
+            0x00009f91      c8             iny                         ; increment index y by one
+            0x00009f92      60             rts                         ; return from subroutine

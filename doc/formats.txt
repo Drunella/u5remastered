@@ -1,20 +1,13 @@
 Block Maps Format
 =================
 
-- 8 maps of block lines (256 bytes)
-
-map 0: track corrector
-index   track corrector
-0       b
-..
-7
-
 map 1-7: addresses of block lines (256 bytes)
 index   bank  high-address
 0       b     b
 ...
 17
 
+position 255: track corrector
 
 - all even block lines start at a bank boundary
   low rom: $80 and $90

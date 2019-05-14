@@ -3,20 +3,20 @@ size=8189
 --------------------------------------------------------------------------
            
             0x00004c00      4c3868         jmp 0x6838       ; write text to screen
-            0x00004c03      4c595a         jmp 0x5a59       ;
+            0x00004c03      4c595a         jmp 0x5a59       ; screen operations
             0x00004c06      4c375a         jmp 0x5a37                  ; jump to new location
             0x00004c09      4c4f5a         jmp 0x5a4f                  ; jump to new location
             0x00004c0c      4c405a         jmp 0x5a40                  ; jump to new location
-            0x00004c0f      4c145b         jmp 0x5b14       ;
+            0x00004c0f      4c145b         jmp 0x5b14       ; 
             0x00004c12      4caa5b         jmp 0x5baa                  ; jump to new location
             0x00004c15      4cb05b         jmp 0x5bb0       ; wait for key? enter disk?
             0x00004c18      4c3c5c         jmp 0x5c3c                  ; jump to new location
-            0x00004c1b      4caf4c         jmp 0x4caf                  ; jump to new location
+            0x00004c1b      4caf4c         jmp 0x4caf       ; jump target can be changed
             0x00004c1e      4c8b51         jmp 0x518b                  ; jump to new location
             0x00004c21      4c8451         jmp 0x5184                  ; jump to new location
             0x00004c24      4cb253         jmp 0x53b2       ;
             0x00004c27      4cb75e         jmp 0x5eb7                  ; jump to new location
-            0x00004c2a      4ce46b         jmp 0x6be4       ;
+            0x00004c2a      4ce46b         jmp 0x6be4       ; sound effect?
             0x00004c2d      4c3a52         jmp 0x523a       ;
             0x00004c30      4c9e5d         jmp 0x5d9e                  ; jump to new location
             0x00004c33      4c1169         jmp 0x6911                  ; jump to new location
@@ -27,7 +27,7 @@ size=8189
             0x00004c42      4c1252         jmp 0x5212                  ; jump to new location
             0x00004c45      4c8f51         jmp 0x518f                  ; jump to new location
             0x00004c48      4c7263         jmp 0x6372                  ; jump to new location
-            0x00004c4b      4c1261         jmp 0x6112                  ; jump to new location
+            0x00004c4b      4c1261         jmp 0x6112       ; sound?
             0x00004c4e      4cdf5b         jmp 0x5bdf       ; get keyboard or joystick input 
             0x00004c51      4c831d         jmp 0x1d83       ;
             0x00004c54      4c1a63         jmp 0x631a                  ; jump to new location
@@ -38,7 +38,7 @@ size=8189
             0x00004c63      4cde50         jmp 0x50de       ;
             0x00004c66      4ca258         jmp 0x58a2                  ; jump to new location
             0x00004c69      4ca458         jmp 0x58a4                  ; jump to new location
-            0x00004c6c      4cea5e         jmp 0x5eea                  ; jump to new location
+            0x00004c6c      4cea5e         jmp 0x5eea       ; 
             0x00004c6f      4c9b5f         jmp 0x5f9b                  ; jump to new location
             0x00004c72      4cff63         jmp 0x63ff                  ; jump to new location
             0x00004c75      4c0c64         jmp 0x640c                  ; jump to new location
@@ -60,7 +60,10 @@ size=8189
             0x00004ca5      4c2601         jmp 0x0126       ; RTS in stack
             0x00004ca8      4c0c5d         jmp 0x5d0c       ; 
             0x00004cab      4c0b5c         jmp 0x5c0b                  ; jump to new location
+
             0x00004cae      00             brk              ; variable
+
+0x4c1b(can be changed):
   --------> 0x00004caf      8ef24c         stx 0x4cf2                  ; store index x in memory
   ||| |||   0x00004cb2      8cf44c         sty 0x4cf4                  ; store index y in memory
   ||| |||   0x00004cb5      48             pha                         ; push accumulator on stack
@@ -1796,6 +1799,7 @@ size=8189
   |||||||   0x00005a73      8c8c5a         sty 0x5a8c                  ; store index y in memory
   |||||||   0x00005a76      8d8e5a         sta 0x5a8e                  ; store accumulator in memory
   |||||||   0x00005a79      60             rts                         ; return from subroutine
+
   --------> 0x00005a7a      a918           lda #0x18                   ; load accumulator with memory
   |||||||   0x00005a7c      85c9           sta 0xc9                    ; store accumulator in memory
   |||||||   0x00005a7e      e6ca           inc 0xca                    ; increment memory by one
@@ -1807,6 +1811,7 @@ size=8189
   ||| |||   0x00005a8b      a000           ldy #0x00        ; value can be changed
   ||| |||   0x00005a8d      a900           lda #0x00        ; value can be changed
   ||| |||   0x00005a8f      60             rts                         ; return from subroutine
+
   ||| |||   0x00005a90      c6ca           dec 0xca                    ; decrement memory by one
   ||| |||   0x00005a92      a672           ldx 0x72                    ; load index x with memory
   ||| |||   0x00005a94      18             clc                         ; clear carry flag
@@ -1847,10 +1852,10 @@ size=8189
   |||||||   0x00005adf      a07f           ldy #0x7f                   ; load index y with memory
   --------> 0x00005ae1      c010           cpy #0x10                   ; compare memory and index y
   ========< 0x00005ae3      b006           bcs 0x4ed108                ; branch on carry set
-  |||||||   0x00005ae5      b9ffff         lda 0xffff,y                ; load accumulator with memory
-  |||||||   0x00005ae8      99ffff         sta 0xffff,y                ; store accumulator in memory
-  --------> 0x00005aeb      b9ffff         lda 0xffff,y                ; load accumulator with memory
-  |||||||   0x00005aee      99ffff         sta 0xffff,y                ; store accumulator in memory
+  |||||||   0x00005ae5      b9ffff         lda 0xffff,y     ; value can be changed
+  |||||||   0x00005ae8      99ffff         sta 0xffff,y     ; value can be changed
+  --------> 0x00005aeb      b9ffff         lda 0xffff,y     ; value can be changed
+  |||||||   0x00005aee      99ffff         sta 0xffff,y     ; value can be changed
   |||||||   0x00005af1      88             dey                         ; decrement index y by one
   ========< 0x00005af2      10ed           bpl 0x4ed108                ; branch on result plus
   |||||||   0x00005af4      8a             txa                         ; transfer index x to accumulator
@@ -1867,7 +1872,7 @@ size=8189
   ||| |||   0x00005b0b      a900           lda #0x00                   ; load accumulator with memory
   |||.----> 0x00005b0d      99ffff         sta 0xffff,y                ; store accumulator in memory
   |||||||   0x00005b10      88             dey                         ; decrement index y by one
-  |||`====< 0x00005b11      10fa           bpl 0x4ed108                ; branch on result plus
+  |||`====< 0x00005b11      10fa           bpl 0x4ed108     ; value can be changed
   ||| |||   0x00005b13      60             rts                         ; return from subroutine
 
 0x4c0f:
@@ -2359,6 +2364,8 @@ size=8189
   ||| |||   0x00005ee2      a76b           lax 0x6b
   ||| |||   0x00005ee4      93c46e         sha 0x6ec4,x
   ||| |||   0x00005ee7      1b6476         slo 0x7664,y
+
+0x4c6c:
   --------> 0x00005eea      4ee95e         lsr 0x5ee9                  ; shift right one bit (memory or accumulator)
   ||| |||   0x00005eed      6ee85e         ror 0x5ee8                  ; rotate one bit right (memory or accumulator)
   |||,====< 0x00005ef0      9008           bcc 0x4ed108                ; branch on carry clear
@@ -2368,9 +2375,10 @@ size=8189
   |||`----> 0x00005efa      2ce95e         bit 0x5ee9                  ; test bits in memory with accumulator
   ||| |||   0x00005efd      ade85e         lda 0x5ee8                  ; load accumulator with memory
   ||| |||   0x00005f00      60             rts                         ; return from subroutine
-  ||| |||   0x00005f01      00             brk                         ; force break
-  ||| |||   0x00005f02      00             brk                         ; force break
-  ||| |||   0x00005f03      00             brk                         ; force break
+  ||| |||   0x00005f01      00             brk                   ; variable
+  ||| |||   0x00005f02      00             brk                   ; variable
+  ||| |||   0x00005f03      00             brk                   ; variable
+
   |||.----> 0x00005f04      a901           lda #0x01                   ; load accumulator with memory
   |||||||   0x00005f06      ae015f         ldx 0x5f01                  ; load index x with memory
   |||||||   0x00005f09      202b67         jsr 0x672b                  ; jump to new location saving return address
@@ -2616,6 +2624,8 @@ size=8189
   |||||||   0x0000610c      a2c0           ldx #0xc0                   ; load index x with memory
   |||||||   0x0000610e      a003           ldy #0x03                   ; load index y with memory
   |||||||   0x00006110      a905           lda #0x05                   ; load accumulator with memory
+
+0x4c4b: (sound?)
   ---`----> 0x00006112      2478           bit 0x78                    ; test bits in memory with accumulator
   |||,====< 0x00006114      1055           bpl 0x4ed108                ; branch on result plus
   |||||||   0x00006116      8c2d61         sty 0x612d                  ; store index y in memory
@@ -2627,6 +2637,7 @@ size=8189
   |||||||   0x00006124      8d2c61         sta 0x612c                  ; store accumulator in memory
   |||||||   0x00006127      ac2d61         ldy 0x612d                  ; load index y with memory
   ========< 0x0000612a      4cffff         jmp 0xffff                  ; jump to new location
+
   |||||||   0x0000612d      00             brk                         ; force break
   |||||||   0x0000612e      0b62           anc #0x62
   |||||||   0x00006130      6c6189         jmp (0x8961)                ; jump to new location
@@ -2680,6 +2691,8 @@ size=8189
   |||`====< 0x00006182      d0ef           bne 0x4ed108                ; branch on result not zero
   ||| |||   0x00006184      68             pla                         ; pull accumulator from stack
   ||| |||   0x00006185      60             rts                         ; return from subroutine
+
+
   |||,====< 0x00006186      4c007b         jmp 0x7b00                  ; jump to new location
   |||||||   0x00006189      8e4462         stx 0x6244                  ; store index x in memory
   |||||||   0x0000618c      8c4562         sty 0x6245                  ; store index y in memory
@@ -2761,6 +2774,8 @@ size=8189
   |||||||   0x00006230      20f06b         jsr 0x6bf0                  ; jump to new location saving return address
   |||||||   0x00006233      88             dey                         ; decrement index y by one
   ||||`===< 0x00006234      d0f5           bne 0x4ed108                ; branch on result not zero
+
+local 0x6236: (wait and sound?)
   |||| ||   0x00006236      a032           ldy #0x32                   ; load index y with memory
   ----.---> 0x00006238      48             pha                         ; push accumulator on stack
   |||||||   0x00006239      68             pla                         ; pull accumulator from stack
@@ -2770,8 +2785,10 @@ size=8189
   |||||||   0x00006240      88             dey                         ; decrement index y by one
   ||||`===< 0x00006241      d0f5           bne 0x4ed108                ; branch on result not zero
   |||| ||   0x00006243      60             rts                         ; return from subroutine
-  |||| ||   0x00006244      00             brk                         ; force break
-  |||| ||   0x00006245      00             brk                         ; force break
+  |||| ||   0x00006244      00             brk                   ; variable
+  |||| ||   0x00006245      00             brk                   ; variable
+
+local 0x6246: (wait 0x20*0x255)
   |||| ||   0x00006246      205362         jsr 0x6253                  ; jump to new location saving return address
   |||| ||   0x00006249      a2ff           ldx #0xff                   ; load index x with memory
   ||||.---> 0x0000624b      a020           ldy #0x20                   ; load index y with memory
@@ -2779,6 +2796,8 @@ size=8189
   ========< 0x0000624e      d0fd           bne 0x4ed108                ; branch on result not zero
   |||||||   0x00006250      ca             dex                         ; decrement index x by one
   ||||`===< 0x00006251      d0f8           bne 0x4ed108                ; branch on result not zero
+
+local 0x6253: (wait and call 0x6bf0)
   |||| ||   0x00006253      a008           ldy #0x08                   ; load index y with memory
   ||||.---> 0x00006255      20ea5e         jsr 0x5eea                  ; jump to new location saving return address
   |||||||   0x00006258      aa             tax                         ; transfer accumulator to index x
@@ -2788,6 +2807,8 @@ size=8189
   |||||||   0x0000625f      88             dey                         ; decrement index y by one
   ||||`===< 0x00006260      d0f3           bne 0x4ed108                ; branch on result not zero
   |||| ||   0x00006262      60             rts                         ; return from subroutine
+
+local:
   |||| ||   0x00006263      a200           ldx #0x00                   ; load index x with memory
   |||| ||   0x00006265      86be           stx 0xbe                    ; store index x in memory
   ----.---> 0x00006267      e8             inx                         ; increment index x by one
@@ -4090,7 +4111,7 @@ size=8189
     ||  |   0x00006be1      f303           isb (0x03),y
             0x00006be3      13
 
-0x4c2a: 
+0x4c2a: (sound effect)
             0x00006be4      a200           ldx #0x00                   ; load index x with memory
             0x00006be6      a5c8           lda 0xc8                    ; load accumulator with memory
         ,=< 0x00006be8      3003           bmi 0x4b4108                ; branch on result minus
@@ -4098,8 +4119,9 @@ size=8189
         |   0x00006bec      60             rts                         ; return from subroutine
         `-> 0x00006bed      86d0           stx 0xd0                    ; store index x in memory
             0x00006bef      60             rts                         ; return from subroutine
-            0x00006bf0      a900           lda #0x00                   ; load accumulator with memory
+local 0x6bf0:
+            0x00006bf0      a900           lda #0x00             ; value will be changed
             0x00006bf2      4907           eor #0x07                   ; "exclusive-or" memory with accumulator
             0x00006bf4      8df16b         sta 0x6bf1                  ; store accumulator in memory
-            0x00006bf7      8d18d4         sta 0xd418                  ; store accumulator in memory
+            0x00006bf7      8d18d4         sta 0xd418            ; set volume
             0x00006bfa      60             rts                         ; return from subroutine

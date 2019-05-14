@@ -36,7 +36,7 @@ size: 992 bytes
             0x0000203c      a903           lda #0x03                   ; load accumulator with memory
             0x0000203e      8d1903         sta 0x0319      ; Execution address of non-maskable interrupt service routine to 039e (single rti)
             0x00002041      a94c           lda #0x4c                   ; load accumulator with memory
-            0x00002043      cd24c0         cmp 0xc024                  ; compare memory and accumulator
+            0x00002043      cd24c0         cmp 0xc024      ; c128 test
         ,=< 0x00002046      d01a           bne 0x2062                  ; branch on result not zero
         |   0x00002048      a980           lda #0x80                   ; load accumulator with memory
         |   0x0000204a      85c8           sta 0xc8                    ; store accumulator in memory
@@ -117,7 +117,7 @@ load_c128:
         |   0x000020df      20d423         jsr 0x23d4      ; set filename, 8,8,1 (M)
         |   0x000020e2      a900           lda #0x00                   ; load accumulator with memory
         |   0x000020e4      20d5ff         jsr 0xffd5      ; ROM_LOAD - load after call SETLFS,SETNAM    
-        |   0x000020e7      200f72         jsr 0x720f      ; jump table in m file, initialize music?
+        |   0x000020e7      200f72         jsr 0x720f      ; jump table in m file, initialize music
         |   0x000020ea      a904           lda #0x04                   ; load accumulator with memory
         |   0x000020ec      a2e6           ldx #0xe6                   ; load index x with memory
         |   0x000020ee      a021           ldy #0x21       

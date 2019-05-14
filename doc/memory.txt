@@ -18,18 +18,18 @@ Main Memory Map
    D
    E
    F
-0x2000
-0x3000
+0x2000    bitmap screen
+0x3000    bitmap screen
 0x4000
    1
-   2
+   2      (unknown data)
    3
    4      map
    5      map
    6      map
    7      map
-   8
-   9
+   8      (unknown data)
+   9      (unknown data)
    A      list, slist, tlist, blank.ulist
    B      list, slist, tlist, blank.ulist
    C      main.subs
@@ -60,14 +60,14 @@ Main Memory Map
    4      temp.subs
    5      temp.subs
    6      temp.subs
-   7      u5siz.o (necessary?) / 32 byte subs.128 jump table + io
-   8      u5siz.o (necessary?) / eapi
-   9      u5siz.o (necessary?) / eapi
-   A      u5siz.o (necessary?) / eapi
-   B      u5siz.o (necessary?) / exomizer
-   C      (256 free)
-   D      (256 free)
-   E      (ram, probably also temp), exomizer table?
+   7      u5siz.o (fast-loader) / 32 byte subs.128 jump table + io
+   8      u5siz.o (fast-loader) / eapi
+   9      u5siz.o (fast-loader) / eapi
+   A      u5siz.o (fast-loader) / eapi
+   B      u5siz.o (fast-loader) / exomizer
+   C      (256 free) (music control and data)
+   D      (256 free) (music data)
+   E      (ram, probably also temp)
    F      (ram, temporary storage for disk checking)
 0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
 0x9000      ( " )
@@ -119,47 +119,47 @@ Main Memory Map
    C
    D
    E      [Cartridge Registers] / [ram]
-   F      [Cartridge RAM: EAPI Jumptable, exomizer tables, variables] / [ram]
-0xE000    [kernel] / [ram] / [banked code]
-0xF000    [kernel] / [ram] / [banked code]
+   F      [Cartridge RAM: EAPI Jumptable, variables] / [ram]
+0xE000    [kernel] / [ram] / [banked code on startup]
+0xF000    [kernel] / [ram] / [banked code on startup]
 
 
 
 Cartridge Memory Map
 ====================
 
-00:0:0000
-     0100
-     0200
-     0300
-     0400
-     0500
-     0600
-     0700
-     0800
-     0900
-     0A00
-     0B00
-     0C00
-     0D00
-     0E00
-     0F00
-     1000
-     1100
-     1200
-     1300      
-     1400      (temp.subs)
-     1500      (temp.subs)
-     1600      (temp.subs)
-     1700      (temp.subs)
-     1800      (temp.subs)
-     1900      (temp.subs)
-     1A00      (temp.subs)
-     1B00      (temp.subs)
-     1C00      (temp.subs)
-     1D00      (temp.subs)
-     1E00      (temp.subs)
-     1F00      (data_loader)
+00:0:0000      (loader)
+     0100      (loader)
+     0200      (loader)
+     0300      (loader)
+     0400      (loader)
+     0500      (loader)
+     0600      (loader)
+     0700      (loader)
+     0800      (loader)
+     0900      (loader)
+     0A00      (loader)
+     0B00      (loader)
+     0C00      (loader)
+     0D00      (loader)
+     0E00      (loader)
+     0F00      (loader)
+     1000      (loader)
+     1100      (loader)
+     1200      (loader)
+     1300      (loader)
+     1400      (loader)
+     1500      (loader)
+     1600      (loader)
+     1700      (loader)
+     1800      (loader)
+     1900      (loader)
+     1A00      (loader)
+     1B00      (loader)
+     1C00      (loader)
+     1D00      (loader)
+     1E00      (loader)
+     1F00      (loader)
 00:1:0000      (directory)
      0100      (directory)
      0200      (directory)
@@ -188,140 +188,140 @@ Cartridge Memory Map
      1900      EAPI       
      1A00      EAPI
      1B00      EAPI
-     1C00      (initialize.s)
-     1D00      (initialize.s)
+     1C00      (exodecrunch)
+     1D00      
      1E00      
-     1F00      Startup Code & Reset Vector (loader.s)
-01:0:0000      (file data)         (alt file data)
-01:1:0000      (file data)         (alt file data)
-02:0:0000      (file data)         (alt file data)
-02:1:0000      (file data)         (alt file data)
-03:0:0000      (file data)         (alt file data)
-03:1:0000      (file data)         (alt file data)
-04:0:0000      (file data)         (alt file data)
-04:1:0000      (file data)         (alt file data)
-05:0:0000      (file data)         (alt file data)
-05:1:0000      (file data)         (alt file data)
-06:0:0000      (file data)         (alt file data)
-06:1:0000      (file data)         (alt file data)
-07:0:0000      (file data)         (alt file data)
-07:1:0000      (file data)         (alt file data)
+     1F00      Startup Code & Reset Vector (init.s)
+01:0:0000      (file data)
+01:1:0000      (file data)
+02:0:0000      (file data)
+02:1:0000      (file data)
+03:0:0000      (file data)
+03:1:0000      (file data)
+04:0:0000      (file data)
+04:1:0000      (file data)
+05:0:0000      (file data)
+05:1:0000      (file data)
+06:0:0000      (file data)
+06:1:0000      (file data)
+07:0:0000      (file data)
+07:1:0000      (file data)
 
-08:0:0000      (file data)         (alt file data)
-08:1:0000      (file data)         (alt file data)
-09:0:0000      (file data)         (alt file data)
-09:1:0000      (file data)         (alt file data)
-10:0:0000      (file data)         (alt file data)
-10:1:0000      (file data)         (alt file data)
-11:0:0000      (file data)         (alt file data)
-11:1:0000      (file data)         (alt file data)
-12:0:0000      (file data)         (alt file data)
-12:1:0000      (file data)         (alt file data)
-13:0:0000      (file data)         (alt file data)
-13:1:0000      (file data)         (alt file data)
-14:0:0000      (file data)         (alt file data)
-14:1:0000      (file data)         (alt file data)
-15:0:0000      (file data)         (alt file data)
-15:1:0000      (file data)         (alt file data)
+08:0:0000      (file data)
+08:1:0000      (file data)
+09:0:0000      (file data)
+09:1:0000      (file data)
+10:0:0000      (file data)
+10:1:0000      (file data)
+11:0:0000      (file data)
+11:1:0000      (file data)
+12:0:0000      (file data)
+12:1:0000      (file data)
+13:0:0000      (file data)
+13:1:0000      (file data)
+14:0:0000      (file data)
+14:1:0000      (file data)
+15:0:0000      (file data)
+15:1:0000      (file data)
 
-16:0:0000      (file data)         (alt file data)
-16:1:0000      (file data)         (alt file data)
-17:0:0000      (file data)         (alt block britannia)
-17:1:0000      (file data)         (alt block underworld)
-18:0:0000      (file data)         (alt block britannia)
-18:1:0000      (file data)         (alt block underworld)
-19:0:0000      (file data)         (alt block britannia)
-19:1:0000      (file data)         (alt block underworld)
-20:0:0000      (file data)         (alt block britannia)
-20:1:0000      (file data)         (alt block underworld)
-21:0:0000      (file data)         (alt block britannia)
-21:1:0000      (file data)         (alt block underworld)
-22:0:0000      (file data)         (alt block britannia)
-22:1:0000      (file data)         (alt block underworld)
-23:0:0000      (file data)         (alt block britannia)
-23:1:0000      (file data)         (alt block underworld)
-                                   
-24:0:0000      (file data)         (alt block britannia)
-24:1:0000      (file data)         (alt block underworld)
-25:0:0000      (file data)         (alt block britannia)
-25:1:0000      (file data)         (alt block underworld)
-26:0:0000      (file data)         (alt block britannia)
-26:1:0000      (file data)         (alt block underworld)
-27:0:0000      (file data)         (alt block towne)
-27:1:0000      (file data)         (alt block dwelling)
-28:0:0000      (file data)         (alt block towne)
-28:1:0000      (file data)         (alt block dwelling)
-29:0:0000      (file data)         (alt block towne)
-29:1:0000      (file data)         (alt block dwelling)
-30:0:0000      (file data)         (alt block towne)
-30:1:0000      (file data)         (alt block dwelling)
-31:0:0000      (file data)         (alt block towne)
-31:1:0000      (file data)         (alt block dwelling)
-                                   
-32:0:0000      (file data)         (alt block towne)
-32:1:0000      (file data)         (alt block dwelling)
-33:0:0000      (file data)         (alt block castle)
-33:1:0000      (file data)         (alt block keep)
-34:0:0000      (file data)         (alt block castle)
-34:1:0000      (file data)         (alt block keep)
-35:0:0000      (file data)         (alt block castle)
-35:1:0000      (file data)         (alt block keep)
-36:0:0000      (file data)         (alt block castle)
-36:1:0000      (file data)         (alt block keep)
-37:0:0000      (file data)         (alt block castle)
-37:1:0000      (file data)         (alt block keep)
-38:0:0000      (file data)         (alt block castle)
-38:1:0000      (file data)         (alt block keep)
-39:0:0000      (file data)         (block map)
-39:1:0000      (file data)         (alt block dungeon)
-                                   
-40:0:0000      (file data)         (alt savefiles)
-40:1:0000      (file data)         (alt block dungeon)
-41:0:0000                          (alt savefiles)
-41:1:0000                          (alt block dungeon)
-41:0:0000                          (alt savefiles)
-42:1:0000                          (alt block dungeon)
-42:0:0000                          (alt savefiles)
-43:1:0000                          (alt block dungeon)
-44:0:0000                          (alt savefiles)
-44:1:0000                          (alt block dungeon)
-45:0:0000                          (alt savefiles)
-45:1:0000                          
-46:0:0000                          (alt savefiles)
-46:1:0000                          
-47:0:0000                          (alt savefiles)
-47:1:0000                          
+16:0:0000      (file data)
+16:1:0000      (file data)
+17:0:0000      (file data)
+17:1:0000      (file data)
+18:0:0000      
+18:1:0000      
+19:0:0000      (block britannia)
+19:1:0000      (block underworld)
+20:0:0000      (block britannia)
+20:1:0000      (block underworld)
+21:0:0000      (block britannia)
+21:1:0000      (block underworld)
+22:0:0000      (block britannia)
+22:1:0000      (block underworld)
+23:0:0000      (block britannia)
+23:1:0000      (block underworld)
+               
+24:0:0000      (block britannia)
+24:1:0000      (block underworld)
+25:0:0000      (block britannia)
+25:1:0000      (block underworld)
+26:0:0000      (block britannia)
+26:1:0000      (block underworld)
+27:0:0000      (block britannia)
+27:1:0000      (block underworld)
+28:0:0000      (block towne)
+28:1:0000      (block dwelling)
+29:0:0000      (block towne)
+29:1:0000      (block dwelling)
+30:0:0000      (block towne)
+30:1:0000      (block dwelling)
+31:0:0000      (block towne)
+31:1:0000      (block dwelling)
+               
+32:0:0000      (block towne)
+32:1:0000      (block dwelling)
+33:0:0000      (block towne)
+33:1:0000      (block dwelling)
+34:0:0000      (block castle)
+34:1:0000      (block keep)
+35:0:0000      (block castle)
+35:1:0000      (block keep)
+36:0:0000      (block castle)
+36:1:0000      (block keep)
+37:0:0000      (block castle)
+37:1:0000      (block keep)
+38:0:0000      (block castle)
+38:1:0000      (block keep)
+39:0:0000      (block castle)
+39:1:0000      (block keep)
+               
+40:0:0000      (savefiles)
+40:1:0000      (block dungeon)
+41:0:0000      (savefiles)
+41:1:0000      (block dungeon)
+41:0:0000      (savefiles)
+42:1:0000      (block dungeon)
+42:0:0000      (savefiles)
+43:1:0000      (block dungeon)
+44:0:0000      (savefiles)
+44:1:0000      (block dungeon)
+45:0:0000      (savefiles)
+45:1:0000      (block dungeon)
+46:0:0000      (savefiles)
+46:1:0000      
+47:0:0000      (savefiles)
+47:1:0000      (block map)
 
-48:0:0000      (savefiles)         (alt tlist britannia)
-48:1:0000      (savefiles)
-49:0:0000      (savefiles)         (alt tlist britannia)
-41:1:0000      (savefiles)
-50:0:0000      (savefiles)         (alt tlist britannia)
-50:1:0000      (savefiles)
-51:0:0000      (savefiles)         (alt tlist britannia)
-51:1:0000      (savefiles)
-52:0:0000      (savefiles)         (alt tlist britannia)
-52:1:0000      (savefiles)
-53:0:0000      (savefiles)         (alt tlist britannia)
-53:1:0000      (savefiles)
-54:0:0000      (savefiles)         (alt tlist britannia)
-54:1:0000      (savefiles)
-55:0:0000      (savefiles)         (alt tlist britannia)
-55:1:0000      (savefiles)
+48:0:0000      (tlist britannia)
+48:1:0000      
+49:0:0000      (tlist britannia)
+41:1:0000      
+50:0:0000      (tlist britannia)
+50:1:0000      
+51:0:0000      (tlist britannia)
+51:1:0000      
+52:0:0000      (tlist britannia)
+52:1:0000      
+53:0:0000      (tlist britannia)
+53:1:0000      
+54:0:0000      (tlist britannia)
+54:1:0000      
+55:0:0000      (tlist britannia)
+55:1:0000      
 
-56:0:0000      (tlist britannia)   (alt tlist underworld)
-56:1:0000      (tlist underworld)
-57:0:0000      (tlist britannia)   (alt tlist underworld)
-57:1:0000      (tlist underworld)
-58:0:0000      (tlist britannia)   (alt tlist underworld)
-58:1:0000      (tlist underworld)
-59:0:0000      (tlist britannia)   (alt tlist underworld)
-59:1:0000      (tlist underworld)
-60:0:0000      (tlist britannia)   (alt tlist underworld)
-60:1:0000      (tlist underworld)
-61:0:0000      (tlist britannia)   (alt tlist underworld)
-61:1:0000      (tlist underworld)
-62:0:0000      (tlist britannia)   (alt tlist underworld)
-62:1:0000      (tlist underworld)
-63:0:0000      (tlist britannia)   (alt tlist underworld)
-63:1:0000      (tlist underworld)
+56:0:0000      (tlist underworld)
+56:1:0000      
+57:0:0000      (tlist underworld)
+57:1:0000      
+58:0:0000      (tlist underworld)
+58:1:0000      
+59:0:0000      (tlist underworld)
+59:1:0000      
+60:0:0000      (tlist underworld)
+60:1:0000      
+61:0:0000      (tlist underworld)
+61:1:0000      
+62:0:0000      (tlist underworld)
+62:1:0000      
+63:0:0000      (tlist underworld)
+63:1:0000      

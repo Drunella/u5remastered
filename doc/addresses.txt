@@ -1,2 +1,23 @@
 
 0xc8: information about c128
+
+0x79: music on / off in c128
+
+0x033c: music related
+0x033d: music related
+0x03cc: music related, planned song
+0x03cd: music related, planned song
+0x03ce: music related, current song?
+
+replaced in music
+0x50, 0x51:  address?
+
+0x52, 0x53:  address?
+
+0x54: 
+0x55: 
+0x56: 
+0x57: 
+0x58: 
+0x59: 
+0x5a: 

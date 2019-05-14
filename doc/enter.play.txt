@@ -20,8 +20,8 @@ program started on journey onward
   |||||||   0x00008024      99c042         sta 0x42c0,y                ; store accumulator in memory
   |||||||   0x00008027      88             dey                         ; decrement index y by one
   |`======< 0x00008028      10f1           bpl 0x4be108                ; branch on result plus
-  | |||||   0x0000802a      a5c8           lda 0xc8                    ; load accumulator with memory
-  |,======< 0x0000802c      3019           bmi 0x4be108                ; branch on result minus
+  | |||||   0x0000802a      a5c8           lda 0xc8         ; check if c128 ### replace with lda #$ff: a5c8 -> A9ff
+  |,======< 0x0000802c      3019           bmi 0x8047       ; branch if c128
   |||||||   0x0000802e      ad3103         lda 0x0331                  ; load accumulator with memory
   |||||||   0x00008031      c9f4           cmp #0xf4                   ; compare memory and accumulator
   ========< 0x00008033      d012           bne 0x4be108                ; branch on result not zero
@@ -365,7 +365,9 @@ local:
   | |||||   0x00008402      00             brk                         ; force break
   | |||||   0x00008403      00             brk                         ; force break
 
-code copied into stack:
+------------------------------------------------------------------------------
+code copied into stack (sound on, off dummy)
+
   | ||||`=< 0x00008404      4c3001         jmp 0x0130                  ; jump to new location
   | ||||    0x00008407      ad4001         lda 0x0140                  ; load accumulator with memory
   | ||||    0x0000840a      8d15d0         sta 0xd015                  ; store accumulator in memory
@@ -382,6 +384,9 @@ local:
   | | ||    0x0000841f      a94c           lda #0x4c                   ; load accumulator with memory
   | | ||    0x00008421      8d1d4c         sta 0x4c1d                  ; store accumulator in memory
   | | ||    0x00008424      60             rts                         ; return from subroutine
+
+------------------------------------------------------------------------------
+
 
   | | ||    0x00008425      a212           ldx #0x12                   ; load index x with memory
   | | ||    0x00008427      a034           ldy #0x34                   ; load index y with memory

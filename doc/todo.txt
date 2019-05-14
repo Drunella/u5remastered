@@ -10,20 +10,28 @@ Variants:
 
 ToDo
 
-- add patching of prg files with other prg files
 - identify the meaning of list, slist and tlist saving
   look in create.prg
-- modify transfer.prg to read from disk
+- better patch mechanism
+- cleanup for release and write small documentation
+- sound and effect mixing is not good, see u4 for better way
+- music while loading -> should work
+
+- ok check for irq handling while loading
+- ok add patching of prg files with other prg files
+- ok modify transfer.prg to read from disk
   + no disk loading available, could be necessary to redesign
-- remove drive selection from main menu
-  patch
-- check for irq handling while loading
-- improve makefile: phony labels, correct building in external directory
-- idea: replace all filenames with numbers (not important right now)
+- ok improve makefile: phony labels, correct building in external directory
+- ok make transfer save files from and to disk
+- ok make start menu
+- ok extend patcher
+- ok patches for ef:
+  + remove drive selection from main menu
+  + append disk read for transfer from ultima 4
+- no: idea: replace all filenames with numbers (not important right now)
   directory search is simple multiplication (well not simple, but ok)
   identification of save files is easy
   rewrite of load call everywere necessary: b:number b:argument size 0 0 0 ...
-
 - ok make jmp table modificator
   + tool to read map files 
   + extract relevant symbol
@@ -106,68 +114,6 @@ Not used zeropage addresses
     load MAIN.OUT
 
 
-File operations
-===============
-0x6c49 - 0x6f4d
-
-- Load file, get name from return address, x: 0: return, 1: call 0x8000, other call 0xa700
-  0x6c24: (0x6c49) load file from disk [6c49 - 6ca9]
-  copy file to non bankable area
-  bank in directory
-  find entry
-    depending on inserted disk
-    filename    
-  set
-    offset address in file (0)
-    destination address (from file entry)
-    bank (from directory entry)
-    decrunch necessary (yes)
-  load as file
-    + bank in
-    + read one byte
-    + bank out
-    + write one byte
-    + when finished, decrunch if necessary
-  
-- Read disk block
-0x6c24: (0x6eae) read disk block, Y: track, X: sector, A: address high byte [6eae - 6f41]
-  depending on inserted disk:
-    set filename
-    correct track offset
-  calculate offset in file
-    (y*16 + x) * 256
-  set
-    offset address in file (256 steps only)
-    destination address (from A and 0)
-    bank (from directory entry)
-    decrunch necessary (no)
-  load as file
-  
-- Save file [6de0 - 6e6e]
-0x6c2d: (0x6de0): save file
-  size: 142 bytes
-
-- Change disk
-0x6c09 (0x6d47): request disk with text [overwrite 0x6d47 to 6ddf]
-  set current disk in file loader
-  return success
-
-0x6c2a: (0x6caa): check inserted disk, A is requested disk, return C set disk no inserted [overwrite 6caa - 6cdf, 6ce0-6d46]
-  set current disk in file loader
-  return success
-
-- Load data
-  + needed:
-    offset address in file (high byte only)
-    destination address (from file entry or provided)
-    bank (from directory entry)
-    decrunch necessary
-  + operation
-    bank in
-    read one byte
-    bank out
-    write one byte
-    when finished, decrunch if necessary
 
 
 Loading
@@ -179,7 +125,7 @@ Loading
 2. xyzzy.prg (alternate would be scratch.prg, which will not be loaded)
    drive selection
    many operations, purpose unclear
-   loads U5SIZ.O.PRG ($7700) (fastloader)
+   loads U5SIZ.O.PRG ($7700) (fastloader) -> not necessary
    loads TEMP.SUBS ($6c00)
 
 3. jumps to TEMP.SUBS
@@ -214,6 +160,71 @@ Loading
    (change disk DWELLING)
    loads MAIN.T* ($8000)
 
+
+Internal text encoding
+======================
+
+0xa8: '('
+0xa9: ')'
+
+0xc1: 'A'
+0xc2: 'B'
+0xc3: 'C'
+0xc4: 'D'
+0xc5: 'E'
+0xc6: 'F'
+0xc7: 'G'
+0xc8: 'H'
+0xc9: 'I'
+0xca: 'J'
+0xcb: 'K'
+0xcc: 'L'
+0xcd: 'M'
+0xce: 'N'
+0xcf: 'O'
+0xd0: 'P'
+0xd1: 'Q'
+0xd2: 'R'
+0xd3: 'S'
+0xd4: 'T'
+0xd5: 'U'
+0xd6: 'V'
+0xd7: 'W'
+0xd8: 'X'
+0xd9: 'Y'
+0xda: 'Z'
+
+0xe1: 'a'
+0xe2: 'b'
+0xe3: 'c'
+0xe4: 'd'
+0xe5: 'e'
+0xe6: 'f'
+0xe7: 'g'
+0xe8: 'h'
+0xe9: 'i'
+0xea: 'j'
+0xeb: 'k'
+0xec: 'l'
+0xed: 'm'
+0xee: 'n'
+0xef: 'o'
+0xf0: 'p'
+0xf1: 'q'
+0xf2: 'r'
+0xf3: 's'
+0xf4: 't'
+0xf5: 'u'
+0xf6: 'v'
+0xf7: 'w'
+0xf8: 'x'
+0xf9: 'y'
+0xfa: 'z'
+0xfb: '?'
+0xfc: '?'
+0xfd: '?'
+0xfe: '?'
+0xff: '?'
 
 
 ==============================================================================
@@ -323,3 +334,119 @@ MEMORY {
 SEGMENTS {
     LOADADDR: load = LOADADDR, type = ro;
 }
+
+
+File operations
+0x6c49 - 0x6f4d
+
+- Load file, get name from return address, x: 0: return, 1: call 0x8000, other call 0xa700
+  0x6c24: (0x6c49) load file from disk [6c49 - 6ca9]
+  copy file to non bankable area
+  bank in directory
+  find entry
+    depending on inserted disk
+    filename    
+  set
+    offset address in file (0)
+    destination address (from file entry)
+    bank (from directory entry)
+    decrunch necessary (yes)
+  load as file
+    + bank in
+    + read one byte
+    + bank out
+    + write one byte
+    + when finished, decrunch if necessary
+  
+- Read disk block
+0x6c24: (0x6eae) read disk block, Y: track, X: sector, A: address high byte [6eae - 6f41]
+  depending on inserted disk:
+    set filename
+    correct track offset
+  calculate offset in file
+    (y*16 + x) * 256
+  set
+    offset address in file (256 steps only)
+    destination address (from A and 0)
+    bank (from directory entry)
+    decrunch necessary (no)
+  load as file
+  
+- Save file [6de0 - 6e6e]
+0x6c2d: (0x6de0): save file
+  size: 142 bytes
+
+- Change disk
+0x6c09 (0x6d47): request disk with text [overwrite 0x6d47 to 6ddf]
+  set current disk in file loader
+  return success
+
+0x6c2a: (0x6caa): check inserted disk, A is requested disk, return C set disk no inserted [overwrite 6caa - 6cdf, 6ce0-6d46]
+  set current disk in file loader
+  return success
+
+- Load data
+  + needed:
+    offset address in file (high byte only)
+    destination address (from file entry or provided)
+    bank (from directory entry)
+    decrunch necessary
+  + operation
+    bank in
+    read one byte
+    bank out
+    write one byte
+    when finished, decrunch if necessary
+
+
+Transfer
+- transfer.prg: 3366 bytes
+  from 0x8000 to 0x8d25
+  + reprogram check disk
+  + reprogram load block
+- patch transfer.prg
+  80e7: 202a6c -> 20????
+  81fa: 20006c -> 20????
+  8203: 4c006c -> 4c????
+  8cae: b016 -> b013  (bugfix)
+- text patches:
+  + change+pos: Please remove the boot disk 
+                -> Please insert the
+    8170:  d0ece5e1f3e5a0f2e5edeff6e5a0f4e8e5a0e2efeff4a0e4e9f3eb00
+           a0a0a0a0a0d0ece5e1f3e5a0e9eef3e5f2f4a0f4e8e5a0a0a0a0a000
+  
+  + change+pos: and insert ...          -> Ultima IV BRITANNIA disk
+    8197:  e1eee4a0e9eef3e5f2f4a0f4e8e5a0d5ecf4e9ede1a0c9d6a0c2d2c9d4c1cecec9c1a0e4e9f3eb00
+           a0a0a0a0a0a0a0a0d5ecf4e9ede1a0c9d6a0c2d2c9d4c1cecec9c1a0e4e9f3eba0a0a0a0a0a0a000
+
+
+Sound
+  + ok free memory areas:
+    0x0200 - 0x027f
+    0x0380 - 0x3c8 (0x380 must be entry point of irq handler)
+  + ok initialize interrupt and timer
+  + ok Ctrl+V for Music on/off
+  + ok transform music code and data to rom
+    * 0x7203 - 0x7bc3 (code, data, some variables) 0x09c1
+      -> automatic conversion
+      -> variable range 0x7219 - 0x7302
+      -> variable range 0x7ba8 - 0x7bc3
+      -> move variables back to spaces
+    * 0x7ca0 - 0x9fa5 (data) 0x2395 (ok)
+    * code: one part needs automatic conversion
+    * data types: construct proper structs
+  + ok place self changing code in $7c00 - $7dff
+  + ok place data in $7c00 - $7dff
+
+- ok Sound On
+  call 0x7203
+    call 0x73da (copy variables)
+    call 0x720c process data
+    call 0x78a6 transfer data to sid
+    set timer
+    jump 0x73da (copy variables)
+
+- ok Sound Data
+  0x7219 - 0x7302: 0xea bytes (234)
+  0x7ba8 - 0x7bc3: 0x1c bytes (28)
+  0x9fa5 - 0xa0ff: 347 bytes (unclear if really necessary)

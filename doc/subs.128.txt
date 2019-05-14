@@ -1,9 +1,11 @@
-   ,======< 0x00007700      4c7b77         jmp 0x777b                  ; jump to new location
-  ,=======< 0x00007703      4c1279         jmp 0x7912                  ; jump to new location
+   ,======< 0x00007700      4c7b77         jmp 0x777b            ; called in scratch.prg
+  ,=======< 0x00007703      4c1279         jmp 0x7912            ; play music x=song
   ========< 0x00007706      4c2c79         jmp 0x792c                  ; jump to new location
-  ========< 0x00007709      4c1278         jmp 0x7812                  ; jump to new location
-  ========< 0x0000770c      4cbb77         jmp 0x77bb                  ; jump to new location
-  ========< 0x0000770f      4c2577         jmp 0x7725                  ; jump to new location
+  ========< 0x00007709      4c1278         jmp 0x7812            ; called in enter.play.prg
+  ========< 0x0000770c      4cbb77         jmp 0x77bb            ; called in enter.play.prg
+  ========< 0x0000770f      4c2577         jmp 0x7725            ; called in main.dng.prg (2x)
+
+0x7702:
   |||||||   0x00007712      a228           ldx #0x28                   ; load index x with memory
   --------> 0x00007714      bc000a         ldy 0x0a00,x                ; load index y with memory
   |||||||   0x00007717      bd7979         lda 0x7979,x                ; load accumulator with memory
@@ -13,6 +15,8 @@
   |||||||   0x00007721      ca             dex                         ; decrement index x by one
   ========< 0x00007722      10f0           bpl 0x508108                ; branch on result plus
   |||||||   0x00007724      60             rts                         ; return from subroutine
+
+0x770f:
   --------> 0x00007725      8d7977         sta 0x7779                  ; store accumulator in memory
   |||||||   0x00007728      a9c0           lda #0xc0                   ; load accumulator with memory
   |||||||   0x0000772a      8d3377         sta 0x7733                  ; store accumulator in memory
@@ -48,6 +52,8 @@
   ========< 0x00007774      d0ef           bne 0x508108                ; branch on result not zero
   ||`=====< 0x00007776      4c036c         jmp 0x6c03                  ; jump to new location
   || ||||   0x00007779      2345           rla (0x45,x)
+
+0x7700:
   |`------> 0x0000777b      a200           ldx #0x00                   ; load index x with memory
   | .-----> 0x0000777d      dd7d78         cmp 0x787d,x                ; compare memory and accumulator
   |,======< 0x00007780      f013           beq 0x508108                ; branch on result zero
@@ -75,6 +81,8 @@
   | |||||   0x000077b6      c9ff           cmp #0xff                   ; compare memory and accumulator
   | `=====< 0x000077b8      d0ec           bne 0x508108                ; branch on result not zero
   |  ||||   0x000077ba      60             rts                         ; return from subroutine
+
+0x770c:
   --------> 0x000077bb      a900           lda #0x00                   ; load accumulator with memory
   |  ||||   0x000077bd      8dd177         sta 0x77d1                  ; store accumulator in memory
   |  ||||   0x000077c0      a200           ldx #0x00                   ; load index x with memory
@@ -113,6 +121,8 @@
   |||||||   0x0000780c      c9ff           cmp #0xff                   ; compare memory and accumulator
   |`======< 0x0000780e      d0ec           bne 0x508108                ; branch on result not zero
   | `=====< 0x00007810      f0be           beq 0x508108                ; branch on result zero
+
+0x7709:
   --------> 0x00007812      e012           cpx #0x12                   ; compare memory and index x
   | ,=====< 0x00007814      d004           bne 0x508108                ; branch on result not zero
   | |||||   0x00007816      c034           cpy #0x34                   ; compare memory and index y
@@ -221,19 +231,23 @@
   |   |||   0x0000790c      c8             iny                         ; increment index y by one
   |   `===< 0x0000790d      d0eb           bne 0x508108                ; branch on result not zero
   |    `==< 0x0000790f      4c036c         jmp 0x6c03                  ; jump to new location
+
+0x7703: play song x=song id
   `-------> 0x00007912      8ecd03         stx 0x03cd                  ; store index x in memory
         |   0x00007915      8ecc03         stx 0x03cc                  ; store index x in memory
         |   0x00007918      a579           lda 0x79                    ; load accumulator with memory
-       ,==< 0x0000791a      100f           bpl 0x508108                ; branch on result plus
+       ,==< 0x0000791a      100f           bpl 0x508108          ; sound off -> leave
        ||   0x0000791c      a0ff           ldy #0xff                   ; load index y with memory
        ||   0x0000791e      98             tya                         ; transfer index y to accumulator
      ..---> 0x0000791f      ecce03         cpx 0x03ce                  ; compare memory and index x
-    ,=====< 0x00007922      f007           beq 0x508108                ; branch on result zero
-    |||||   0x00007924      88             dey                         ; decrement index y by one
+    ,=====< 0x00007922      f007           beq 0x508108          ; is song playing -> leave
+    |||||   0x00007924      88             dey                   ; probably wait until song is playing
     |`====< 0x00007925      d0f8           bne 0x508108                ; branch on result not zero
     | |||   0x00007927      e901           sbc #0x01                   ; subtract memory from accumulator with borrow
     | `===< 0x00007929      d0f4           bne 0x508108                ; branch on result not zero
     `--`--> 0x0000792b      60             rts                         ; return from subroutine
+
+0x7706:
   --------> 0x0000792c      adcd03         lda 0x03cd                  ; load accumulator with memory
         |   0x0000792f      8dcc03         sta 0x03cc                  ; store accumulator in memory
         |   0x00007932      60             rts                         ; return from subroutine
@@ -461,6 +475,8 @@
      | ||   0x00007afc      00             brk                         ; force break
      | ||   0x00007afd      00             brk                         ; force break
      | ||   0x00007afe      0100           ora (0x00,x)                ; "or" memory with accumulator
+
+0x7b00:
      | ||   0x00007b00      8e557b         stx 0x7b55                  ; store index x in memory
      | ||   0x00007b03      8c567b         sty 0x7b56                  ; store index y in memory
      | ||   0x00007b06      8a             txa                         ; transfer index x to accumulator
