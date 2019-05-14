@@ -1,0 +1,7 @@
+prghex
+; at 0x76b8: replace lda 0xc8 with lda #0xff: a5c8 -> a9ff
+; disable c128 check to allow play song id
+filename = "0x41/temp.subs"
+address  = 0x0ab8
+original = a5c8
+new      = a9ff

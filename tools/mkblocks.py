@@ -93,22 +93,22 @@ def main(argv):
     global bank_data, map_data
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
-    p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
-    p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
+    p.add_argument("-o", dest="disks", action="store", required=True, help="disk configuration file.")
+    p.add_argument("-f", dest="files", action="store", required=True, help="files directory.")
     p.add_argument("-m", dest="crtfile", action="store", required=True, help="crt.map file")
-    #p.add_argument("-x", dest="noblocks", action="store_true", required=False, help="ignore data blocks.")
-    #p.add_argument("-e", dest="fileending", action="store", required=True, help="file ending of data files.")
+    p.add_argument("-d", dest="destination", action="store", required=True, help="destination directory.")
+    p.add_argument("-b", dest="blockmap", action="store", required=True, help="blockmap file.")
     #p.add_argument("-f", dest="fileoutput", action="store", required=True, help="output data content file.")
     args = p.parse_args()
-    temp_path = os.path.join(args.build, "temp")
-    os.makedirs(temp_path, exist_ok=True)
-    files_path = os.path.join(args.build, "files")
+    #temp_path = os.path.join(args.build, "temp")
+    #os.makedirs(temp_path, exist_ok=True)
+    files_path = args.files #os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
-    destination_path = os.path.join(args.build, "obj")
+    destination_path = args.destination #os.path.join(args.build, "obj")
     os.makedirs(destination_path, exist_ok=True)
 
-    disks = readdisks_info(os.path.join(args.source, "disks.cfg"))
-    blockmap = readblockmap_info(os.path.join(args.source, "block.map"))
+    disks = readdisks_info(args.disks)
+    blockmap = readblockmap_info(args.blockmap)
 
     map_initialize()
     if os.path.exists(args.crtfile):
@@ -157,10 +157,10 @@ def main(argv):
             # increase values
             startbank += 1
 
-    # write block map    
-    blockmap_bank = 39
-    blockmap_address = 0x8000
-    blockmap_lowhigh = 0
+    # write block map
+    blockmap_bank = int(blockmap["blockmap"][0], 0)
+    blockmap_lowhigh = int(blockmap["blockmap"][1], 0)
+    blockmap_address = calculate_address(blockmap_lowhigh) * 256
     #blockmap_appendentry(0, b, startbank, baseaddress)
     blockmapname = os.path.join(destination_path, "blockmap.aprg")
     write_prg(blockmapname, blockmap_lowhigh, map_data)

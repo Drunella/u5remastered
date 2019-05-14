@@ -1,11 +1,10 @@
 ; =============================================================================
 ; 00:1:1600 (LOROM, bank 0)
 
-.include "../include/easyflash.inc"
-.include "../include/io.inc"
-.include "efs.inc"
-.include "../include/exodecrunch.inc"
-.include "data_loader.exported.inc"
+.include "easyflash.i"
+.include "io.i"
+;.include "../exo/exodecrunch.i"
+;.include "data_loader.exported.inc"
 
 ; jump table vectors must be changed via patch
 ;
@@ -58,41 +57,53 @@
 ;
 
 ; export the entry points of the functions
-.export IO_request_disk_id_entry
-.export IO_request_disk_char_entry
-.export IO_load_file_entry
-.export IO_save_file_entry
-.export IO_read_block_entry
-.export IO_read_block_alt_entry
+.export _IO_request_disk_id_entry
+.export _IO_request_disk_char_entry
+.export _IO_load_file_entry
+.export _IO_save_file_entry
+.export _IO_read_block_entry
+.export _IO_read_block_alt_entry
 
 ; imports
-;.import load_prg
-;.import load_block
-;.import save_prg
-;.import load_destination_low
-;.import load_destination_high
-;.import save_source_low
-;.import save_source_high
-
-;.macro event_before
-;    jsr $0126  ; copied from original copy
-;.endmacro
-
-;.macro event_after
-;    jsr $0129  ; copied from original copy
-;.endmacro
+.import EXO_decrunch
+.import load_prg
+.import load_block
+.import save_prg_byte
+.import erase_prg
+.import load_destination_low
+.import load_destination_high
+.import save_source_low
+.import save_source_high
+.import save_files_directory_entry
+.import requested_fullname
+.import alt_track
+.import alt_sector
+.import block_bank
+.import count_directories
+.import save_files_offset_high
+.import save_files_offset_low
+.import save_files_bank
+.import save_directory_bank
+.import erase_disallow
+.import requested_filename
+.import save_files_size_high
+.import save_files_size_low
+.import bank_strategy
+.import load_strategy
+.import requested_loadmode
+.import requested_disk
 
 
 .segment "IO_CODE"
 
 
     ; --------------------------------------------------------------------
-    IO_request_disk_id_entry:
+    _IO_request_disk_id_entry:
         clc
         adc #$40   ; add 40 to get the character
 
     ; --------------------------------------------------------------------
-    IO_request_disk_char_entry:
+    _IO_request_disk_char_entry:
         sta requested_disk
         clc        ; disk request always succeeds
         rts
@@ -101,8 +112,10 @@
     ; IO_load_file_entry: load file
     ; filename after return address
     ; x: return mode (0, 1, >1)
-    IO_load_file_entry:
+    _IO_load_file_entry:
         stx requested_loadmode
+        jsr $0126  ; sound off
+
         ; load return address to copy opcode
         pla
         sta copy_name_address_low
@@ -148,8 +161,9 @@
         jsr find_directoryentry
         bcc filefound
 
-        ; not found, can happen
+        ; not found, can happen, may crash afterwards
         jsr finish_search
+        jsr $0129  ; sound on
         sec
         jmp load_return
 
@@ -164,6 +178,7 @@
         jsr EXO_decrunch
         pla
         sta $a7
+        jsr $0129  ; sound on
         jmp startorreturn
     otherloader:
         jsr load_prg
@@ -192,7 +207,9 @@
     ; string: (after return address) null terminated filename, prepended with "S:"
     ; word: (after return address) address
     ; word: (after return address) size
-    IO_save_file_entry:
+    _IO_save_file_entry:
+        jsr $0126  ; sound off
+
         pla                            ; load return address to copy opcode
         sta copy_name_address_low
         pla
@@ -240,21 +257,6 @@
         lda #$b0
         sta bank_strategy
 
-        ; prepare settings for save files
-;    save_saves:
-;        lda #EFS_SAVES_BANK
-;        sta save_directory_bank
-;        jmp save_file_step2
-;    save_btlist:
-;        ; prepare settings for btlist
-;        lda #EFS_BTLIST_BANK
-;        sta save_directory_bank
-;        jmp save_file_step2
-;    save_utlist:
-;        ; prepare settings for utlist
-;        lda #EFS_UTLIST_BANK
-;        sta save_directory_bank
-
     save_file_step2:
         ; locate file and delete
         ldy #$80   ; all saves are in low banks
@@ -262,7 +264,7 @@
         jsr start_directory_search
         jsr find_directoryentry
         bcs save_file_step3   ; file not found
-        jsr erase_file
+        jsr erase_prg
 
     save_file_step3:
         ; check if bank needs to be erased
@@ -315,6 +317,7 @@
         pha
         lda copy_name_address_low
         pha
+        jsr $0129  ; sound on
         clc        ; success
         rts
 
@@ -322,12 +325,18 @@
     ; --------------------------------------------------------------------
     ; IO_read_block_entry
     ; y:track x:sector a:high destination address
-    IO_read_block_entry:
+    _IO_read_block_entry:
          ; save destination address
         sta load_destination_high
         lda #$00
         sta load_destination_low
         sta $fe
+
+        txa
+        pha        ; sector on stack
+        tya
+        pha        ; track on stack
+        jsr $0126  ; sound off
 
         ; bank in block map
         lda #BLOCKMAP_BANK
@@ -340,7 +349,7 @@
         clc
         adc #>BLOCKMAP_ADDRESS
         sta $ff
-        tya
+        pla        ; track from stack
         ldy #$ff
         sec
         sbc ($fe), y ; corrected track now in A
@@ -350,7 +359,7 @@
         lda ($fe), y ; first element bank
         sta block_bank
 
-        txa
+        pla        ; sector from stack
         clc
         iny
         adc ($fe), y ; second element address
@@ -369,7 +378,7 @@
     ; meaning of function unclear, copied from temp.subs
     ; parameter a, x
     ; some calculations to get the track and number from a
-    IO_read_block_alt_entry:
+    _IO_read_block_alt_entry:
         sta alt_sector
         sta alt_track
         txa
@@ -384,12 +393,12 @@
         lda #$7e
         ldy alt_track
         ldx alt_sector
-        jsr IO_read_block_entry
+        jsr _IO_read_block_entry
         lda #$7f
         ldy alt_track
         ldx alt_sector
         inx
-        jmp IO_read_block_entry
+        jmp _IO_read_block_entry
 
 
     ; ====================================================================
@@ -610,25 +619,6 @@
 
 
     ; --------------------------------------------------------------------
-    ; erase_file
-    ; erases the file that fe,ff points to
-    ; can only be used for files in low ram
-    ; parameters
-    ;    fe,ff: address of directory entry
-    erase_file:
-        lda #efs_directory::flags
-        clc
-        adc $fe
-        tax        ; low address in x
-        lda #$00
-        adc $ff
-        tay        ; high address in y
-        lda #$00
-        jmp EAPIWriteFlash ; erase flag of file
-        ; no rts
-
-
-    ; --------------------------------------------------------------------
     ; save_directory
     ; saves a new directory entry at fe,ff
     ; can only be used in low ram
@@ -703,67 +693,3 @@
         jmp save_file_repeat   ; branch if positive (max 0x79 !)
 finish:
         rts
-
-
-    ; ====================================================================
-    ; library wide variables
-    ; library variables must be initialized in initialize.s
-
-.segment "IO_DATA"
-
-.export requested_disk
-.export read_block_filename
-.export save_files_directory_entry
-.export save_files_flags
-
-    ; order reflects precisely a directory entry
-    save_files_directory_entry:
-    requested_fullname:
-    requested_disk:
-        .byte $41
-    requested_filename:
-        .byte $00, $00, $00, $00, $00, $00, $00
-        .byte $00, $00, $00, $00, $00, $00, $00, $00
-    save_files_flags:
-        .byte $00
-    save_files_bank:
-        .byte $00
-    save_files_bank_high:
-        .byte $00
-    save_files_offset_low:
-        .byte $00
-    save_files_offset_high:
-        .byte $00
-    save_files_size_low:
-        .byte $00
-    save_files_size_high:
-        .byte $00
-    save_files_size_upper:
-        .byte $00
-
-    read_block_filename:
-        .byte "BLOCK", $00
-    bank_strategy:
-        .byte $00
-    load_strategy:    ; 00: decrunch; 01: load prg
-        .byte $00
-
-    save_directory_bank:
-        .byte $00
-;    erase_max_directories:
-;        .byte $00
-    count_directories:
-        .byte $00
-    erase_disallow:
-        .byte $00
-
-    requested_loadmode:
-        .byte $00
-
-    block_bank:
-        .byte $00
-
-    alt_track:  ; 6eac
-        .byte $00
-    alt_sector: ; 6ead
-        .byte $00

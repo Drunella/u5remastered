@@ -11,55 +11,78 @@ function findaddress() {
 mkdir -p $1
 
 # 0x6c00 IO_read_block_entry
-target=$( findaddress "IO_read_block_entry" $2 )
+target=$( findaddress "_IO_read_block_entry" $2 )
 destname="$1/temp.subs.1.patch"
 echo "jumptable" > $destname
 echo "# 0x6c00" >> $destname
 echo "# IO_read_block_entry" >> $destname
-echo "address = 0x0002" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0000" >> $destname
+echo "oldtarget = 0x6eae" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c09 IO_request_disk_char_entry
-target=$( findaddress "IO_request_disk_id_entry" $2 )
+target=$( findaddress "_IO_request_disk_id_entry" $2 )
 destname="$1/temp.subs.2.patch"
 echo "jumptable" > $destname
 echo "# 0x6c09" >> $destname
 echo "# IO_request_disk_id_entry" >> $destname
-echo "address = 0x000b" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0009" >> $destname
+echo "oldtarget = 0x6d47" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c24 IO_load_file_entry
-target=$( findaddress "IO_load_file_entry" $2 )
+target=$( findaddress "_IO_load_file_entry" $2 )
 destname="$1/temp.subs.3.patch"
 echo "jumptable" > $destname
 echo "# 0x6c24" >> $destname
 echo "# IO_load_file_entry" >> $destname
-echo "address = 0x0026" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0024" >> $destname
+echo "oldtarget = 0x6c49" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c2a IO_request_disk_id_entry
-target=$( findaddress "IO_request_disk_char_entry" $2 )
+target=$( findaddress "_IO_request_disk_char_entry" $2 )
 destname="$1/temp.subs.4.patch"
 echo "jumptable" > $destname
 echo "# 0x6c2a" >> $destname
 echo "# IO_request_disk_char_entry" >> $destname
-echo "address = 0x002c" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x002a" >> $destname
+echo "oldtarget = 0x6caa" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c2d IO_save_file_entry
-target=$( findaddress "IO_save_file_entry" $2 )
+target=$( findaddress "_IO_save_file_entry" $2 )
 destname="$1/temp.subs.5.patch"
 echo "jumptable" > $destname
 echo "# 0x6c2d" >> $destname
 echo "# IO_save_file_entry" >> $destname
-echo "address = 0x002f" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x002d" >> $destname
+echo "oldtarget = 0x6de0" >> $destname
 echo "newtarget = 0x$target" >> $destname
 
 # 0x6c30 IO_read_block_alt_entry
-target=$( findaddress "IO_read_block_alt_entry" $2 )
+target=$( findaddress "_IO_read_block_alt_entry" $2 )
 destname="$1/temp.subs.6.patch"
 echo "jumptable" > $destname
 echo "# 0x6c30" >> $destname
 echo "# IO_read_block_alt_entry" >> $destname
-echo "address = 0x0032" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0030" >> $destname
+echo "oldtarget = 0x6e7b" >> $destname
+echo "newtarget = 0x$target" >> $destname
+
+# 0x76bc jump to play_song
+target=$( findaddress "_play_song" $3 )
+destname="$1/temp.subs.7.patch"
+echo "jumptable" > $destname
+echo "# 0x76bc" >> $destname
+echo "# _play_song" >> $destname
+echo "filename = \"0x41/temp.subs\"" >> $destname
+echo "address = 0x0abc" >> $destname
+echo "oldtarget = 0x7703" >> $destname
 echo "newtarget = 0x$target" >> $destname

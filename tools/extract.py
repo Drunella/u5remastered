@@ -71,16 +71,16 @@ def file_md5(filename):
 
 
 def main(argv):
-    global source_path
+    #global source_path
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
     p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
     args = p.parse_args()
     source_path = args.source
-    temp_path = os.path.join(args.build, "temp")
-    os.makedirs(temp_path, exist_ok=True)
-    files_path = os.path.join(args.build, "files")
+    #temp_path = os.path.join(args.build, "temp")
+    #os.makedirs(temp_path, exist_ok=True)
+    files_path = args.build #os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
 
     files_directory = dict()
@@ -98,7 +98,7 @@ def main(argv):
             directory = readdisk_directory(diskfile)
             for f in directory:
                 entry = "0x{0:x}/{1}".format(diskid, f)
-                tempfile = os.path.join(temp_path, "uncompressed")
+                tempfile = os.path.join(files_path, "uncompressed.tmp")
                 readdisk_extractfile(diskfile, f, tempfile)
                 hex = file_md5(tempfile)
                 processfile = os.path.join(files_path, hex + ".prg")
@@ -114,7 +114,7 @@ def main(argv):
 
             if (args.verbose):
                 print("extracting blocks from " + diskname + " ...")
-            blockfile = os.path.join(temp_path, "block")
+            blockfile = os.path.join(files_path, "block.tmp")
             datafile = os.path.join(files_path, diskname + ".data")
             with open(datafile, "wb") as df:
                 # d[2]:starttrack d[3]:startsector d[4]:endtrack d[5]:endsector

@@ -28,9 +28,9 @@
 ; read a crunched byte. This subroutine has to preserve x and y register
 ; and must not modify the state of the carry flag.
 ; -------------------------------------------------------------------
-.include "../io/data_loader.exported.inc"
-;.import get_crunched_byte
-
+;.include "../io/data_loader.exported.inc"
+.import get_crunched_byte
+.import decrunch_table
 
 ; -------------------------------------------------------------------
 ; this function is the heart of the decruncher.
@@ -39,7 +39,7 @@
 ; This function will not change the interrupt status bit and it will not
 ; modify the memory configuration.
 ; -------------------------------------------------------------------
-.export decrunch
+.export EXO_decrunch
 
 ; -------------------------------------------------------------------
 ; if literal sequences is not used (the data was crunched with the -c
@@ -70,12 +70,14 @@ tabl_hi = decrunch_table + 104
 ; more suitable address.
 ; -------------------------------------------------------------------
 
+.segment "EXO_CODE"
+
 ; -------------------------------------------------------------------
 ; jsr this label to decrunch, it will in turn init the tables and
 ; call the decruncher
 ; no constraints on register content, however the
 ; decimal flag has to be #0 (it almost always is, otherwise do a cld)
-decrunch:
+EXO_decrunch:
 ; -------------------------------------------------------------------
 ; init zeropage, x and y regs. (12 bytes)
 ;
@@ -309,7 +311,7 @@ tabl_off:
 ; this 156 byte table area may be relocated. It may also be clobbered
 ; by other data between decrunches.
 ; -------------------------------------------------------------------
-decrunch_table = $7e00
+;decrunch_table = $7e00
 
 ;decrunch_table:
 ;	.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

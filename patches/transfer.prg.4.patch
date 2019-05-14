@@ -1,0 +1,4 @@
+prgbin
+; append disk loading in transfer.prg
+filename = "0x41/transfer"
+prg = "./build/ef/transfer-load.prg"
