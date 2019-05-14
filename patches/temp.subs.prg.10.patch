@@ -1,0 +1,9 @@
+type = symaddr
+# jumptable
+# 0x76bc
+# _play_song
+filename = "0x41/temp.subs"
+offset = 3
+address = 0x0abc
+oldtarget = 0x7703
+newtarget = symbol(_play_song)

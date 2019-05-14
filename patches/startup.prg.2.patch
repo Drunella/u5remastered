@@ -1,7 +1,8 @@
-prghex
+type = hex
 ; cpx #0x06 -> cpx #0x05
 ; max menu entry is 5 (ignore number of drives)
 filename = "0x41/startup"
+offset   = 2
 address  = 0x05c4
 original = e006
 new      = e005
