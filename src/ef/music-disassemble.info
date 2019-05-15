@@ -17,6 +17,8 @@ LABEL { ADDR $7219; NAME "music_masterswitch"; };
 LABEL { ADDR $7225; NAME "music_timer"; };
 LABEL { ADDR $7223; NAME "music_activity"; };
 
+LABEL { ADDR $7422; NAME "music_setvolume"; };
+
 LABEL { ADDR $762b; NAME "music_song_1"; };
 LABEL { ADDR $762d; NAME "music_song_2"; };
 LABEL { ADDR $762f; NAME "music_song_3"; };

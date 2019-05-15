@@ -1,0 +1,8 @@
+type = hex
+; replace value of volume to 8 for quiet
+; 0x6bf0: a908
+filename = "0x41/main.subs"
+offset = 2
+address = 0x1ff0
+original = a900
+new      = a908

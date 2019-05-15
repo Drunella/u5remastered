@@ -452,7 +452,7 @@
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         rts
 
 
@@ -461,7 +461,7 @@
     ; must not use X
     finish_search:
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         lda #$06
         sta $01
         rts
