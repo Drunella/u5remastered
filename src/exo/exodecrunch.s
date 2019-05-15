@@ -28,7 +28,6 @@
 ; read a crunched byte. This subroutine has to preserve x and y register
 ; and must not modify the state of the carry flag.
 ; -------------------------------------------------------------------
-;.include "../io/data_loader.exported.inc"
 .import get_crunched_byte
 .import decrunch_table
 
@@ -311,7 +310,6 @@ tabl_off:
 ; this 156 byte table area may be relocated. It may also be clobbered
 ; by other data between decrunches.
 ; -------------------------------------------------------------------
-;decrunch_table = $7e00
 
 ;decrunch_table:
 ;	.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
