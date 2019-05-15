@@ -12,11 +12,15 @@ ToDo
 
 - identify the meaning of list, slist and tlist saving
   look in create.prg
-- better patch mechanism
-- cleanup for release and write small documentation
+- cleanup for release
+  + write small documentation
+  + apache 2.0 licence
+  + cleanup of repository, rewrite history, one commit only
+
 - sound and effect mixing is not good, see u4 for better way
 - music while loading -> should work
 
+- ok better patch mechanism
 - ok check for irq handling while loading
 - ok add patching of prg files with other prg files
 - ok modify transfer.prg to read from disk

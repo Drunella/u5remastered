@@ -54,7 +54,7 @@ size=8189
             0x00004c93      4cc568         jmp 0x68c5                  ; jump to new location
             0x00004c96      4c5c68         jmp 0x685c                  ; jump to new location
             0x00004c99      4cc066         jmp 0x66c0                  ; jump to new location
-            0x00004c9c      4cf06b         jmp 0x6bf0                  ; jump to new location
+            0x00004c9c      4cf06b         jmp 0x6bf0       ; sound effect off
             0x00004c9f      4c2601         jmp 0x0126       ; RTS in stack
             0x00004ca2      4c2901         jmp 0x0129       ; RTS in stack
             0x00004ca5      4c2601         jmp 0x0126       ; RTS in stack
@@ -4119,7 +4119,7 @@ local:
         |   0x00006bec      60             rts                         ; return from subroutine
         `-> 0x00006bed      86d0           stx 0xd0                    ; store index x in memory
             0x00006bef      60             rts                         ; return from subroutine
-local 0x6bf0:
+0x4c9c:
             0x00006bf0      a900           lda #0x00             ; value will be changed
             0x00006bf2      4907           eor #0x07                   ; "exclusive-or" memory with accumulator
             0x00006bf4      8df16b         sta 0x6bf1                  ; store accumulator in memory
