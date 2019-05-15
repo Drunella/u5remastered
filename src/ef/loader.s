@@ -1,4 +1,4 @@
-; =============================================================================
+	; =============================================================================
 ; 00:1:0000 (HIROM, bank 0)
 
 .include "easyflash.i"
@@ -64,14 +64,6 @@
         lda #$80
         sta $79    ; music on
 
-;        ; copy key board routine
-;        ldx #(irq_routine_end - irq_routine)   ; calculate this value ###
-;    @repeat:
-;        lda irq_routine, x
-;        sta $0380, x
-;        dex
-;        bpl @repeat
-        
         ; check if this is a c128 (value $4c at this address) -> it should not
         ;lda #$4c
         ;cmp $c024
@@ -106,7 +98,7 @@
 
         ; now bank out and set memory
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         lda #$06
         sta $01
 
@@ -130,24 +122,8 @@
         jsr _music_init_impl
 
         ; Execution address of non-maskable interrupt service routine to 039e (single rti)
-;        lda #$9e
-;        sta $0318
-;        lda #$03
-;        sta $0319
-
-        
         ; set Execution address of interrupt service routine to 0x0380
-;        sei
-;        lda #$80
-;        sta $fffe
-;        lda #$03
-;        sta $ffff
-;        cli
-
-;        ; load io.add
-;        ldx #$00    ; return after load
-;        jsr IO_load_file
-;        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
+        ; both done in music
 
         ; load startup.prg or qs.prg, depending on parameter pressed
         pla         ; how to load is on stack
@@ -187,13 +163,32 @@
 ;    irq_routine_end:
 ;        nop
 
+;    exrom_routines:  ; (14 bytes)
+;        .byte $00
+;        sei
+;        sta $0115
+;        sta $de02
+;        cli
+;        rts
+;        lda $0115
+;        rts
+;    exrom_routines_end:  ; $0123
+
 
     _load_basicfiles:
+;        ; copy bankin / bank out
+;        ldx #(exrom_routines_end - exrom_routines)
+;    @repeat:
+;        lda exrom_routines, x
+;        sta $0115, x
+;        dex
+;        bpl @repeat
+
         ; bank in 16k mode
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; switch to bank 0
         lda #$00
@@ -249,7 +244,7 @@
 
         ; now bank out but do not set memory
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         lda #$07
         sta $01
 

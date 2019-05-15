@@ -138,7 +138,7 @@ build/u5remastered.crt: build/ef/u5remastered.bin
 
 subdirs:
 	@mkdir -p ./build/temp ./build/exo
-	@mkdir -p ./build/sources
+	@mkdir -p ./build/source
 	@mkdir -p ./build/files
 	@mkdir -p ./build/patches
 	@mkdir -p ./build/ef
@@ -150,6 +150,7 @@ clean:
 	rm -rf build/patches
 	rm -rf build/temp
 	rm -rf build/exo
+	rm -f build/u5remastered.crt
 
 mrproper:
 	rm -rf build

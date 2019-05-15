@@ -32,13 +32,13 @@ temporary_accumulator = $fb
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         ; read byte
         jsr EAPIReadFlashInc
         sta temporary_accumulator
         ; bank out and memory
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
         lda #$06
         sta $01
 
@@ -73,7 +73,7 @@ temporary_accumulator = $fb
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; read address
         jsr EAPIReadFlashInc
@@ -91,7 +91,7 @@ temporary_accumulator = $fb
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; read byte
         jsr EAPIReadFlashInc
@@ -101,7 +101,7 @@ temporary_accumulator = $fb
         lda #$06
         sta $01
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; if C set last byte read
         bcs data_loader_finish   
@@ -130,7 +130,7 @@ temporary_accumulator = $fb
         lda #$06
         sta $01
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; read byte
     save_source_low = save_source + 1
@@ -143,7 +143,7 @@ temporary_accumulator = $fb
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; inc address
         inc save_source_low

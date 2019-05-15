@@ -57,11 +57,13 @@ void main(void)
         switch (cgetc()) {
         case ' ':
         case 'g':
-            startupgame(0);
+            clear_menu();
+            startupgame(0); // does not return
             return;
         
         case 'j':
-            startupgame(1);
+            clear_menu();
+            startupgame(1); // does not return
             break;
 
         case 's':

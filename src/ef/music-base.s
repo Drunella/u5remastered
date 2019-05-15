@@ -183,6 +183,9 @@
         sta $01
         plp        ; clears interrupt flag
 
+        ; turn on
+        jsr $0129
+
         ; wait for sound activity ###
         jsr _sid_initialize_waitforirq
 
@@ -285,6 +288,8 @@
         ; bank in music bank
         lda #$07
         sta $01
+;        jsr EAPIGetBank
+;        sta $0114
         lda #MUSIC_BANK
         jsr EAPISetBank
         lda #EASYFLASH_16K ; bank in without led
@@ -296,7 +301,9 @@
         ; bank out
         lda #$06
         sta $01
-        lda #EASYFLASH_KILL ; bank out
+;        lda $0114
+;        jsr EAPISetBank
+        lda #EASYFLASH_KILL ; jsr GetMemConfiguration ; bank out
         sta EASYFLASH_CONTROL
         rts
 
