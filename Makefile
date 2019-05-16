@@ -99,7 +99,7 @@ build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
 
 # source files
 build/source/files.list:
-	tools/extract.py -v -s ./disks -b ./build/source
+	tools/extract.py -v -d ./src/disks.cfg -s ./disks -b ./build/source
 
 # get m.prg	
 build/source/m.prg:

@@ -46,7 +46,7 @@ def readdisk_getdiskfile(directory, diskname):
 
 
 def readdisk_directory(filename):
-    result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, universal_newlines=True)
+    result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     lines = result.stdout.splitlines()[1:-1]
     retval = []
     for l in lines:
@@ -56,7 +56,7 @@ def readdisk_directory(filename):
 
 
 def readdisk_checktype(filename, typeid, typename):
-    result = subprocess.run(["c1541", filename, "-block", "18", "0", "162"], stdout=subprocess.PIPE, universal_newlines=True)
+    result = subprocess.run(["c1541", filename, "-block", "18", "0", "162"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     content = result.stdout.splitlines()
     value = content[1].split()[2]
     if int(value, 16) != typeid:
@@ -66,14 +66,14 @@ def readdisk_checktype(filename, typeid, typename):
     
 def readdisk_extractfile(diskfile, filename, destfile):
     arguments = ["c1541", diskfile, "-read", filename, destfile]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error extracting file " + filename + " from disk " + diskname)
 
 
 def readdisk_extractblock(diskfile, destfile, track, sector):
     arguments = ["c1541", diskfile, "-bread", destfile, str(track), str(sector)]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error extracting block " + track + ", " + sector + " from disk " + diskname)
 
@@ -92,6 +92,7 @@ def main(argv):
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
     p.add_argument("-s", dest="source", action="store", required=True, help="source directory.")
+    p.add_argument("-d", dest="disks", action="store", required=True, help="disks file.")
     args = p.parse_args()
     source_path = args.source
     #temp_path = os.path.join(args.build, "temp")
@@ -100,7 +101,7 @@ def main(argv):
     os.makedirs(files_path, exist_ok=True)
 
     files_directory = dict()
-    disks = readdisks_info(os.path.join(args.source, "../src/disks.cfg"))
+    disks = readdisks_info(args.disks)
     for d in disks:
         try:
             diskid = int(d[1], 0)
