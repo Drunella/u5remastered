@@ -1,0 +1,66 @@
+# ----------------------------------------------------------------------------
+# Copyright 2019 Drunella
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ----------------------------------------------------------------------------
+
+GLOBAL {
+    INPUTNAME       "build/source/xyzzy.prg";
+    OUTPUTNAME      "doc/xyzzy.s";
+    STARTADDR       $2000;    # takes start addr into account
+    PAGELENGTH      0;        # No paging
+    INPUTOFFS       2;
+    CPU             "6502";
+    COMMENTS        4;
+};
+
+
+# code segments
+#SEGMENT { START $6c00;  END $6c48; NAME "JUMPTABLE"; };
+#SEGMENT { START $6c49;  END $6f4c; NAME "IO_CODE"; };
+#SEGMENT { START $6f4e;  END $76f7; NAME "OTHER_CODE"; };
+
+
+# code and vars
+RANGE { START $2000;  END $2123; TYPE code; };
+RANGE { START $2124;  END $2126; TYPE ByteTable; };
+RANGE { START $2127;  END $212b; TYPE code; };
+RANGE { START $212c;  END $212f; TYPE ByteTable; };
+RANGE { START $2130;  END $2132; TYPE code; };
+
+RANGE { START $2133;  END $21d8; TYPE skip; };
+RANGE { START $21d9;  END $21e9; TYPE ByteTable; };
+RANGE { START $21ea;  END $239b; TYPE skip; };
+RANGE { START $239c;  END $23b4; TYPE skip; };
+RANGE { START $23b5;  END $23df; TYPE code; };
+
+# labels
+LABEL { ADDR $2133; NAME "L2133"; };
+LABEL { ADDR $23b5; NAME "irq_routine"; };
+LABEL { ADDR $6C24; NAME "IO_load_file"; };
+
+LABEL { ADDR $ffba; NAME "kernal_SETLFS"; };
+LABEL { ADDR $ffbd; NAME "kernal_SETNAM"; };
+LABEL { ADDR $ffd5; NAME "kernal_LOAD"; };
+LABEL { ADDR $ffc3; NAME "kernal_CLOSE"; };
+LABEL { ADDR $ffd8; NAME "kernal_SAVE"; };
+LABEL { ADDR $ffc0; NAME "kernal_OPEN"; };
+
+LABEL { ADDR $21d9; NAME "name_UJ"; };
+LABEL { ADDR $21dc; NAME "name_U5SIZO"; };
+LABEL { ADDR $21e5; NAME "name_M"; };
+LABEL { ADDR $21e6; NAME "name_SUBS128"; };
+LABEL { ADDR $21e0; NAME "name_TEMPSUBS"; };
+
+LABEL { ADDR $2127; NAME "normal_startup"; };
+LABEL { ADDR $23D4; NAME "set_fileparams"; COMMENT "A = File name length; X/Y = Pointer to file name."; };

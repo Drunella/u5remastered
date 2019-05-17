@@ -1,0 +1,42 @@
+# ----------------------------------------------------------------------------
+# Copyright 2019 Drunella
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ----------------------------------------------------------------------------
+
+GLOBAL {
+    INPUTNAME       "build/source/temp.subs.prg";
+    OUTPUTNAME      "doc/temp.subs.s";
+    STARTADDR       $6c00;    # takes start addr into account
+    PAGELENGTH      0;        # No paging
+    INPUTOFFS       2;
+    CPU             "6502";
+    COMMENTS        4;
+};
+
+
+# outside label
+LABEL { ADDR $6ca8; NAME "requested_loadmode"; };
+
+
+# code segments
+SEGMENT { START $6c00;  END $6c48; NAME "JUMPTABLE"; };
+SEGMENT { START $6c49;  END $6f4c; NAME "IO_CODE"; };
+SEGMENT { START $6f4e;  END $76f7; NAME "OTHER_CODE"; };
+
+
+# code and vars
+RANGE { START $6c00;  END $6c32; TYPE code; };
+RANGE { START $6c33;  END $6c33; TYPE ByteTable; };
+RANGE { START $6c34;  END $76f7; TYPE code; };
+
