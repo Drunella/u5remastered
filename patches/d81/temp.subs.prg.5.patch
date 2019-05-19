@@ -1,0 +1,9 @@
+type = symaddr
+# jumptable
+# 0x6c2a
+# IO_request_disk_char_entry
+filename = "0x41/temp.subs"
+offset = 3
+address = 0x002a
+oldtarget = 0x6caa
+newtarget = symbol(_IO_request_disk_char_entry)

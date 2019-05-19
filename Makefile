@@ -42,7 +42,7 @@ all: easyflash
 easyflash: subdirs build/ef/directory.data.prg build/ef/files.data.prg build/u5remastered.crt
 
 # d81
-
+d81: subdirs build/u5remastered.d81
 
 # assemble
 build/%.o: src/%.s
@@ -56,6 +56,9 @@ build/%.s: src/%.c
 build/%.o: build/%.s
 	$(CA65) $(CA65FLAGS) -o $@ $<
 
+
+# ------------------------------------------------------------------------
+# easyflash
 
 # exomizer for ef
 build/ef/exodecrunch.prg: build/exo/exodecrunch.o build/ef/io-rw.o build/ef/io-data.o
@@ -73,10 +76,6 @@ build/ef/loader.prg: $(LOADER_FILES)
 build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(MUSIC_FILES)
 
-# music map
-#build/ef/music.inc: build/ef/music.map
-#	tools/parsemap.py -v -s ./build/ef/music.map -d build/ef/music.inc -e _play_song
-
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
@@ -85,18 +84,9 @@ build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o buil
 build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
 
-# io map
-#build/ef/io-replacement.inc: build/ef/io-replacement.map
-#	tools/parsemap.py -v -s ./build/ef/io-replacement.map -d build/ef/io-replacement.inc -e _IO_load_file_entry -e _IO_read_block_entry -e _IO_request_disk_id_entry -e _IO_request_disk_char_entry -e _IO_save_file_entry -e _IO_read_block_alt_entry  -e get_crunched_byte -e decrunch_table
-
 # transfer-load
 build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/transfer-load.map -o $@ -C ./src/ef/transfer-load.cfg $^
-
-# transfer-load map
-#build/ef/transfer-load.inc: build/ef/transfer-load.map
-#	tools/parsemap.py -v -s ./build/ef/transfer-load.map -d build/ef/transfer-load.inc -e _disk_load_block -e _disk_check_type
-
 
 # disassemble m.prg 
 build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info ./src/ef/music-export.i
@@ -114,13 +104,13 @@ build/ef.f/files.list: build/source/files.list build/ef/io-addendum.prg build/ef
 	
 # patch
 build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/ef.f/music_rom.bin
-	tools/u5patch.py -v -l ./build/ef.f/files.list -f ./build/ef.f -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map ./patches/ef/*.patch
+	tools/u5patch.py -v -l ./build/ef.f/files.list -f ./build/ef.f -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map ./patches/ef/*.patch ./patches/*.patch
 	cp build/ef.f/music_rom.bin build/ef/music_rom.aprg
 	touch ./build/ef.f/patched.done
 	 
 # crunch
 build/ef.f/crunched.done: build/ef.f/patched.done
-	tools/crunch.py -v -b ./build/ef.f
+	tools/crunch.py -v -t level -b ./build/ef.f
 	touch build/ef.f/crunched.done
 
 # build efs
@@ -142,11 +132,46 @@ build/u5remastered.crt: build/ef/u5remastered.bin
 	cartconv -b -t easy -o build/u5remastered.crt -i build/ef/u5remastered.bin -n "Ultima 5 Remastered" -p
 
 
+# ------------------------------------------------------------------------
 # d81
+
 # io-replacement d81
 build/d81/io-replacement.prg build/d81/io-replacement.map: build/d81/io-code.o build/exo/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/io-replacement.map -o build/d81/io-replacement.prg -C ./src/d81/io-replacement.cfg $^
 
+# loader
+build/d81/loader.prg: build/d81/loader.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/loader.map -o build/d81/loader.prg -C ./src/d81/loader.cfg $^
+
+build/d81.f/loader.prg: build/d81/loader.prg
+	cp ./build/d81/loader.prg build/d81.f/loader.prg
+
+# exomizer for d81 todo
+build/d81/exodecrunch.prg: build/exo/exodecrunch.o build/d81/io-code.o
+	$(LD65) $(LD65FLAGS) -o $@ -C ./src/d81/exodecrunch.cfg $^
+
+build/d81.f/exodecrunch.prg: build/d81/exodecrunch.prg
+	cp ./build/d81/exodecrunch.prg ./build/d81.f/exodecrunch.prg
+
+# files with additional items
+build/d81.f/files.list: build/source/files.list
+	cp ./build/source/* ./build/d81.f/
+
+# crunch
+build/d81.f/crunched.done: build/d81.f/patched.done
+	tools/crunch.py -v -t mem -b ./build/d81.f
+	touch build/d81.f/crunched.done
+
+# patch
+build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map build/d81/io-replacement.prg
+	tools/u5patch.py -v -l ./build/d81.f/files.list -f ./build/d81.f -m build/d81/io-replacement.map ./patches/d81/*.patch ./patches/*.patch
+	touch ./build/d81.f/patched.done
+
+# build disk
+build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg
+	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
+
+# ------------------------------------------------------------------------
 
 subdirs:
 	@mkdir -p ./build/temp 
@@ -179,6 +204,14 @@ build/source/files.list:
 build/source/m.prg:
 	c1541 ./disks/osi.d64 -read m ./build/source/m.prg
 
-# get xyzzy.prg	
-build/source/xyzzy.prg:
-	c1541 ./disks/osi.d64 -read xyzzy ./build/source/xyzzy.prg
+# get meow.prg	
+#build/source/meow.prg:
+#	c1541 ./disks/osi.d64 -read meow ./build/source/meow.prg
+
+# get subs.128.prg	
+#build/source/subs.128.prg:
+#	c1541 ./disks/osi.d64 -read subs.128 ./build/source/subs.128.prg
+
+# get temp.subs.prg	
+#build/source/temp.subs.prg:
+#	c1541 ./disks/osi.d64 -read temp.subs ./build/source/temp.subs.prg

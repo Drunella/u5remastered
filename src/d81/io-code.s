@@ -405,20 +405,21 @@
         jsr getnext_name_character     ; next char in A
         sta requested_filename, y      ; and store
         bne :-
+        iny       ; additional increase for leading drive letter
         tya
         rts
 
 
     ; --------------------------------------------------------------------
     ; checks if decrunch necessary and decrunches
-    ; X/Y address of last byte loaded
+    ; X/Y address of last byte loaded + 1
     decrunch_prepare:
         ; increase address by one byte
-        inx
-        bne :+
-        iny
-    :   stx copy_name_address_low
-        sty copy_name_address_high
+;        inx
+;        bne :+
+;        iny
+        stx copy_address_low
+        sty copy_address_high
         
         ; check if decrunch necessary
         ldx #<name_list

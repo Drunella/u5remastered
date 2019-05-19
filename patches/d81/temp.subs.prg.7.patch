@@ -1,0 +1,9 @@
+type = symaddr
+# jumptable
+# 0x6c30
+# IO_read_block_alt_entry
+filename = "0x41/temp.subs"
+offset = 3
+address = 0x0030
+oldtarget = 0x6e7b
+newtarget = symbol(_IO_read_block_alt_entry)

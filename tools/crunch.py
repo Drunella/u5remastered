@@ -47,8 +47,8 @@ def file_readaddress(filename):
 #        f.write(data)
 
 
-def file_crunch(infilename, outfilename):
-    arguments = ["exomizer", "level", \
+def file_crunch(infilename, outfilename, crunchtype):
+    arguments = ["exomizer", crunchtype, \
                              "-m", "256", \
                              "-M", "256", \
                              "-o", outfilename, \
@@ -64,11 +64,19 @@ def main(argv):
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
+    p.add_argument("-t", dest="type", action="store", required=True, help="exomizer type.")
     args = p.parse_args()
 #    temp_path = os.path.join(args.build, "temp")
 #    os.makedirs(temp_path, exist_ok=True)
     files_path = args.build #os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
+
+    if args.type == "mem":
+        crunchtype = "mem"
+    elif args.type == "level":
+        crunchtype = "level"
+    else:
+       raise Exception("unknown type " + args.type)
 
     amount = 0
     for filename in os.listdir(files_path):
@@ -87,7 +95,7 @@ def main(argv):
         infilename = os.path.join(files_path, f)
         outfilename = os.path.join(files_path, basename + ".crunch")
         address = file_readaddress(infilename)
-        file_crunch(infilename, outfilename)
+        file_crunch(infilename, outfilename, crunchtype)
         #file_prependaddress(outfilename, address)
     if args.verbose:
         print("")
