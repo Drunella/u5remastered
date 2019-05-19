@@ -22,18 +22,18 @@
 
 .setcpu "6502"
 
-bankin_kernal   := $6C03
-bankout_kernal  := $6C06
-IO_load_file    := $6C24
-init_music      := $720F
-drive_selection := $6c33
-kernal_SCNKEY   := $FF9F
-kernal_SETLFS   := $FFBA
-kernal_SETNAM   := $FFBD
-kernal_OPEN     := $FFC0
-kernal_CLOSE    := $FFC3
-kernal_LOAD     := $FFD5
-kernal_SAVE     := $FFD8
+bankin_kernal   = $6C03
+bankout_kernal  = $6C06
+IO_load_file    = $6C24
+init_music      = $720F
+drive_selection = $6c33
+kernal_SCNKEY   = $FF9F
+kernal_SETLFS   = $FFBA
+kernal_SETNAM   = $FFBD
+kernal_OPEN     = $FFC0
+kernal_CLOSE    = $FFC3
+kernal_LOAD     = $FFD5
+kernal_SAVE     = $FFD8
 
 
 .segment "LOADER"

@@ -47,13 +47,26 @@ def file_readaddress(filename):
 #        f.write(data)
 
 
-def file_crunch(infilename, outfilename, crunchtype):
-    arguments = ["exomizer", crunchtype, \
-                             "-m", "256", \
-                             "-M", "256", \
-                             "-o", outfilename, \
-                             infilename \
-                 ]
+def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
+    if crunchtype == "level":
+        # for easyflash
+        arguments = ["exomizer", "level", \
+                                 "-m", "256", \
+                                 "-M", "256", \
+                                 "-o", outfilename, \
+                                 infilename \
+                     ]
+    elif crunchtype == "mem":
+        # for d81
+        arguments = ["exomizer", "mem", \
+                                 "-l", "0x{0:04x}".format(startaddress), \
+                                 "-m", "256", \
+                                 "-M", "256", \
+                                 "-o", outfilename, \
+                                 infilename \
+                     ]
+    else:
+        raise Exception("unknown type " + crunchtype)
     result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error crunching file " + infilename)
@@ -95,7 +108,7 @@ def main(argv):
         infilename = os.path.join(files_path, f)
         outfilename = os.path.join(files_path, basename + ".crunch")
         address = file_readaddress(infilename)
-        file_crunch(infilename, outfilename, crunchtype)
+        file_crunch(infilename, outfilename, crunchtype, address)
         #file_prependaddress(outfilename, address)
     if args.verbose:
         print("")

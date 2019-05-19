@@ -36,7 +36,7 @@ MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
 
 # all
-all: easyflash
+all: easyflash d81
 
 # easyflash
 easyflash: subdirs build/ef/directory.data.prg build/ef/files.data.prg build/u5remastered.crt

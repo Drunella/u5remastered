@@ -220,7 +220,7 @@ def main(argv):
         name["type"] = 0x60|0x01   # normal prg file with start address
         #pprint.pprint(name)
         if name["name"] in excludes_list:
-            print("excluding " + name["name"])
+            #print("excluding " + name["name"])
             continue
         content = load_file(os.path.join(files_path, fi + "." + args.fileending))
         entry = efs_makefileentry(fi, content)

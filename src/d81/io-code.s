@@ -230,9 +230,9 @@
         bcs :-
         
         ; close
-        jsr $0129  ; music on
         lda #$08  
         jsr kernal_CLOSE
+        jsr $0129  ; music on
 
         ; leave
         lda copy_name_address_high    ; return address on stack
@@ -278,105 +278,144 @@
     ; y:track x:sector a:high destination address
     ; modify track and sector and call original_load_block
     _IO_read_block_entry:
-        sta $fc
+        sta $ff
+        stx $fe
         lda requested_disk
         sec
         sbc #$41
         asl
-        clc
-        adc #<load_block_jumptable
-        sta $fe
-        lda #$00
-        adc #>load_block_jumptable
-        sta $ff
-        jmp ($fe)
-    load_block_jumptable:
-        .addr disk_dungeon
-        .addr disk_britannia
-        .addr disk_underworld
-        .addr disk_towne
-        .addr disk_dwelling
-        .addr disk_castle
-        .addr disk_keep
-
-    disk_dungeon:  ; sectors 0-15
-        clc
-        tya
-        adc #dungeon_track_correction
-        tay
-        clc
-        lda $fc
-        jmp original_load_block
-        ; no rts
-
-    disk_britannia:  ; sectors 0-15
-        clc
-        tya
-        adc #britannia_track_correction
-        tay
-        clc
-        lda $fc
-        jmp original_load_block
-        ; no rts
-
-    disk_underworld:  ; sectors 16-31
-        clc
-        tya
-        adc #underworld_track_correction
-        tay
-        clc
-        txa
-        adc #$10   ; sector correction
         tax
-        lda $fc
-        jmp original_load_block
-        ; no rts
-
-    disk_towne:  ; sectors 0-15
-        clc
+        
+        ; load track corrections
         tya
-        adc #towne_track_correction
-        tay
         clc
-        lda $fc
-        jmp original_load_block
-        ; no rts
+        adc track_corrections, x
+        tay
 
-    disk_dwelling:  ; sectors 16-31
+        ; load sector corrections
+        lda sector_corrections, x
         clc
-        tya
-        adc #dwelling_track_correction
-        tay
-        clc
-        txa
-        adc #$10   ; sector correction
+        adc $fe
         tax
-        lda $fc
+
+        ; execute
         jmp original_load_block
         ; no rts
 
-    disk_castle:  ; sectors 0-15
-        clc
-        tya
-        adc #castle_track_correction
-        tay
-        clc
-        lda $fc
-        jmp original_load_block
-        ; no rts
+    track_corrections:
+        .byte $00
+        .byte britannia_track_correction
+        .byte towne_track_correction
+        .byte dwelling_track_correction
+        .byte castle_track_correction
+        .byte keep_track_correction
+        .byte dungeon_track_correction
+        .byte underworld_track_correction
 
-    disk_keep:  ; sectors 16-31
-        clc
-        tya
-        adc #keep_track_correction
-        tay
-        clc
-        txa
-        adc #$10   ; sector correction
-        tax
-        lda $fc
-        jmp original_load_block
-        ; no rts
+    sector_corrections:
+        .byte $00
+        .byte britannia_sector_correction
+        .byte towne_sector_correction
+        .byte dwelling_sector_correction
+        .byte castle_sector_correction
+        .byte keep_sector_correction
+        .byte dungeon_sector_correction
+        .byte underworld_sector_correction
+
+;        clc
+;        adc #<load_block_jumptable
+;        sta $fe
+;        lda #$00
+;        adc #>load_block_jumptable
+;        sta $ff
+;        jmp ($fe)
+;    load_block_jumptable:
+;        .addr disk_dungeon
+;        .addr disk_britannia
+;        .addr disk_underworld
+;        .addr disk_towne
+;        .addr disk_dwelling
+;        .addr disk_castle
+;        .addr disk_keep
+;
+;    disk_dungeon:  ; sectors 0-15
+;        clc
+;        tya
+;        adc #dungeon_track_correction
+;        tay
+;        clc
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_britannia:  ; sectors 0-15
+;        clc
+;        tya
+;        adc #britannia_track_correction
+;        tay
+;        clc
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_underworld:  ; sectors 16-31
+;        clc
+;        tya
+;        adc #underworld_track_correction
+;        tay
+;        clc
+;        txa
+;        adc #$10   ; sector correction
+;        tax
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_towne:  ; sectors 0-15
+;        clc
+;        tya
+;        adc #towne_track_correction
+;        tay
+;        clc
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_dwelling:  ; sectors 16-31
+;        clc
+;        tya
+;        adc #dwelling_track_correction
+;        tay
+;        clc
+;        txa
+;        adc #$10   ; sector correction
+;        tax
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_castle:  ; sectors 0-15
+;        clc
+;        tya
+;        adc #castle_track_correction
+;        tay
+;        clc
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
+;
+;    disk_keep:  ; sectors 16-31
+;        clc
+;        tya
+;        adc #keep_track_correction
+;        tay
+;        clc
+;        txa
+;        adc #$10   ; sector correction
+;        tax
+;        lda $fc
+;        jmp original_load_block
+;        ; no rts
 
 
     ; ====================================================================
@@ -442,6 +481,10 @@
         jsr compare_filename
 
         ; decrunch
+        jsr get_crunched_byte  ; preload buffer
+        jsr get_crunched_byte
+        jsr get_crunched_byte
+        jsr get_crunched_byte
         jsr EXO_decrunch
         rts
 
@@ -454,9 +497,19 @@
         bne :+
         dec copy_address_high
     :   dec copy_address_low
+        lda decrunch_buffer+3
+        pha                     ; put old byte on
+        lda decrunch_buffer+2
+        sta decrunch_buffer+3
+        lda decrunch_buffer+1
+        sta decrunch_buffer+2
+        lda decrunch_buffer+0
+        sta decrunch_buffer+1
     copy_address_low = * + 1
     copy_address_high = * + 2
         lda $ffff               ; load
+        sta decrunch_buffer
+        pla                     ; release first byte
         rts
 
 
@@ -491,8 +544,14 @@
         rts
 
 
+
+.segment "IO_DATA"
+
     ; --------------------------------------------------------------------
     ; variables
+    decrunch_buffer:
+        .res 4, $00
+
     requested_deletename:
         .byte $53, $3a  ; "S:"
     requested_fullname:

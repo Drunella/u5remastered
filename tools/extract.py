@@ -114,6 +114,8 @@ def main(argv):
             typeid = readdisk_checktype(diskfile, diskid, d[0])
             directory = readdisk_directory(diskfile)
             for f in directory:
+                if f == "dconfig":
+                    continue
                 entry = "0x{0:x}/{1}".format(diskid, f)
                 tempfile = os.path.join(files_path, "uncompressed.tmp")
                 readdisk_extractfile(diskfile, f, tempfile)
