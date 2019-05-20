@@ -1,0 +1,8 @@
+type = hex
+; loading without decrunch
+; ROSTER
+filename = "0x46/end"
+offset = 2
+address = 0x0918
+original = a20020246c
+new      = a28020246c

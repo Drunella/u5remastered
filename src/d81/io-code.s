@@ -66,6 +66,21 @@
 ;         none
 ;
 
+; list of relevant files that cannot be decrunched
+; PRTY.DATA (britannia)
+; LIST (britannia)
+; SLIST (britannia)
+; TLIST (britannia)
+; ROSTER (britannia)
+; STORY1.TXT (dwelling)
+; STORY2.TXT (dwelling)
+; STORY3.TXT (dwelling)
+; STORY4.TXT (dwelling)
+; BLANK.PRTY (britannia, osi)
+; CREATE1.TXT (osi)
+; M9 (osi)
+
+
 ; export the entry points of the functions
 .export _IO_request_disk_id_entry
 .export _IO_request_disk_char_entry
@@ -125,12 +140,24 @@
     :   jsr kernal_LOAD
         bcs :-     ; repeat on error
 
-        ; ### decrunch if necessary X/Y last loaded byte
-        jsr decrunch_prepare
-     
+        ; store last loaded address X/Y
+        stx copy_address_low
+        sty copy_address_high
+
+        ; close
         lda #$08
         jsr kernal_CLOSE
-        jsr $0129  ; sound on
+
+        ; decompress or simply load
+        lda #$80   ; bit 7 set
+        bit requested_loadmode
+        bmi :+     ; bit 7 is set: no decrunch
+        jsr get_crunched_byte  ; load buffer
+        jsr get_crunched_byte  ; load buffer
+        jsr get_crunched_byte  ; load buffer
+        jsr get_crunched_byte  ; load buffer
+        jsr EXO_decrunch
+    :   jsr $0129  ; sound on
 
         ; decide how to start (if) te loaded prg
         lda requested_loadmode
@@ -145,6 +172,7 @@
         pha
         lda copy_name_address_low
         pha
+        clc        ; load always succeeds
         rts
     requested_loadmode:
         .byte $00
@@ -457,36 +485,36 @@
 ;        inx
 ;        bne :+
 ;        iny
-        stx copy_address_low
-        sty copy_address_high
+;        stx copy_address_low
+;        sty copy_address_high
         
         ; check if decrunch necessary
-        ldx #<name_list
-        ldy #>name_list
-        jsr compare_filename
-        ldx #<name_slist
-        ldy #>name_slist
-        jsr compare_filename
-        ldx #<name_btlist
-        ldy #>name_btlist
-        jsr compare_filename
-        ldx #<name_utlist
-        ldy #>name_utlist
-        jsr compare_filename
-        ldx #<name_roster
-        ldy #>name_roster
-        jsr compare_filename
-        ldx #<name_prtydata
-        ldy #>name_prtydata
-        jsr compare_filename
+;        ldx #<name_list
+;        ldy #>name_list
+;        jsr compare_filename
+;        ldx #<name_slist
+;        ldy #>name_slist
+;        jsr compare_filename
+;        ldx #<name_btlist
+;        ldy #>name_btlist
+;        jsr compare_filename
+;        ldx #<name_utlist
+;        ldy #>name_utlist
+;        jsr compare_filename
+;        ldx #<name_roster
+;        ldy #>name_roster
+;        jsr compare_filename
+;        ldx #<name_prtydata
+;        ldy #>name_prtydata
+;        jsr compare_filename
 
         ; decrunch
-        jsr get_crunched_byte  ; preload buffer
-        jsr get_crunched_byte
-        jsr get_crunched_byte
-        jsr get_crunched_byte
-        jsr EXO_decrunch
-        rts
+;        jsr get_crunched_byte  ; preload buffer
+;        jsr get_crunched_byte
+;        jsr get_crunched_byte
+;        jsr get_crunched_byte
+;        jsr EXO_decrunch
+;        rts
 
 
     ; --------------------------------------------------------------------
@@ -569,15 +597,15 @@
     save_source_high:
         .byte $ff
 
-    name_list:
-        .byte $42, $4c, $49, $53, $54, $00  ; 'BLIST'
-    name_slist:
-        .byte $42, $53, $4c, $49, $53, $54, $00  ; 'BSLIST'
-    name_utlist:
-        .byte $48, $54, $4c, $49, $53, $54, $00  ; 'HTLIST'
-    name_btlist:
-        .byte $42, $54, $4c, $49, $53, $54, $00  ; 'BTLIST'
-    name_roster:
-        .byte $42, $50, $52, $4f, $53, $54, $45, $52, $00  ; 'BROSTER'
-    name_prtydata:
-        .byte $42, $50, $52, $54, $59, $2e, $44, $41, $54, $41, $00  ; 'BPRTY.DATA'
+;    name_list:
+;        .byte $42, $4c, $49, $53, $54, $00  ; 'BLIST'
+;    name_slist:
+;        .byte $42, $53, $4c, $49, $53, $54, $00  ; 'BSLIST'
+;    name_utlist:
+;        .byte $48, $54, $4c, $49, $53, $54, $00  ; 'HTLIST'
+;    name_btlist:
+;        .byte $42, $54, $4c, $49, $53, $54, $00  ; 'BTLIST'
+;    name_roster:
+;        .byte $42, $50, $52, $4f, $53, $54, $45, $52, $00  ; 'BROSTER'
+;    name_prtydata:
+;        .byte $42, $50, $52, $54, $59, $2e, $44, $41, $54, $41, $00  ; 'BPRTY.DATA'

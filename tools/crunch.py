@@ -22,6 +22,7 @@ import glob
 import subprocess
 import argparse
 import traceback
+import re
 import pprint
 
 
@@ -70,6 +71,14 @@ def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
     result = subprocess.run(arguments, stdout=subprocess.PIPE, universal_newlines=True)
     if result.returncode != 0:
         raise Exception("error crunching file " + infilename)
+    m = re.search("Crunched data reduced ([0-9-]*) bytes .([0-9-]*).", result.stdout)
+    if not m:
+        print("warning: no compression info on " + outfilename)
+        return
+    size = int(m.group(1), 0)
+    ratio = int(m.group(2), 0)
+    if ratio < 0:
+        print("warning: negative ratio (" + str(ratio) + "%) for " + outfilename)
 
 
 def main(argv):

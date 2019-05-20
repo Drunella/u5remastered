@@ -1,0 +1,8 @@
+type = hex
+; loading without decrunch
+; STORY1.TXT
+filename = "0x44/story"
+offset = 2
+address = 0x0147
+original = a20020246c
+new      = a28020246c
