@@ -138,10 +138,13 @@
         jsr $0126  ; sound off
         lda #$00 
     :   jsr kernal_LOAD
-        bcs :-     ; repeat on error
+        bcc :+     ; no error, continue
+        cmp #$04   ; file not found
+        beq load_return
+        bcs :-     ; repeat on other error
 
         ; store last loaded address X/Y
-        stx copy_address_low
+    :   stx copy_address_low
         sty copy_address_high
 
         ; close
@@ -151,28 +154,31 @@
         ; decompress or simply load
         lda #$80   ; bit 7 set
         bit requested_loadmode
-        bmi :+     ; bit 7 is set: no decrunch
-        jsr get_crunched_byte  ; load buffer
-        jsr get_crunched_byte  ; load buffer
-        jsr get_crunched_byte  ; load buffer
-        jsr get_crunched_byte  ; load buffer
+        bmi skip_decrunch  ; bit 7 is set: no decrunch
+        ldx #$06   ; 6x load buffer
+    :   jsr get_crunched_byte
+        dex
+        bne :-
         jsr EXO_decrunch
-    :   jsr $0129  ; sound on
+    skip_decrunch:
+        jsr $0129  ; sound on
 
-        ; decide how to start (if) te loaded prg
+        ; decide how to start the loaded prg
         lda requested_loadmode
-        beq load_return                ; 0: return
+        and #$7f
+        beq load_success               ; 0: return
         cmp #$01
         beq load_jumptomain            ; 1: jump to $800
         jmp $a700                      ; >1: jump to $a700
     load_jumptomain:
         jmp $8000
+    load_success:
+        clc
     load_return:
         lda copy_name_address_high    ; return address on stack
         pha
         lda copy_name_address_low
         pha
-        clc        ; load always succeeds
         rts
     requested_loadmode:
         .byte $00
@@ -198,7 +204,7 @@
 
         ; copy filename
         jsr copy_filename
-        sta $ff    ; length of filename now in fc
+        sta $ff    ; length of filename now in ff
         clc
         adc #$02
         ldx #<requested_deletename
@@ -215,14 +221,14 @@
         jsr kernal_CLOSE
         
         ; copy address and size
-        jsr getnext_name_character
-        sta save_source_low
-        jsr getnext_name_character
-        sta save_source_high
-        jsr getnext_name_character
-        sta save_files_size_low
-        jsr getnext_name_character
-        sta save_files_size_high
+;        jsr getnext_name_character
+;        sta save_source_low
+;        jsr getnext_name_character
+;        sta save_source_high
+;        jsr getnext_name_character
+;        sta save_files_size_low
+;        jsr getnext_name_character
+;        sta save_files_size_high
 
         ; prepare saving
         lda #$08  
@@ -520,13 +526,18 @@
     ; --------------------------------------------------------------------
     ; gets next byte to decrunch, moves backwars
     ; must not change X, Y, C
+    ; maximum safety buffer is 6
     get_crunched_byte:
         lda copy_address_low    ; decrease
         bne :+
         dec copy_address_high
     :   dec copy_address_low
-        lda decrunch_buffer+3
+        lda decrunch_buffer+5
         pha                     ; put old byte on
+        lda decrunch_buffer+4
+        sta decrunch_buffer+5
+        lda decrunch_buffer+3
+        sta decrunch_buffer+4
         lda decrunch_buffer+2
         sta decrunch_buffer+3
         lda decrunch_buffer+1
@@ -544,32 +555,32 @@
     ; --------------------------------------------------------------------
     ; compare filename 
     ; name address in x,y
-    compare_filename:
-        stx $fe
-        sty $ff
-
-        ; compare filename
-        ldy #$ff
-        sty $fc  ; 0xff means decrunch necessary
-    nameloop:
-        iny
-        lda #$2a   ; '*'
-        cmp requested_fullname, y  ; character in name is '*', we have a match
-        beq namematch
-        lda requested_fullname, y  ; compare character with character in entry
-        cmp ($fe), y               ; if not equal nextname
-        bne nomatch
-        lda #$0                    ; compare if both character are zero
-        cmp ($fe), y               ; if not, next name
-        beq namematch
-        jmp nameloop
-    namematch: ; if match we return double, as no decrnch
-        tsx
-        dex
-        dex
-        txs
-    nomatch:
-        rts
+;    compare_filename:
+;        stx $fe
+;        sty $ff
+;
+;        ; compare filename
+;        ldy #$ff
+;        sty $fc  ; 0xff means decrunch necessary
+;    nameloop:
+;        iny
+;        lda #$2a   ; '*'
+;        cmp requested_fullname, y  ; character in name is '*', we have a match
+;        beq namematch
+;        lda requested_fullname, y  ; compare character with character in entry
+;        cmp ($fe), y               ; if not equal nextname
+;        bne nomatch
+;        lda #$0                    ; compare if both character are zero
+;        cmp ($fe), y               ; if not, next name
+;        beq namematch
+;        jmp nameloop
+;    namematch: ; if match we return double, as no decrnch
+;        tsx
+;        dex
+;        dex
+;        txs
+;    nomatch:
+;        rts
 
 
 
@@ -578,7 +589,7 @@
     ; --------------------------------------------------------------------
     ; variables
     decrunch_buffer:
-        .res 4, $00
+        .res 6, $00
 
     requested_deletename:
         .byte $53, $3a  ; "S:"
@@ -588,14 +599,14 @@
     requested_filename:
         .res 15, $00
 
-    save_files_size_low:
-        .byte $ff
-    save_files_size_high:
-        .byte $ff
-    save_source_low:
-        .byte $ff
-    save_source_high:
-        .byte $ff
+;    save_files_size_low:
+;        .byte $ff
+;    save_files_size_high:
+;        .byte $ff
+;    save_source_low:
+;        .byte $ff
+;    save_source_high:
+;        .byte $ff
 
 ;    name_list:
 ;        .byte $42, $4c, $49, $53, $54, $00  ; 'BLIST'

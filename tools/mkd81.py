@@ -356,6 +356,8 @@ def main(argv):
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "exo", verbose=args.verbose)
 
     # transfer files to disk and create duplicates
+    uncrunched = ["0x41/create1.txt", "0x41/m9", "0x41/blank.prty", "0x48/blank.party", 
+                 "0x44/story1.txt", "0x44/story2.txt", "0x44/story3.txt", "0x44/story4.txt"]
     already_copied = dict()
     additional_entry = dict()
     for e in files_list:
@@ -367,7 +369,10 @@ def main(argv):
         # exclude list
         if destfilename in excludes_list:
             continue
-        sourcefilename = os.path.join(files_path, key + ".crunch")
+        if e in uncrunched:
+            sourcefilename = os.path.join(files_path, key + ".prg")
+        else:
+            sourcefilename = os.path.join(files_path, key + ".crunch")
         if key in already_copied:
             # append entry
             additional_entry[destfilename] = already_copied[key]

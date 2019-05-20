@@ -49,6 +49,7 @@ def file_readaddress(filename):
 
 
 def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
+    global safety_offset
     if crunchtype == "level":
         # for easyflash
         arguments = ["exomizer", "level", \
@@ -74,15 +75,23 @@ def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
     m = re.search("Crunched data reduced ([0-9-]*) bytes .([0-9-]*).", result.stdout)
     if not m:
         print("warning: no compression info on " + outfilename)
-        return
-    size = int(m.group(1), 0)
-    ratio = int(m.group(2), 0)
-    if ratio < 0:
-        print("warning: negative ratio (" + str(ratio) + "%) for " + outfilename)
+    else:
+        size = int(m.group(1), 0)
+        ratio = int(m.group(2), 0)
+        if ratio < 0:
+            print("warning: negative ratio (" + str(ratio) + "%) for " + outfilename)
+    m = re.search("safety offset is ([0-9]*)", result.stdout)
+    if not m:
+        print("warning: no safety offset on " + outfilename)
+    else:
+        offset = int(m.group(1), 0)
+        if offset > safety_offset:
+            safety_offset = offset
 
 
 def main(argv):
     global source_path
+    global safety_offset
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
@@ -107,6 +116,7 @@ def main(argv):
         amount += 1
     
     count = 0
+    safety_offset = 0
     for f in os.listdir(files_path):
         if not f.endswith(".prg"):
             continue
@@ -124,6 +134,7 @@ def main(argv):
     # make a file to let make know we are ready
     ready_path = os.path.join(files_path, "crunched.done")
     open(ready_path, 'a').close()
+    print("maximum safety offset is: " + str(safety_offset))
 
 
 if __name__ == '__main__':
