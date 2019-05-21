@@ -155,11 +155,17 @@
         lda #$80   ; bit 7 set
         bit requested_loadmode
         bmi skip_decrunch  ; bit 7 is set: no decrunch
+        lda $ff00  ; for c128 to decrunch we need ram only
+        pha
+        lda #$3f
+        sta $ff00
         ldx #$06   ; 6x load buffer
     :   jsr get_crunched_byte
         dex
         bne :-
-        jsr EXO_decrunch
+        jsr EXO_decrunch  ; decrunch
+        pla        ; restore c128 mmu
+        sta $ff00
     skip_decrunch:
         jsr $0129  ; sound on
 
@@ -486,7 +492,7 @@
     ; --------------------------------------------------------------------
     ; checks if decrunch necessary and decrunches
     ; X/Y address of last byte loaded + 1
-    decrunch_prepare:
+;    decrunch_prepare:
         ; increase address by one byte
 ;        inx
 ;        bne :+
