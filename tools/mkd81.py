@@ -325,6 +325,10 @@ def main(argv):
     
     # use blocked sectors and boot sectors
     bam_marksectorused(1,0)  # boot sector
+    bootdata = load_file(os.path.join(files_path, "boot.data"))
+    set_sector(1, 0, bootdata)
+
+    # fill map sectors    
     disk_fillwithblocks("dungeon", files_path)
     disk_fillwithblocks("britannia", files_path)
     disk_fillwithblocks("underworld", files_path)

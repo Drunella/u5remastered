@@ -102,8 +102,8 @@ def main(argv):
 
     files_directory = dict()
     disks = readdisks_info(args.disks)
-    for d in disks:
-        try:
+    try:
+        for d in disks:
             diskid = int(d[1], 0)
             diskname = d[0]
             if (args.verbose):
@@ -142,12 +142,25 @@ def main(argv):
                         readdisk_extractblock(diskfile, blockfile, track, sector)
                         with open(blockfile, "rb") as sf:
                             df.write(sf.read())
+
+        # boot sector
+        if (args.verbose):
+            print("extracting boot sector ...")
+        blockfile = os.path.join(files_path, "block.tmp")
+        datafile = os.path.join(files_path, "boot.data")
+        result = readdisk_getdiskfile(args.source, "osi")
+        diskfile = os.path.join(source_path, result)
+        with open(datafile, "wb") as df:
+            readdisk_extractblock(diskfile, blockfile, 1, 0)
+            with open(blockfile, "rb") as sf:
+                df.write(sf.read())
+
             
-        except Exception as e:
-            print(e)
-            print("error processing disk " + diskname)
-            raise e
-            return 2
+    except Exception as e:
+        print(e)
+        print("error processing disk " + diskname)
+        raise e
+        return 2
 
     files_directory_name = os.path.join(files_path, "files.list")
     with open(files_directory_name, "wt") as f:
