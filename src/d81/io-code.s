@@ -312,12 +312,11 @@
     ; y:track x:sector a:high destination address
     ; modify track and sector and call original_load_block
     _IO_read_block_entry:
-        sta $ff
+        sta $ff    ; save address
         stx $fe
         lda requested_disk
         sec
         sbc #$41
-        asl
         tax
         
         ; load track corrections
@@ -331,6 +330,7 @@
         clc
         adc $fe
         tax
+        lda $ff    ; load address
 
         ; execute
         jmp original_load_block
