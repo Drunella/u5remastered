@@ -157,7 +157,7 @@
         bmi skip_decrunch  ; bit 7 is set: no decrunch
         lda $ff00  ; for c128 to decrunch we need ram only
         pha
-        lda #$3f
+        ora #$30   ; set c000-feff to ram
         sta $ff00
         ldx #$06   ; 6x load buffer
     :   jsr get_crunched_byte
@@ -605,6 +605,9 @@
     requested_filename:
         .res 15, $00
 
+    decrunch_table:
+        .res 156, $00
+    
 ;    save_files_size_low:
 ;        .byte $ff
 ;    save_files_size_high:

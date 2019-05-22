@@ -22,7 +22,7 @@ kernal_CLOSE  = $ffc3
 kernal_SAVE   = $ffd8
 kernal_OPEN   = $ffc0
 
-decrunch_table = $7f00
+;decrunch_table = $7f00
 
 drive_id = $6c33
 original_load_block = $6eae
