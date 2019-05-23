@@ -29,7 +29,6 @@
 
 static void draw_game_info(void) {
     clrscr();
-    cputs("\r\n");
     textcolor(COLOR_GRAY2);
     cputs("     Ultima V: Warriors of Destiny\r\n"
           "\r\n"
@@ -38,9 +37,10 @@ static void draw_game_info(void) {
     //textcolor(COLOR_GRAY1);
     cputs("   Commodore 64 conversion by Dr. Cat\r\n"
           "  Music composed by  Kenneth W. Arnold\r\n"
-          "     EasyFlash version by Drunella\r\n"
           "\r\n"
-          " Copyright (c) 1988 Origin Systems Inc."
+          " Copyright (c) 1988 Origin Systems Inc.\r\n"
+          "\r\n"
+          "     EasyFlash version by Drunella\r\n"
           "\r\n");
 }
 
