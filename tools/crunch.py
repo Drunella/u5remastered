@@ -53,6 +53,7 @@ def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
     if crunchtype == "level":
         # for easyflash
         arguments = ["exomizer", "level", \
+                                 "-T4", "-P7", \
                                  "-m", "256", \
                                  "-M", "256", \
                                  "-o", outfilename, \
@@ -62,6 +63,7 @@ def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
         # for d81
         arguments = ["exomizer", "mem", \
                                  "-l", "0x{0:04x}".format(startaddress), \
+                                 "-T4", "-P7", \
                                  "-m", "256", \
                                  "-M", "256", \
                                  "-o", outfilename, \
@@ -80,6 +82,7 @@ def file_crunch(infilename, outfilename, crunchtype, startaddress=0):
         ratio = int(m.group(2), 0)
         if ratio < 0:
             print("warning: negative ratio (" + str(ratio) + "%) for " + outfilename)
+            return
     m = re.search("safety offset is ([0-9]*)", result.stdout)
     if not m:
         print("warning: no safety offset on " + outfilename)

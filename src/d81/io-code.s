@@ -159,7 +159,7 @@
         pha
         ora #$30   ; set c000-feff to ram
         sta $ff00
-        ldx #$06   ; 6x load buffer
+        ldx #decrunch_buffer_size ; buffer size
     :   jsr get_crunched_byte
         dex
         bne :-
@@ -226,16 +226,6 @@
         lda #$0f  
         jsr kernal_CLOSE
         
-        ; copy address and size
-;        jsr getnext_name_character
-;        sta save_source_low
-;        jsr getnext_name_character
-;        sta save_source_high
-;        jsr getnext_name_character
-;        sta save_files_size_low
-;        jsr getnext_name_character
-;        sta save_files_size_high
-
         ; prepare saving
         lda #$08  
         ldx drive_id
@@ -362,105 +352,10 @@
         .byte dungeon_sector_correction
         .byte underworld_sector_correction
 
-;        clc
-;        adc #<load_block_jumptable
-;        sta $fe
-;        lda #$00
-;        adc #>load_block_jumptable
-;        sta $ff
-;        jmp ($fe)
-;    load_block_jumptable:
-;        .addr disk_dungeon
-;        .addr disk_britannia
-;        .addr disk_underworld
-;        .addr disk_towne
-;        .addr disk_dwelling
-;        .addr disk_castle
-;        .addr disk_keep
-;
-;    disk_dungeon:  ; sectors 0-15
-;        clc
-;        tya
-;        adc #dungeon_track_correction
-;        tay
-;        clc
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_britannia:  ; sectors 0-15
-;        clc
-;        tya
-;        adc #britannia_track_correction
-;        tay
-;        clc
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_underworld:  ; sectors 16-31
-;        clc
-;        tya
-;        adc #underworld_track_correction
-;        tay
-;        clc
-;        txa
-;        adc #$10   ; sector correction
-;        tax
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_towne:  ; sectors 0-15
-;        clc
-;        tya
-;        adc #towne_track_correction
-;        tay
-;        clc
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_dwelling:  ; sectors 16-31
-;        clc
-;        tya
-;        adc #dwelling_track_correction
-;        tay
-;        clc
-;        txa
-;        adc #$10   ; sector correction
-;        tax
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_castle:  ; sectors 0-15
-;        clc
-;        tya
-;        adc #castle_track_correction
-;        tay
-;        clc
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
-;
-;    disk_keep:  ; sectors 16-31
-;        clc
-;        tya
-;        adc #keep_track_correction
-;        tay
-;        clc
-;        txa
-;        adc #$10   ; sector correction
-;        tax
-;        lda $fc
-;        jmp original_load_block
-;        ; no rts
 
 
     ; ====================================================================
-    ; loading file utility, search in several efs dirs
-    ; uses fe, ff in zeropage
+    ; loading file utility
 
     ; --------------------------------------------------------------------
     ; returns next character in A
@@ -490,72 +385,62 @@
 
 
     ; --------------------------------------------------------------------
-    ; checks if decrunch necessary and decrunches
-    ; X/Y address of last byte loaded + 1
-;    decrunch_prepare:
-        ; increase address by one byte
-;        inx
-;        bne :+
-;        iny
-;        stx copy_address_low
-;        sty copy_address_high
-        
-        ; check if decrunch necessary
-;        ldx #<name_list
-;        ldy #>name_list
-;        jsr compare_filename
-;        ldx #<name_slist
-;        ldy #>name_slist
-;        jsr compare_filename
-;        ldx #<name_btlist
-;        ldy #>name_btlist
-;        jsr compare_filename
-;        ldx #<name_utlist
-;        ldy #>name_utlist
-;        jsr compare_filename
-;        ldx #<name_roster
-;        ldy #>name_roster
-;        jsr compare_filename
-;        ldx #<name_prtydata
-;        ldy #>name_prtydata
-;        jsr compare_filename
-
-        ; decrunch
-;        jsr get_crunched_byte  ; preload buffer
-;        jsr get_crunched_byte
-;        jsr get_crunched_byte
-;        jsr get_crunched_byte
-;        jsr EXO_decrunch
-;        rts
-
-
-    ; --------------------------------------------------------------------
-    ; gets next byte to decrunch, moves backwars
-    ; must not change X, Y, C
+    ; gets next byte to decrunch, moves backwards
+    ; and processes data through a 8 byte ring buffer
+    ; to comply with safety offset up to 8
+    ; must not change X, Y, C, O
     ; maximum safety buffer is 6
     get_crunched_byte:
-        lda copy_address_low    ; decrease
+        txa
+        pha
+        ; load byte from buffer to temp
+        ldx decrunch_pointer
+        lda decrunch_buffer, x
+        sta decrunch_temp
+        ; decrease pointer to source
+        lda copy_address_low
         bne :+
         dec copy_address_high
     :   dec copy_address_low
-        lda decrunch_buffer+5
-        pha                     ; put old byte on
-        lda decrunch_buffer+4
-        sta decrunch_buffer+5
-        lda decrunch_buffer+3
-        sta decrunch_buffer+4
-        lda decrunch_buffer+2
-        sta decrunch_buffer+3
-        lda decrunch_buffer+1
-        sta decrunch_buffer+2
-        lda decrunch_buffer+0
-        sta decrunch_buffer+1
+        ; copy byte from source to buffer
     copy_address_low = * + 1
     copy_address_high = * + 2
         lda $ffff               ; load
-        sta decrunch_buffer
-        pla                     ; release first byte
+        sta decrunch_buffer, x
+        ; inc buffer
+        inc decrunch_pointer
+        lda #(decrunch_buffer_size - 1)  ; buffer size of 8 bytes
+        and decrunch_pointer
+        sta decrunch_pointer
+        ; restore X
+        pla
+        tax
+        lda decrunch_temp
         rts
+
+;    get_crunched_byte:
+;        lda copy_address_low    ; decrease
+;        bne :+
+;        dec copy_address_high
+;    :   dec copy_address_low
+;        lda decrunch_buffer+5
+;        pha                     ; put old byte on
+;        lda decrunch_buffer+4
+;        sta decrunch_buffer+5
+;        lda decrunch_buffer+3
+;        sta decrunch_buffer+4
+;        lda decrunch_buffer+2
+;        sta decrunch_buffer+3
+;        lda decrunch_buffer+1
+;        sta decrunch_buffer+2
+;        lda decrunch_buffer+0
+;        sta decrunch_buffer+1
+;    copy_address_low = * + 1
+;    copy_address_high = * + 2
+;        lda $ffff               ; load
+;        sta decrunch_buffer
+;        pla                     ; release first byte
+;        rts
 
 
     ; --------------------------------------------------------------------
@@ -594,8 +479,13 @@
 
     ; --------------------------------------------------------------------
     ; variables
+    decrunch_buffer_size = $08
+    decrunch_temp:
+        .byte $00
+    decrunch_pointer:
+        .byte $00
     decrunch_buffer:
-        .res 6, $00
+        .res decrunch_buffer_size, $00
 
     requested_deletename:
         .byte $53, $3a  ; "S:"
