@@ -34,5 +34,4 @@ Find the crt and d81 image in the build sub-directory:
 # Bugs
 
 I wanted to have a working version with music as fast as possible. I did not
-test it thoroughly. Please report bugs or suggestions to .... I'm planning to
-implement more features in the future.
+test it thoroughly. I'm planning to implement more features sometimes in the future.
