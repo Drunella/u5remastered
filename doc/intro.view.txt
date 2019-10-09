@@ -181,6 +181,8 @@
   || `----> 0x00009688      ad4b96         lda 0x964b                  ; load accumulator with memory
   ||  |||   0x0000968b      60             rts                         ; return from subroutine
   ||  |||   0x0000968c      00             brk                         ; force break
+
+local:
   ---.----> 0x0000968d      a9ff           lda #0xff                   ; load accumulator with memory
   || ||||   0x0000968f      8578           sta 0x78                    ; store accumulator in memory
   || ||||   0x00009691      a9ba           lda #0xba                   ; load accumulator with memory
@@ -279,13 +281,13 @@
   |||||||   0x00009755      858a           sta 0x8a                    ; store accumulator in memory
   |||||||   0x00009757      a9db           lda #0xdb                   ; load accumulator with memory
   |||||||   0x00009759      858b           sta 0x8b                    ; store accumulator in memory
-  |||||||   0x0000975b      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x0000975b      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   |||||||   0x0000975e      a01f           ldy #0x1f                   ; load index y with memory
   --------> 0x00009760      b1fc           lda (0xfc),y                ; load accumulator with memory
   |||||||   0x00009762      918a           sta (0x8a),y                ; store accumulator in memory
   |||||||   0x00009764      88             dey                         ; decrement index y by one
-  ========< 0x00009765      10f9           bpl 0x4cc108                ; branch on result plus
-  |||||||   0x00009767      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  ========< 0x00009765      10f9           bpl 0x4cc108                ; 
+  |||||||   0x00009767      20036c         jsr 0x6c03            ; set memory banking: set kernal and io visible
   |||||||   0x0000976a      20b896         jsr 0x96b8                  ; jump to new location saving return address
   |||||||   0x0000976d      a8             tay                         ; transfer accumulator to index y
   |||||||   0x0000976e      20b896         jsr 0x96b8                  ; jump to new location saving return address
@@ -299,7 +301,7 @@
   |||||||   0x0000977e      a91f           lda #0x1f                   ; load accumulator with memory
   --------> 0x00009780      48             pha                         ; push accumulator on stack
   |||||||   0x00009781      a8             tay                         ; transfer accumulator to index y
-  |||||||   0x00009782      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x00009782      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   |||||||   0x00009785      a955           lda #0x55                   ; load accumulator with memory
   |||||||   0x00009787      918a           sta (0x8a),y                ; store accumulator in memory
   |||||||   0x00009789      20c797         jsr 0x97c7                  ; jump to new location saving return address
@@ -317,7 +319,7 @@
   |||||||   0x0000979f      20c797         jsr 0x97c7                  ; jump to new location saving return address
   |||||||   0x000097a2      a9ff           lda #0xff                   ; load accumulator with memory
   |||||||   0x000097a4      918a           sta (0x8a),y                ; store accumulator in memory
-  |||||||   0x000097a6      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  |||||||   0x000097a6      20036c         jsr 0x6c03            ; set memory banking: set kernal and io visible
   |||||||   0x000097a9      a58a           lda 0x8a                    ; load accumulator with memory
   |||||||   0x000097ab      48             pha                         ; push accumulator on stack
   |||||||   0x000097ac      a58b           lda 0x8b                    ; load accumulator with memory
@@ -353,7 +355,7 @@
   |||||||   0x000097de      a900           lda #0x00                   ; load accumulator with memory
   --------> 0x000097e0      48             pha                         ; push accumulator on stack
   |||||||   0x000097e1      a8             tay                         ; transfer accumulator to index y
-  |||||||   0x000097e2      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x000097e2      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   |||||||   0x000097e5      b18a           lda (0x8a),y                ; load accumulator with memory
   |||||||   0x000097e7      918c           sta (0x8c),y                ; store accumulator in memory
   |||||||   0x000097e9      203a98         jsr 0x983a                  ; jump to new location saving return address
@@ -371,7 +373,7 @@
   |||||||   0x000097ff      203a98         jsr 0x983a                  ; jump to new location saving return address
   |||||||   0x00009802      a9ff           lda #0xff                   ; load accumulator with memory
   |||||||   0x00009804      918c           sta (0x8c),y                ; store accumulator in memory
-  |||||||   0x00009806      20036c         jsr 0x6c03                  ; jump to new location saving return address
+  |||||||   0x00009806      20036c         jsr 0x6c03            ; set memory banking: set kernal and io visible
   |||||||   0x00009809      a58a           lda 0x8a                    ; load accumulator with memory
   |||||||   0x0000980b      48             pha                         ; push accumulator on stack
   |||||||   0x0000980c      a58b           lda 0x8b                    ; load accumulator with memory
@@ -413,7 +415,7 @@
   |||||||   0x00009849      bd1395         lda 0x9513,x                ; load accumulator with memory
   |||||||   0x0000984c      8561           sta 0x61                    ; store accumulator in memory
   |||||||   0x0000984e      60             rts                         ; return from subroutine
-  |||||||   0x0000984f      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x0000984f      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   |||||||   0x00009852      20b896         jsr 0x96b8                  ; jump to new location saving return address
   |||||||   0x00009855      8d7a98         sta 0x987a                  ; store accumulator in memory
   |||||||   0x00009858      a8             tay                         ; transfer accumulator to index y
@@ -480,7 +482,7 @@
   |||||||   0x000098d4      290f           and #0x0f                   ; "and" memory with accumulator
   ========< 0x000098d6      d006           bne 0x4cc108                ; branch on result not zero
   |||||||   0x000098d8      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
-  |||||||   0x000098db      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x000098db      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   --------> 0x000098de      c68e           dec 0x8e                    ; decrement memory by one
   ========< 0x000098e0      d0d8           bne 0x4cc108                ; branch on result not zero
   |||||||   0x000098e2      a000           ldy #0x00                   ; load index y with memory
@@ -496,8 +498,8 @@
   |||||||   0x000098f7      99c0de         sta 0xdec0,y                ; store accumulator in memory
   |||||||   0x000098fa      88             dey                         ; decrement index y by one
   ========< 0x000098fb      10f7           bpl 0x4cc108                ; branch on result plus
-  `=======< 0x000098fd      4c036c         jmp 0x6c03                  ; jump to new location
-   ||||||   0x00009900      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  `=======< 0x000098fd      4c036c         jmp 0x6c03            ; set memory banking: set kernal and io visible
+   ||||||   0x00009900      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
    ||||||   0x00009903      20b896         jsr 0x96b8                  ; jump to new location saving return address
    ||||||   0x00009906      aa             tax                         ; transfer accumulator to index x
    ||||||   0x00009907      bc503f         ldy 0x3f50,x                ; load index y with memory
@@ -557,7 +559,7 @@
   |||||||   0x00009975      290f           and #0x0f                   ; "and" memory with accumulator
   ========< 0x00009977      d006           bne 0x4cc108                ; branch on result not zero
   |||||||   0x00009979      20bc9d         jsr 0x9dbc                  ; jump to new location saving return address
-  |||||||   0x0000997c      20066c         jsr 0x6c06                  ; jump to new location saving return address
+  |||||||   0x0000997c      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
   --------> 0x0000997f      c68e           dec 0x8e                    ; decrement memory by one
   `=======< 0x00009981      d0d8           bne 0x4cc108                ; branch on result not zero
    ||||||   0x00009983      a01f           ldy #0x1f                   ; load index y with memory
@@ -565,7 +567,7 @@
   |||||||   0x00009988      99a0e3         sta 0xe3a0,y                ; store accumulator in memory
   |||||||   0x0000998b      88             dey                         ; decrement index y by one
   `=======< 0x0000998c      10f7           bpl 0x4cc108                ; branch on result plus
-   `======< 0x0000998e      4c036c         jmp 0x6c03                  ; jump to new location
+   `======< 0x0000998e      4c036c         jmp 0x6c03            ; set memory banking: set kernal and io visible
     |||||   0x00009991      69ad           adc #0xad                   ; add memory to accumulator with carry
     |||||   0x00009993      9199           sta (0x99),y                ; store accumulator in memory
     |||||   0x00009995      4a             lsr a                       ; shift right one bit (memory or accumulator)
@@ -627,7 +629,7 @@
     | |||   0x000099fd      a960           lda #0x60                   ; load accumulator with memory
     | |||   0x000099ff      8d0380         sta 0x8003                  ; store accumulator in memory
     | |||   0x00009a02      a900           lda #0x00                   ; load accumulator with memory
-    | |||   0x00009a04      200c6c         jsr 0x6c0c                  ; jump to new location saving return address
+    | |||   0x00009a04      200c6c         jsr 0x6c0c            ; unknown purpose
     | |||   0x00009a07      a94c           lda #0x4c                   ; load accumulator with memory
     | |||   0x00009a09      8d0380         sta 0x8003                  ; store accumulator in memory
     | |||   0x00009a0c      a200           ldx #0x00                   ; load index x with memory
@@ -1131,7 +1133,7 @@
         ,=< 0x00009e3d      1004           bpl 0x4cc108                ; branch on result plus
         |   0x00009e3f      78             sei                         ; set interrupt disable status
         |   0x00009e40      20891d         jsr 0x1d89                  ; jump to new location saving return address
-        `-> 0x00009e43      20066c         jsr 0x6c06                  ; jump to new location saving return address
+        `-> 0x00009e43      20066c         jsr 0x6c06            ; set memory banking: set ram visible in all areas
         .-> 0x00009e46      a45b           ldy 0x5b                    ; load index y with memory
        .--> 0x00009e48      a908           lda #0x08                   ; load accumulator with memory
        ||   0x00009e4a      8d819e         sta 0x9e81                  ; store accumulator in memory
@@ -1252,7 +1254,7 @@
         |   0x00009f2e      c95a           cmp #0x5a                   ; compare memory and accumulator
        ,==< 0x00009f30      b003           bcs 0x4cc108                ; branch on carry set
        |`=< 0x00009f32      4c469e         jmp 0x9e46                  ; jump to new location
-       `--> 0x00009f35      a906           lda #0x06                   ; load accumulator with memory
+       `--> 0x00009f35      a906           lda #0x06             ; bank in kernal
             0x00009f37      8501           sta 0x01                    ; store accumulator in memory
             0x00009f39      a90e           lda #0x0e                   ; load accumulator with memory
             0x00009f3b      8d00ff         sta 0xff00                  ; store accumulator in memory
@@ -1261,7 +1263,7 @@
         |   0x00009f42      20891d         jsr 0x1d89                  ; jump to new location saving return address
         `-> 0x00009f45      58             cli                         ; clear interrupt disable bit
             0x00009f46      200380         jsr 0x8003                  ; jump to new location saving return address
-            0x00009f49      20e4ff         jsr 0xffe4                  ; jump to new location saving return address
+            0x00009f49      20e4ff         jsr 0xffe4            ; GETIN. Read byte from default input. (If not keyboard, must call OPEN and CHKIN beforehands.)
         ,=< 0x00009f4c      f010           beq 0x4cc108                ; branch on result zero
         |   0x00009f4e      ae5f9f         ldx 0x9f5f                  ; load index x with memory
         |   0x00009f51      9a             txs                         ; transfer index x to stack pointer

@@ -397,18 +397,22 @@ set name: A: value, X: offset in string
             0x00006f3c      9d416f         sta 0x6f41,x                ; store accumulator in memory
             0x00006f3f      60             rts                         ; return from subroutine
   || ||||   0x00006f40      23                              ; variable filename '#' (data channel for random access files)
-  || ||||   0x00006f41      55 31 20 35 20 30 20 32 36 20 30 30 00 ; variable filename ("U1 5 0 26 02)
+  || ||||   0x00006f41      55 31 20 35 20 30 20 32 36 20 30 30 ; variable filename ("U1 5 0 26 02)
 
 --------------------------------------------------------------------------
 
+            0x00006f4d      00
+
+0x6c0c:
   --------> 0x00006f4e      205c6f         jsr 0x6f5c                  ; jump to new location saving return address
   |||||||   0x00006f51      08             php                         ; push processor status on stack
-  |||||||   0x00006f52      ad15d0         lda 0xd015                  ; load accumulator with memory
+  |||||||   0x00006f52      ad15d0         lda 0xd015            ; 0x6c0c sprite enable
   |||||||   0x00006f55      29fe           and #0xfe                   ; "and" memory with accumulator
-  |||||||   0x00006f57      8d15d0         sta 0xd015                  ; store accumulator in memory
+  |||||||   0x00006f57      8d15d0         sta 0xd015            ; 0x6c0c sprite enable
   |||||||   0x00006f5a      28             plp                         ; pull processor status from stack
   |||||||   0x00006f5b      60             rts                         ; return from subroutine
 
+local:
   |||||||   0x00006f5c      8d4d6f         sta 0x6f4d                  ; store accumulator in memory
   |||||||   0x00006f5f      0a             asl a                       ; shift left one bit (memory or accumulator)
   |||||||   0x00006f60      a8             tay                         ; transfer accumulator to index y
@@ -1102,7 +1106,7 @@ local: (0x72f9)
        `--> 0x0000746c      204b4c         jsr 0x4c4b       ; main.subs
         `=< 0x0000746f      4c1b4c         jmp 0x4c1b       ; main.subs
 
-0x6c1b (0x7472):
+0x6c1b (0x7472): change out to town and vice versa, save TLIST
        ||   0x00007472      20214c         jsr 0x4c21                  ; jump to new location saving return address
        ||   0x00007475      c9dc           cmp #0xdc                   ; compare memory and accumulator
       ,===< 0x00007477      f002           beq 0x4b2108                ; branch on result zero
@@ -1148,14 +1152,8 @@ local: (0x72f9)
     |||||   0x000074ca      8a             txa                         ; transfer index x to accumulator
     |||||   0x000074cb      48             pha                         ; push accumulator on stack
     |||||   0x000074cc      202d6c         jsr 0x6c2d                  ; jump to new location saving return address
-    |||||   0x000074cf      533a           sre (0x3a),y
-    |||||   0x000074d1      544c           nop 0x4c,x                  ; no operation
-    ||| |   0x000074d3      4953           eor #0x53                   ; "exclusive-or" memory with accumulator
-    ||| |   0x000074d5      5400           nop 0x00,x                  ; no operation
-    ||| |   0x000074d7      00             brk                         ; force break
-    ||| |   0x000074d8      4a             lsr a                       ; shift right one bit (memory or accumulator)
-    ||| |   0x000074d9      00             brk                         ; force break
-    ||| |   0x000074da      0168           ora (0x68,x)                ; "or" memory with accumulator
+    |||||   0x000074cf      533a544c49535400 004a 0001           ; S:TLIST
+    ||| |   0x000074db      68             
     ||| |   0x000074dc      aa             tax                         ; transfer accumulator to index x
     |`----> 0x000074dd      bd9012         lda 0x1290,x                ; load accumulator with memory
     | | |   0x000074e0      850a           sta 0x0a                    ; store accumulator in memory
@@ -1182,10 +1180,7 @@ local: (0x72f9)
     |  ||   0x00007509      8588           sta 0x88                    ; store accumulator in memory
     |  ||   0x0000750b      a201           ldx #0x01                   ; load index x with memory
     |  ||   0x0000750d      20246c         jsr 0x6c24                  ; jump to new location saving return address
-    |  ||   0x00007510      4d4149         eor 0x4941                  ; "exclusive-or" memory with accumulator
-    |  ||   0x00007513      4e2e54         lsr 0x542e                  ; shift right one bit (memory or accumulator)
-    |  ||   0x00007516      574e           sre 0x4e,x
-    |  ||   0x00007518      00             brk                         ; force break
+    |  ||   0x00007510      4d41494e2e54574e00                   ; MAIN.TWN
     `-----> 0x00007519      a900           lda #0x00                   ; load accumulator with memory
        ||   0x0000751b      850c           sta 0x0c                    ; store accumulator in memory
        ||   0x0000751d      60             rts                         ; return from subroutine
@@ -1196,16 +1191,11 @@ local: (0x72f9)
        `--> 0x00007526      20096c         jsr 0x6c09                  ; jump to new location saving return address
         |   0x00007529      a200           ldx #0x00                   ; load index x with memory
         |   0x0000752b      20246c         jsr 0x6c24                  ; jump to new location saving return address
-        |   0x0000752e      544c           nop 0x4c,x                  ; no operation
-            0x00007530      4953           eor #0x53                   ; "exclusive-or" memory with accumulator
-            0x00007532      5400           nop 0x00,x                  ; no operation
+        |   0x0000752e      544c49535400                         ; TLIST
             0x00007534      201975         jsr 0x7519                  ; jump to new location saving return address
             0x00007537      a201           ldx #0x01                   ; load index x with memory
             0x00007539      20246c         jsr 0x6c24                  ; jump to new location saving return address
-            0x0000753c      4d4149         eor 0x4941                  ; "exclusive-or" memory with accumulator
-            0x0000753f      4e2e4f         lsr 0x4f2e                  ; shift right one bit (memory or accumulator)
-            0x00007542      5554           eor 0x54,x                  ; "exclusive-or" memory with accumulator
-            0x00007544      00             brk                         ; force break
+            0x0000753c      4d41494e2e4f555400                   ; MAIN.OUT
 
 0x6c1e (0x7545):
             0x00007545      a000           ldy #0x00                   ; load index y with memory

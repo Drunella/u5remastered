@@ -303,18 +303,7 @@ local:
   | | |||   0x00008383      a90a           lda #0x0a                   ; load accumulator with memory
   | | |||   0x00008385      85c9           sta 0xc9                    ; store accumulator in memory
   | | |||   0x00008387      20004c         jsr 0x4c00                  ; jump to new location saving return address
-  | | |||   0x0000838a      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x0000838c      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x0000838e      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x00008390      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x00008392      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x00008394      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x00008396      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x00008398      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x0000839a      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x0000839c      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x0000839e      a0a0           ldy #0xa0                   ; load index y with memory
-  | | |||   0x000083a0      a000           ldy #0x00                   ; load index y with memory
+  | | |||   0x0000838a      a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a000
   | | |`==< 0x000083a2      4c5a83         jmp 0x835a                  ; jump to new location
   | | `---> 0x000083a5      a246           ldx #0x46                   ; load index x with memory
   | |  .--> 0x000083a7      bdb383         lda 0x83b3,x                ; load accumulator with memory
@@ -387,7 +376,7 @@ local:
 
 ------------------------------------------------------------------------------
 
-
+local:
   | | ||    0x00008425      a212           ldx #0x12                   ; load index x with memory
   | | ||    0x00008427      a034           ldy #0x34                   ; load index y with memory
   | | ||    0x00008429      200977         jsr 0x7709                  ; jump to new location saving return address
@@ -398,6 +387,7 @@ local:
   | |  |    0x00008439      a212           ldx #0x12                   ; load index x with memory
   | |  |    0x0000843b      a034           ldy #0x34                   ; load index y with memory
   | `=====< 0x0000843d      4c0977         jmp 0x7709                  ; jump to new location
+
   |    |    0x00008440      02             hlt
   |    |    0x00008441      cf08db         dcp 0xdb08
   |    |    0x00008444      0a             asl a                       ; shift left one bit (memory or accumulator)

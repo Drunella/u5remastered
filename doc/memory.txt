@@ -60,15 +60,15 @@ Main Memory Map
    4      temp.subs
    5      temp.subs
    6      temp.subs
-   7      u5siz.o (fast-loader) / 32 byte subs.128 jump table + io
-   8      u5siz.o (fast-loader) / eapi
-   9      u5siz.o (fast-loader) / eapi
-   A      u5siz.o (fast-loader) / eapi
-   B      u5siz.o (fast-loader) / exomizer
-   C      (256 free) (music control and data)
-   D      (256 free) (music data)
+   7      u5siz.o (fast-loader) / 32 byte subs.128 jump table + io / [d81: u5siz.o or subs.128]
+   8      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
+   9      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
+   A      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
+   B      u5siz.o (fast-loader) / exomizer / [d81: u5siz.o or subs.128] / [d81: 0x7b80 - 0x7bff free]
+   C      (256 free) (music control and data) / [d81: exomizer]
+   D      (256 free) (music data) / [d81: free]
    E      (ram, probably also temp)
-   F      (ram, temporary storage for disk checking)
+   F      (ram, temporary storage for disk checking) [d81: in use in c128 mode between loading]
 0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
 0x9000      ( " )
    1        ( " )

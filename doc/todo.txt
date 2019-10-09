@@ -1,63 +1,33 @@
 Ultima V Remastered
 
 Mission: Put the complete original game for the C64 on an EasyFlash cartridge
-Variants:
-- Do not change anything
-- Allow Bugfixes
-- No trainer or similar, no demo or other
-- Later: add savegame manager, add trainer, add sound via banking (might be possible)
 ==============================================================================
 
-ToDo
+Features
+- trainer
+- save game editor (both versions)
+- run music while loading (at least for block loading)
+- d81 version save file manager (save files in d81 version have different names)
 
+ToDo
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - cleanup for release
   + write small documentation
-  + apache 2.0 licence
+  + ok apache 2.0 licence
   + cleanup of repository, rewrite history, one commit only
+- make block loading not interrupt music
+- sound and effect mixing is not good
+- show karma with CTRL+K
+- change own file formats to json
+- check Underworld/startup.prg for menu modifications
+- d81 version u4 import
+- quickstart in d81 does not work (c128)
+- does not work in c64 standard emulator
 
-- sound and effect mixing is not good, see u4 for better way
-- music while loading -> should work
-
-- ok better patch mechanism
-- ok check for irq handling while loading
-- ok add patching of prg files with other prg files
-- ok modify transfer.prg to read from disk
-  + no disk loading available, could be necessary to redesign
-- ok improve makefile: phony labels, correct building in external directory
-- ok make transfer save files from and to disk
-- ok make start menu
-- ok extend patcher
-- ok patches for ef:
-  + remove drive selection from main menu
-  + append disk read for transfer from ultima 4
-- no: idea: replace all filenames with numbers (not important right now)
-  directory search is simple multiplication (well not simple, but ok)
-  identification of save files is easy
-  rewrite of load call everywere necessary: b:number b:argument size 0 0 0 ...
-- ok make jmp table modificator
-  + tool to read map files 
-  + extract relevant symbol
-  + patch other file
-- ok implement new loading routines
-  + omit saving for now
-  + just loading blocks and files
-- ok make tool to create bin file: 
-  + define map to put together all files for bin file
-  + list of files and their position in the cartridge
-  + make crt file from binfile (own script or cartconv)
-- ok save strategy
-- ok Identify relevant code and files
-- ok Learn about u5 structure
-- ok Identify all kernal calls (not all, but is sufficient)
-- ok identify saved location for current disk -> is requested through temp.subs call
-- ok create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
-
-Not used zeropage addresses
-- fc, fd, fe, ff (probably temporary variables)
-- fb (not found with lda)
-
+- VICE & VICE Monitor
+  Alt+F12: Hard Reset
+  d [addr]: disassemble
 
 - Save Game
     save S:PRTY.DATA (bc00, 0030)
@@ -99,6 +69,20 @@ Not used zeropage addresses
     save S:TLIST (4a00, 0200)
     loads LIST ($4a00)
     loads ROSTER ($1000) (ROS*)
+      loads Q (on c128 only)
+      loads C (on c128 only)
+      loads E (on c128 only)
+      loads I (on c128 only)
+      loads M (on c128 only)
+      loads P (on c128 only)
+      loads R (on c128 only)
+      loads S (on c128 only)
+      loads T (on c128 only)
+      loads U (on c128 only)
+      loads V (on c128 only)
+      loads Z (on c128 only)
+      loads MAIN.C* (MAIN.COMBAT, on c128 only)
+      ...
     (change disk DWELLING)
     loads MAIN.T* ($8000)
 
@@ -116,8 +100,6 @@ Not used zeropage addresses
     (insert britannia)
     load TLIST
     load MAIN.OUT
-
-
 
 
 Loading
@@ -234,6 +216,43 @@ Internal text encoding
 ==============================================================================
 Old stuff
 
+Done:
+
+- ok better patch mechanism
+- ok check for irq handling while loading
+- ok add patching of prg files with other prg files
+- ok modify transfer.prg to read from disk
+  + no disk loading available, could be necessary to redesign
+- ok improve makefile: phony labels, correct building in external directory
+- ok make transfer save files from and to disk
+- ok make start menu
+- ok extend patcher
+- ok patches for ef:
+  + remove drive selection from main menu
+  + append disk read for transfer from ultima 4
+- no: idea: replace all filenames with numbers (not important right now)
+  directory search is simple multiplication (well not simple, but ok)
+  identification of save files is easy
+  rewrite of load call everywere necessary: b:number b:argument size 0 0 0 ...
+- ok make jmp table modificator
+  + tool to read map files 
+  + extract relevant symbol
+  + patch other file
+- ok implement new loading routines
+  + omit saving for now
+  + just loading blocks and files
+- ok make tool to create bin file: 
+  + define map to put together all files for bin file
+  + list of files and their position in the cartridge
+  + make crt file from binfile (own script or cartconv)
+- ok save strategy
+- ok Identify relevant code and files
+- ok Learn about u5 structure
+- ok Identify all kernal calls (not all, but is sufficient)
+- ok identify saved location for current disk -> is requested through temp.subs call
+- ok create all code and data as prg files with their visible address (bank0: 0x8000, bank1: 0xA000, startup: 0xE000)
+
+
 Calculation
 
 - 1 5 1/4 disk: 174848 bytes (minus directory): 169984 bytes
@@ -320,6 +339,12 @@ ok Program/scratch.prg (1x) -> alternative loader with fastloader
 ok Program/startup.prg (2x) -> will be changed, device 9 related
 ok Program/temp.subs.prg (3x) -> load, save, load block, will be changed
 ok Program/xyzzy.prg (1x) -> loader, will be changed
+
+-----
+
+Not used zeropage addresses
+- fc, fd, fe, ff (probably temporary variables)
+- fb (not found with lda)
 
 -----
 
@@ -454,3 +479,41 @@ Sound
   0x7219 - 0x7302: 0xea bytes (234)
   0x7ba8 - 0x7bc3: 0x1c bytes (28)
   0x9fa5 - 0xa0ff: 347 bytes (unclear if really necessary)
+
+- ok d81 version
+  + savegame not found should work
+  + ok save correct drive in variable in the beginning: write in 6c33 asap: 0xba
+  + ok no changing of drive
+  + ok replace io functions
+  + ok copying files to disk: append extra directory entries
+  + ok replicate meow / ULTIMA V
+  + redesign xyzzy, remove xyzzy question
+    -> c128 does not work
+  + ok uncompressed files: XYZZY, U5SIZ.O, M, SUBS.128,  TEMP.SUBS
+  + ok more uncompressed files
+    * ok 0x41/create1.txt  -> 2 occurence
+    * ok 0x41/m9 -> basic programm, can be ignored
+    * ok 0x41/meow -> excluded
+    * ok 0x48/blank.prty + 0x41/blank.prty -> 1 occurences
+    * ok 0x48/blank.party + 0x41/blank.prty -> 1 occurences
+    * ok 0x42/prty.data -> 1 occurence: Program/enter.play.prg
+    * ok 0x42/roster -> Keep/end.prg Program/enter.play.prg
+    * ok 0x42/slist -> Program/enter.play.prg
+    * ok 0x42/list -> 8 occurences: Britannia/main.out.prg Underworld/main.out.prg Underworld/startup.prg Program/enter.play.prg */main.twn.prg Dungeon/main.dng.prg
+    * ok 0x42/tlist -> many occurences    
+    * ok 0x44/story1.txt -> Dwelling/story.prg
+    * ok 0x44/story2.txt -> Dwelling/story.prg
+    * ok 0x44/story3.txt -> Dwelling/story.prg
+    * ok 0x44/story4.txt -> Dwelling/story.prg
+  + ok blocks start at track
+    britannia: 41/0
+    underworld: 41/16
+    town: 59/0
+    dwelling: 59/16
+    castle: 27/0
+    keep: 27/0
+    dungeon: 16/0
+  + ok own create d81 tool with
+    set sector in use
+    create additional dir entry
+    set boot block
