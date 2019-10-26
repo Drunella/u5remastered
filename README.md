@@ -28,7 +28,7 @@ make
 ```
 
 Find the crt and d81 image in the build sub-directory:
-`build/u5remastered.crt`.
+`build/u5remastered.crt`, 
 `build/u5remastered.d81`.
 
 # Bugs
