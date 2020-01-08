@@ -1,14 +1,14 @@
 Disks
 =====
 
-program: (id 0x41)
-dungeon: (id 0x47)
-britannia: (id 0x42)
-underworld: (id 0x48)
-towne: (id 0x43)
-dwelling (id 0x44)
-castle: (id 0x45)
-keep: (id 0x46)
+program: (id 0x41) (A)
+dungeon: (id 0x47) (G)
+britannia: (id 0x42) (B)
+underworld: (id 0x48) (H)
+towne: (id 0x43) (C)
+dwelling (id 0x44) (D)
+castle: (id 0x45) (E)
+keep: (id 0x46) (F)
 
 
 Files
@@ -18,7 +18,7 @@ Files
 - match every file with this entry
 - several files can point to the same entry
 - does not contain duplicates
-- will be named [disk]/name.prg
+- will be named [disk]name.prg
 - 236 files + 7 blocks
 - 541650 bytes (without duplicates)
 - 271326 bytes (compressed, no duplicates)
@@ -123,7 +123,7 @@ Dungeon: (id 0x47)
 0 "dungeon         " g
 41    "main.dng"          prg
 6     "dng.precom"        prg
-11    "dng1a"             prg
+11    "dng1a"             prg ($b000)
 7     "dng2a"             prg
 4     "dng2b"             prg
 7     "dng1b"             prg

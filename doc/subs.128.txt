@@ -1,6 +1,6 @@
    ,======< 0x00007700      4c7b77         jmp 0x777b            ; called in scratch.prg
   ,=======< 0x00007703      4c1279         jmp 0x7912            ; play music x=song
-  ========< 0x00007706      4c2c79         jmp 0x792c                  ; jump to new location
+  ========< 0x00007706      4c2c79         jmp 0x792c            ,
   ========< 0x00007709      4c1278         jmp 0x7812            ; called in enter.play.prg
   ========< 0x0000770c      4cbb77         jmp 0x77bb            ; called in enter.play.prg
   ========< 0x0000770f      4c2577         jmp 0x7725            ; called in main.dng.prg (2x)
@@ -62,8 +62,8 @@
   ||`=====< 0x00007786      d0f5           bne 0x508108                ; branch on result not zero
   || ||||   0x00007788      8d9077         sta 0x7790                  ; store accumulator in memory
   ||.-----> 0x0000778b      a200           ldx #0x00                   ; load index x with memory
-  |||||||   0x0000778d      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |||||||   0x00007790      4300           sre (0x00,x)
+  |||||||   0x0000778d      20246c         jsr 0x6c24            ; load file
+  |||||||   0x00007790      4300                                 ; C
   ||`=====< 0x00007792      b0f7           bcs 0x508108                ; branch on carry set
   || ||||   0x00007794      60             rts                         ; return from subroutine
   |`------> 0x00007795      a9a7           lda #0xa7                   ; load accumulator with memory
@@ -86,8 +86,8 @@
   --------> 0x000077bb      a900           lda #0x00                   ; load accumulator with memory
   |  ||||   0x000077bd      8dd177         sta 0x77d1                  ; store accumulator in memory
   |  ||||   0x000077c0      a200           ldx #0x00                   ; load index x with memory
-  |  ||||   0x000077c2      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |  ||||   0x000077c5      5100           eor (0x00),y                ; "exclusive-or" memory with accumulator
+  |  ||||   0x000077c2      20246c         jsr 0x6c24            ; load file
+  |  ||||   0x000077c5      5100                                 ; Q
   |  ||||   0x000077c7      a9a7           lda #0xa7                   ; load accumulator with memory
   |  ||||   0x000077c9      a23e           ldx #0x3e                   ; load index x with memory
   |  ||||   0x000077cb      a000           ldy #0x00                   ; load index y with memory
@@ -101,8 +101,8 @@
   | |||||   0x000077de      8a             txa                         ; transfer index x to accumulator
   | |||||   0x000077df      48             pha                         ; push accumulator on stack
   |.------> 0x000077e0      a200           ldx #0x00                   ; load index x with memory
-  |||||||   0x000077e2      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |||||||   0x000077e5      4300           sre (0x00,x)
+  |||||||   0x000077e2      20246c         jsr 0x6c24            ; load file
+  |||||||   0x000077e5      4300                                 ; C
   |`======< 0x000077e7      b0f7           bcs 0x508108                ; branch on carry set
   | |||||   0x000077e9      68             pla                         ; pull accumulator from stack
   | |||||   0x000077ea      aa             tax                         ; transfer accumulator to index x
@@ -167,6 +167,7 @@
   |||||||   0x00007876      c9cd           cmp #0xcd                   ; compare memory and accumulator
   ========< 0x00007878      d0ec           bne 0x508108                ; branch on result not zero
   =``-----> 0x0000787a      4c0080         jmp 0x8000                  ; jump to new location
+
   |  ||||   0x0000787d      4345           sre (0x45,x)
   |  ||||   0x0000787f      494d           eor #0x4d                   ; "exclusive-or" memory with accumulator
   |  ||||   0x00007881      5052           bvc 0x508108                ; branch on overflow clear
@@ -184,6 +185,8 @@
   |  ||||   0x0000789b      6ce070         jmp (0x70e0)                ; jump to new location
   |  ||||   0x0000789e      ff2006         isb 0x0620,x
   |  ||||   0x000078a1      6ca900         jmp (0x00a9)                ; jump to new location
+
+local:
   |  ||||   0x000078a4      85fe           sta 0xfe                    ; store accumulator in memory
   |  ||||   0x000078a6      84ff           sty 0xff                    ; store index y in memory
   |  ||||   0x000078a8      8eb978         stx 0x78b9                  ; store index x in memory
@@ -196,6 +199,8 @@
   | |||||   0x000078ba      c8             iny                         ; increment index y by one
   | `=====< 0x000078bb      d0f5           bne 0x508108                ; branch on result not zero
   |  `====< 0x000078bd      4c036c         jmp 0x6c03                  ; jump to new location
+
+local:
   |   |||   0x000078c0      20066c         jsr 0x6c06                  ; jump to new location saving return address
   |   |||   0x000078c3      a900           lda #0x00                   ; load accumulator with memory
   |   |||   0x000078c5      85fe           sta 0xfe                    ; store accumulator in memory
@@ -210,6 +215,8 @@
   |  ||||   0x000078db      c8             iny                         ; increment index y by one
   |  `====< 0x000078dc      d0f5           bne 0x508108                ; branch on result not zero
   |   `===< 0x000078de      4c036c         jmp 0x6c03                  ; jump to new location
+
+local:
   |    ||   0x000078e1      20066c         jsr 0x6c06                  ; jump to new location saving return address
   |    ||   0x000078e4      a900           lda #0x00                   ; load accumulator with memory
   |    ||   0x000078e6      85fe           sta 0xfe                    ; store accumulator in memory

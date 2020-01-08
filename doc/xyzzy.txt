@@ -2,7 +2,7 @@ does some checks
 probably checks if c128 or c64
 drive select
 loads files U5SIZ.O TEMP.SUBS 
-loads M if other drive selected
+loads M an subs.128 if c128
 jumps to TEMP.SUBS (0x6c24) and load ST* (STARTUP)
 jumps to 0x8000
 size: 992 bytes
@@ -76,7 +76,7 @@ size: 992 bytes
        |    0x00002096      20bdff         jsr 0xffbd      ;$FFBD - set file name  (UJ)  -> reset disk drive               
        |    0x00002099      a90f           lda #0x0f                   ; load accumulator with memory
        |    0x0000209b      a8             tay                         ; transfer accumulator to index y
-       |    0x0000209c      a208           ldx #0x08                   ; load index x with memory
+       |    0x0000209c      a208           ldx #0x08       ; ### d81: replace with ldx $ba ###  to load last used drive instead ###
        |    0x0000209e      20baff         jsr 0xffba      ;$FFBA - set file parameters  15,8,15
        |    0x000020a1      20c0ff         jsr 0xffc0      ;$FFC0 - open file after SETLFS,SETNAM
        |    0x000020a4      a211           ldx #0x11                   ; load index x with memory
@@ -94,7 +94,7 @@ size: 992 bytes
        |    0x000020b8      20c3ff         jsr 0xffc3      ;$FFC3 - close a logical file             
        
 
-loading file starts?
+loading file starts? ; ### d81: this block can be removed and changed to own code ### 0x20bb - 0x20d4 
        |    0x000020bb      a907           lda #0x07                   ; load accumulator with memory
        |    0x000020bd      a2dc           ldx #0xdc                   ; load index x with memory
        |    0x000020bf      a021           ldy #0x21                   ; load index y with memory
@@ -295,7 +295,7 @@ routine copied to 0x0380
 
 filename and file parameters standardized
             0x000023d4      20bdff         jsr 0xffbd       ; ROM_SETNAM $FFBD - set file name   
-            0x000023d7      a908           lda #0x08                   ; load accumulator with memory
-            0x000023d9      a208           ldx #0x08                   ; load index x with memory
-            0x000023db      a001           ldy #0x01                   ; load index y with memory
+            0x000023d7      a908           lda #0x08        ; A = Logical number
+            0x000023d9      a208           ldx #0x08        ; X = Device number  ### d81: replace with ldx $ba
+            0x000023db      a001           ldy #0x01        ; Y = Secondary address
             0x000023dd      4cbaff         jmp 0xffba       ; ROM_SETLFS ;$FFBA - set file parameters

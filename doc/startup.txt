@@ -3,6 +3,7 @@ size=5072
   ========< 0x00008000      4c2580         jmp 0x8025                  ; jump to new location
 
   |||||||   0x00008003      207a8a         jsr 0x8a7a                  ; jump to new location saving return address
+  
   ========< 0x00008006      4cd391         jmp 0x91d3                  ; jump to new location
   |||||||   0x00008009      4678           lsr 0x78                    ; shift right one bit (memory or accumulator)
   |||||||   0x0000800b      ea             nop                         ; no operation
@@ -781,19 +782,8 @@ create new:
    || |||   0x0000885b      a907           lda #0x07                   ; load accumulator with memory
    || |||   0x0000885d      85c9           sta 0xc9                    ; store accumulator in memory
    || |||   0x0000885f      20004c         jsr 0x4c00                  ; jump to new location saving return address
-   || |||   0x00008862      d4f5           nop 0xf5,x                  ; no operation
-   || |||   0x00008864      f2             hlt
-   || |||   0x00008865      eea0ef         inc 0xefa0                  ; increment memory by one
-   || |||   0x00008868      eea0f3         inc 0xf3a0                  ; increment memory by one
-   || |||   0x0000886b      e5e3           sbc 0xe3                    ; subtract memory from accumulator with borrow
-   || |||   0x0000886d      efeee4         isb 0xe4ee
-   || |||   0x00008870      a0e4           ldy #0xe4                   ; load index y with memory
-   || |||   0x00008872      f2             hlt
-   || |||   0x00008873      e9f6           sbc #0xf6                   ; subtract memory from accumulator with borrow
-   || |||   0x00008875      e5a0           sbc 0xa0                    ; subtract memory from accumulator with borrow
-   || |||   0x00008877      eeeff7         inc 0xf7ef                  ; increment memory by one
-   || |||   0x0000887a      ba             tsx                         ; transfer stack pointer to index x
-   || |||   0x0000887b      00             brk                         ; force break
+   || |||   0x00008862      d4f5f2eea0efeea0f3e5e3efeee4a0e4f2e9f6e5a0eeeff7ba00    
+   
    ||.----> 0x0000887c      204e4c         jsr 0x4c4e                  ; jump to new location saving return address
   ,=======< 0x0000887f      3015           bmi 0x4f9108                ; branch on result minus
   |||||||   0x00008881      207a8a         jsr 0x8a7a                  ; jump to new location saving return address
@@ -834,9 +824,9 @@ create new:
    ||||||   0x000088ce      a908           lda #0x08                   ; load accumulator with memory
    ||||||   0x000088d0      8d336c         sta 0x6c33       ; store 8 as drive id
    |``----> 0x000088d3      4ca24c         jmp 0x4ca2                  ; jump to new location
-   |  |||   0x000088d6      4d2d577700 02 29 49
+   |  |||   0x000088d6      4d2d577700022949 ; M-W(119)(0)(2)(9+32)(9+64)
    |  |||   0x000088dc      2949           and #0x49                   ; "and" memory with accumulator
-   |  |||   0x000088de      4d2d577700 02 28 48 ; M-W...
+   |  |||   0x000088de      4d2d577700022848 ; M-W(119)(0)(2)(8+32)(8+64)
 
 local: reopen secondary channel 15
    |  |||   0x000088e6      a200           ldx #0x00                   ; load index x with memory
