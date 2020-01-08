@@ -36,3 +36,10 @@ Find the crt and d81 image in the build sub-directory:
 I wanted to have a working version with music as fast as possible. I did not
 test it thoroughly. Please report bugs or suggestions to .... I'm planning to
 implement more features in the future.
+
+# License and Copyright
+
+The code is © 2019 Drunella, available under an Apache 2.0 license.
+
+The original Ultima V game is © 1988 Origin Systems, Inc. 
+No copy of the original game is included in this repository.
