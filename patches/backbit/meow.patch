@@ -1,0 +1,7 @@
+type = hex
+; don't override vectors
+filename = "0x41/meow"
+offset = 2
+address = 0x0012
+original = 208aff
+new      = eaeaea
