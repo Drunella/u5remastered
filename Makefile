@@ -189,6 +189,7 @@ clean:
 	rm -rf build/d81.f
 	rm -rf build/temp
 	rm -rf build/exo
+	rm -rf build/source
 	rm -f build/u5remastered.crt
 	rm -f build/u5remastered.d81
 
