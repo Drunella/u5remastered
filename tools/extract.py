@@ -68,14 +68,14 @@ def readdisk_extractfile(diskfile, filename, destfile):
     arguments = ["c1541", diskfile, "-read", filename, destfile]
     result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     if result.returncode != 0:
-        raise Exception("error extracting file " + filename + " from disk " + diskname)
+        raise Exception("error extracting file " + filename + " from disk " + diskfile)
 
 
 def readdisk_extractblock(diskfile, destfile, track, sector):
     arguments = ["c1541", diskfile, "-bread", destfile, str(track), str(sector)]
     result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
     if result.returncode != 0:
-        raise Exception("error extracting block " + track + ", " + sector + " from disk " + diskname)
+        raise Exception("error extracting block " + track + ", " + sector + " from disk " + diskfile)
 
 
 def file_md5(filename):
