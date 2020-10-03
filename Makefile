@@ -233,6 +233,7 @@ clean:
 	rm -rf build/backbit.f
 	rm -rf build/temp
 	rm -rf build/exo
+	rm -rf build/source
 	rm -f build/u5remastered.crt
 	rm -f build/u5remastered.d81
 	rm -f build/u5remastered-BackBit.d81
