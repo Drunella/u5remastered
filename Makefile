@@ -30,19 +30,21 @@ export LD65_LIB=/opt/cc65/share/cc65/lib
 .SUFFIXES: .prg .s .c
 .PHONY: clean subdirs all easyflash mrproper
 
-LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o
-
-MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
+EF_LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o
+EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
 
 # all
-all: easyflash d81
+all: easyflash d81 backbit
 
 # easyflash
 easyflash: subdirs build/ef/directory.data.prg build/ef/files.data.prg build/u5remastered.crt
 
 # d81
 d81: subdirs build/u5remastered.d81
+
+# backbit
+backbit: subdirs build/u5remastered-BackBit.d81
 
 # assemble
 build/%.o: src/%.s
@@ -69,12 +71,12 @@ build/ef/init.prg: build/ef/init.o
 	$(LD65) $(LD65FLAGS) -o $@ -C src/ef/init.cfg $^
 
 # easyflash loader.prg
-build/ef/loader.prg: $(LOADER_FILES)
-	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $(LOADER_FILES)
+build/ef/loader.prg: $(EF_LOADER_FILES)
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -C src/ef/loader.cfg c64.lib $(EF_LOADER_FILES)
 
 # music
-build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(MUSIC_FILES)
-	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(MUSIC_FILES)
+build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES)
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
 # io-replacement
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
@@ -172,12 +174,52 @@ build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d
 	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
 
 # ------------------------------------------------------------------------
+# backbit
+
+# io-replacement d81
+build/backbit/io-replacement.prg build/backbit/io-replacement.map: build/backbit/io-code.o build/exo/exodecrunch.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/backbit/io-replacement.map -o build/backbit/io-replacement.prg -C ./src/backbit/io-replacement.cfg $^
+
+# loader
+build/backbit/loader.prg: build/backbit/loader.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/backbit/loader.map -o build/backbit/loader.prg -C ./src/backbit/loader.cfg $^
+
+build/backbit.f/loader.prg: build/backbit/loader.prg
+	cp ./build/backbit/loader.prg build/backbit.f/loader.prg
+
+build/backbit/exodecrunch.prg: build/exo/exodecrunch.o build/backbit/io-code.o
+	$(LD65) $(LD65FLAGS) -o $@ -C ./src/backbit/exodecrunch.cfg $^
+
+build/backbit.f/exodecrunch.prg: build/backbit/exodecrunch.prg
+	cp ./build/backbit/exodecrunch.prg ./build/backbit.f/exodecrunch.prg
+
+# files with additional items
+build/backbit.f/files.list: build/source/files.list
+	cp ./build/source/* ./build/backbit.f/
+
+# crunch
+build/backbit.f/crunched.done: build/backbit.f/patched.done
+	tools/crunch.py -v -t mem -b ./build/backbit.f
+	touch build/backbit.f/crunched.done
+
+# patch
+build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replacement.map build/backbit/io-replacement.prg
+	tools/u5patch.py -v -l ./build/backbit.f/files.list -f ./build/backbit.f -m build/backbit/io-replacement.map ./patches/backbit/*.patch ./patches/d81/*.patch ./patches/*.patch
+	touch ./build/backbit.f/patched.done
+
+# build disk
+build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg
+	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f
+
+# ------------------------------------------------------------------------
 
 subdirs:
 	@mkdir -p ./build/temp 
 	@mkdir -p ./build/exo
 	@mkdir -p ./build/d81.f
 	@mkdir -p ./build/d81
+	@mkdir -p ./build/backbit.f
+	@mkdir -p ./build/backbit
 	@mkdir -p ./build/source
 	@mkdir -p ./build/ef.f
 	@mkdir -p ./build/ef
@@ -185,13 +227,16 @@ subdirs:
 clean:
 	rm -rf build/ef
 	rm -rf build/d81
+	rm -rf build/backbit
 	rm -rf build/ef.f 
 	rm -rf build/d81.f
+	rm -rf build/backbit.f
 	rm -rf build/temp
 	rm -rf build/exo
 	rm -rf build/source
 	rm -f build/u5remastered.crt
 	rm -f build/u5remastered.d81
+	rm -f build/u5remastered-BackBit.d81
 
 mrproper:
 	rm -rf build

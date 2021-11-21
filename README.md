@@ -1,6 +1,5 @@
 # Ultima V Remastered
-This is the source to build an EasyFlash and 1581 version from original C64 
-Ultima V disks.
+This is the source to build an EasyFlash, 1581 or BackBit version from original C64 Ultima V disks.
 
 ## Features
 * Import and export save games
