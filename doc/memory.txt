@@ -187,7 +187,7 @@ Cartridge Memory Map
      1800      EAPI
      1900      EAPI       
      1A00      EAPI
-     1B00      EAPI
+     1B00      EF-NAME
      1C00      (exodecrunch)
      1D00      
      1E00      
@@ -228,7 +228,7 @@ Cartridge Memory Map
 16:1:0000      (file data)
 17:0:0000      (file data)
 17:1:0000      (file data)
-18:0:0000      
+18:0:0000      (music rom)
 18:1:0000      
 19:0:0000      (block britannia)
 19:1:0000      (block underworld)
