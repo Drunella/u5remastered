@@ -26,8 +26,33 @@
 
 #include "menu_include.h"
 
-
 #define MENU_START 13
+
+
+uint8_t version[2] = {
+#include "../../version.txt"
+};
+
+
+uint8_t get_version_major(void)
+{
+    return version[0];
+}
+
+uint8_t get_version_minor(void)
+{
+    return version[1];
+}
+
+
+void draw_version(void)
+{
+    char text[8];
+    uint8_t n;
+
+    n = sprintf(text, "v%d.%d", get_version_major(), get_version_minor());
+    cputsxy(39-n, 24, text);
+}
 
 
 void clear_menu(void)

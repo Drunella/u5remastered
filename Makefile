@@ -248,7 +248,7 @@ build/source/files.list:
 
 # get m.prg	
 build/source/m.prg:
-	c1541 ./disks/osi.d64 -read m ./build/source/m.prg
+	SDL_VIDEODRIVER=dummy c1541 ./disks/osi.d64 -read m ./build/source/m.prg
 
 # get meow.prg	
 #build/source/meow.prg:

@@ -46,7 +46,8 @@ def readdisk_getdiskfile(directory, diskname):
 
 
 def readdisk_directory(filename):
-    result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+    global my_env
+    result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
     lines = result.stdout.splitlines()[1:-1]
     retval = []
     for l in lines:
@@ -56,7 +57,8 @@ def readdisk_directory(filename):
 
 
 def readdisk_checktype(filename, typeid, typename):
-    result = subprocess.run(["c1541", filename, "-block", "18", "0", "162"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+    global my_env
+    result = subprocess.run(["c1541", filename, "-block", "18", "0", "162"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
     content = result.stdout.splitlines()
     value = content[1].split()[2]
     if int(value, 16) != typeid:
@@ -65,15 +67,17 @@ def readdisk_checktype(filename, typeid, typename):
     
     
 def readdisk_extractfile(diskfile, filename, destfile):
+    global my_env
     arguments = ["c1541", diskfile, "-read", filename, destfile]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
     if result.returncode != 0:
         raise Exception("error extracting file " + filename + " from disk " + diskfile)
 
 
 def readdisk_extractblock(diskfile, destfile, track, sector):
+    global my_env
     arguments = ["c1541", diskfile, "-bread", destfile, str(track), str(sector)]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
     if result.returncode != 0:
         raise Exception("error extracting block " + track + ", " + sector + " from disk " + diskfile)
 
@@ -87,7 +91,8 @@ def file_md5(filename):
 
 
 def main(argv):
-    #global source_path
+    global my_env
+    
     p = argparse.ArgumentParser()
     p.add_argument("-v", dest="verbose", action="store_true", help="Verbose output.")
     p.add_argument("-b", dest="build", action="store", required=True, help="build directory.")
@@ -99,6 +104,9 @@ def main(argv):
     #os.makedirs(temp_path, exist_ok=True)
     files_path = args.build #os.path.join(args.build, "files")
     os.makedirs(files_path, exist_ok=True)
+
+    my_env = os.environ
+    my_env["SDL_VIDEODRIVER"] = "dummy"
 
     files_directory = dict()
     disks = readdisks_info(args.disks)

@@ -29,6 +29,7 @@ import pprint
 
 
 def create_disk(filename):
+    global my_env
     #if os.path.isfile(filename):
     #    raise Exception("disk image " + filename  + "already exists")
     arguments = ["c1541",
@@ -36,12 +37,13 @@ def create_disk(filename):
                 "ultima v,65",
                 "d81",
                 filename]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
     print (result.stdout)
     return
 
 
 def copyfile_disk(diskname, sourcefilename, destfilename, verbose=False):
+    global my_env
     if not os.path.isfile(diskname):
         raise Exception("disk image " + diskname  + "not found")
     destfilename = destfilename.lower()
@@ -50,7 +52,7 @@ def copyfile_disk(diskname, sourcefilename, destfilename, verbose=False):
                  "-write",
                  sourcefilename,
                  destfilename]
-    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    result = subprocess.run(arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, env=my_env)
     if result.returncode != 0:
         print(result.stderr)
         raise Exception("copying of " + destfilename + " failed")
@@ -280,6 +282,7 @@ def disk_makeadditionaldirentry(originalfile, newfile, verbose=False):
 
 
 def main(argv):
+    global my_env
     global disk_image
     global disk_map
     global includes
@@ -292,6 +295,9 @@ def main(argv):
     p.add_argument("-i", dest="includefiles", action="append", required=False, help="include files with values.")
     p.add_argument("-o", dest="outputfile", action="store", required=True, help="d81 output file.")
     p.add_argument("-x", dest="excludes", action="store", required=False, default=None, help="files to exclude.")
+
+    my_env = os.environ
+    my_env["SDL_VIDEODRIVER"] = "dummy"
 
     args = p.parse_args()
     output_file = args.outputfile

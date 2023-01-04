@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 
+
+void draw_version(void);
 void clear_menu(void);
 void menu_option(char key, char *desc);
 void cart_kill(void);

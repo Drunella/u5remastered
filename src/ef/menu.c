@@ -72,6 +72,7 @@ void main(void)
             menu_option('S', "Manage savegames");
             cputs("\r\n");
             menu_option('Q', "Quit to basic");
+            draw_version();
         }
         
         repaint = false;
