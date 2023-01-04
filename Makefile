@@ -83,7 +83,7 @@ build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o buil
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
 
 # io-addendum
-build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o
+build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/exo/exodecrunch.o build/ef/subs128-disassemble.o
 	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
 
 # transfer-load
@@ -103,6 +103,12 @@ build/ef.f/files.list: build/source/files.list build/ef/io-addendum.prg build/ef
 	cp build/ef/music.prg build/ef.f/music.prg
 	echo "0x41/io.add io.add" >> build/ef.f/files.list
 	echo "0x41/music music" >> build/ef.f/files.list
+
+# disassemble subs.128.prg
+build/ef/subs128-disassemble.o: build/source/subs.128.prg src/ef/subs128-disassemble.info
+	$(DA65) -i ./src/ef/subs128-disassemble.info -o ./build/temp/subs128-disassemble.s
+#	cat ./src/ef/subs128-export.i >> ./build/temp/subs128-disassemble.s
+	$(CA65) $(CA65FLAGS) -o ./build/ef/subs128-disassemble.o ./build/temp/subs128-disassemble.s
 	
 # patch
 build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/ef.f/music_rom.bin
@@ -233,7 +239,6 @@ clean:
 	rm -rf build/backbit.f
 	rm -rf build/temp
 	rm -rf build/exo
-	rm -rf build/source
 	rm -f build/u5remastered.crt
 	rm -f build/u5remastered.d81
 	rm -f build/u5remastered-BackBit.d81
@@ -250,14 +255,7 @@ build/source/files.list:
 build/source/m.prg:
 	SDL_VIDEODRIVER=dummy c1541 ./disks/osi.d64 -read m ./build/source/m.prg
 
-# get meow.prg	
-#build/source/meow.prg:
-#	c1541 ./disks/osi.d64 -read meow ./build/source/meow.prg
-
 # get subs.128.prg	
-#build/source/subs.128.prg:
-#	c1541 ./disks/osi.d64 -read subs.128 ./build/source/subs.128.prg
+build/source/subs.128.prg:
+	SDL_VIDEODRIVER=dummy c1541 ./disks/osi.d64 -read subs.128 ./build/source/subs.128.prg
 
-# get temp.subs.prg	
-#build/source/temp.subs.prg:
-#	c1541 ./disks/osi.d64 -read temp.subs ./build/source/temp.subs.prg

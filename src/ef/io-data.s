@@ -52,7 +52,7 @@ decrunch_table = $7f00
     save_files_directory_entry:
     requested_fullname:
     requested_disk:
-        .byte $41
+        .byte $00  ; $41
     requested_filename:
         .byte $00, $00, $00, $00, $00, $00, $00
         .byte $00, $00, $00, $00, $00, $00, $00, $00
@@ -74,7 +74,7 @@ decrunch_table = $7f00
         .byte $00
 
     read_block_filename:
-        .byte "BLOCK", $00
+        .byte $00, $00, $00, $00, $00, $00  ; "BLOCK\0"
     bank_strategy:
         .byte $00
     load_strategy:    ; 00: decrunch; 01: load prg

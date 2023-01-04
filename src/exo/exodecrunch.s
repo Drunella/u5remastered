@@ -30,6 +30,7 @@
 ; -------------------------------------------------------------------
 .import get_crunched_byte
 .import decrunch_table
+playsound = $7700
 
 ; -------------------------------------------------------------------
 ; this function is the heart of the decruncher.
@@ -41,6 +42,10 @@
 .export EXO_decrunch
 
 .segment "EXO_CODE"
+
+; some sound effects start at $7b00
+; we place a jump there
+jmp playsound
 
 ; -------------------------------------------------------------------
 ; Controls if the shared get_bits routines should be inlined or not.
