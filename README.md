@@ -3,6 +3,7 @@ This is the source to build an EasyFlash, 1581 or BackBit version from original 
 
 ## Features
 * Import and export save games
+* Savegame editor
 * Ultima V music
 
 ## Required Tools

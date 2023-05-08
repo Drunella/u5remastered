@@ -78,7 +78,7 @@ static uint8_t select_device()
 
 
 
-bool sure(uint8_t x, uint8_t y)
+/*bool sure(uint8_t x, uint8_t y)
 {
     char c;
 
@@ -89,7 +89,7 @@ bool sure(uint8_t x, uint8_t y)
     cursor(0);
     cclearxy(x, y, 16);
     return c == 'y';
-}
+}*/
 
 
 void backup_to_disk(uint8_t device)

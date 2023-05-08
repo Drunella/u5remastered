@@ -29,6 +29,8 @@ void cart_bankout(void);
 void managesavegames(void);
 bool disk_save_file(uint8_t device, char *filename, uint16_t loadaddr, void *buffer, uint16_t length);
 
+void savegameeditor(void);
+bool sure(uint8_t x, uint8_t y);
 
 bool __fastcall__ loadgame_prtydata(void);
 bool __fastcall__ loadgame_slist(void);
@@ -44,5 +46,7 @@ void __fastcall__ IO_request_disk_char_entry(uint8_t disk);
 void __fastcall__ load_basicfiles(void);
 void __fastcall__ startupgame(uint8_t how);
 
+uint8_t __fastcall__ SYS_get_system(void);
+uint8_t __fastcall__ SYS_get_sid();
 
 #endif

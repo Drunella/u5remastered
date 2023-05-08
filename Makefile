@@ -30,7 +30,7 @@ export LD65_LIB=/opt/cc65/share/cc65/lib
 .SUFFIXES: .prg .s .c
 .PHONY: clean subdirs all easyflash mrproper
 
-EF_LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o
+EF_LOADER_FILES=build/ef/menu.o build/ef/loader.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
 EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
 

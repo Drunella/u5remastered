@@ -12,4 +12,7 @@
 # music bank
 18 f music_rom.aprg addr 0x8000
 
+# editor bank
+46 f editor.aprg addr 0xa000
+
 # automatic additions

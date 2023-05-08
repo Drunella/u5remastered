@@ -22,7 +22,6 @@
 
 #include <stdbool.h>
 #include <conio.h>
-// #include <peekpoke.h>
 
 #include "menu_include.h"
 
@@ -52,6 +51,7 @@ void main(void)
     //  initialize_basic files: eapi, exocrunch for later
     load_basicfiles();
     
+restart:
     repaint = true;
     bgcolor(COLOR_BLACK);
     bordercolor(COLOR_BLACK);
@@ -70,6 +70,8 @@ void main(void)
             menu_option('J', "Journey Onward");
             cputs("\r\n");
             menu_option('S', "Manage savegames");
+            cputs("\r\n");
+            menu_option('E', "Savegame editor");
             cputs("\r\n");
             menu_option('Q', "Quit to basic");
             draw_version();
@@ -92,6 +94,12 @@ void main(void)
         case 's':
             repaint = true;
             managesavegames();
+            break;
+
+        case 'e':
+            repaint = true;
+            savegameeditor();
+            goto restart;
             break;
         
         case 'q':

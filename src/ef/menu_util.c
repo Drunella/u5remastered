@@ -23,36 +23,16 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "menu_include.h"
 
 #define MENU_START 13
 
 
-uint8_t version[2] = {
+uint8_t version[3] = {
 #include "../../version.txt"
 };
-
-
-uint8_t get_version_major(void)
-{
-    return version[0];
-}
-
-uint8_t get_version_minor(void)
-{
-    return version[1];
-}
-
-
-void draw_version(void)
-{
-    char text[8];
-    uint8_t n;
-
-    n = sprintf(text, "v%d.%d", get_version_major(), get_version_minor());
-    cputsxy(39-n, 24, text);
-}
 
 
 void clear_menu(void)
@@ -133,4 +113,81 @@ bool disk_save_file(uint8_t device, char *filename, uint16_t loadaddr, void *buf
 
     cbm_close(1);
     return true;
+}
+
+
+#pragma code-name ("EDITOR")
+#pragma rodata-name ("ROEDITOR")
+
+
+bool sure(uint8_t x, uint8_t y)
+{
+    char c;
+
+    textcolor(COLOR_GRAY2);
+    cputsxy(x, y, "Are you sure? ");
+    cursor(1);
+    c = cgetc();
+    cursor(0);
+    cclearxy(x, y, 16);
+    return c == 'y';
+}
+
+
+uint8_t get_version_major(void)
+{
+    return version[0];
+}
+
+uint8_t get_version_minor(void)
+{
+    return version[1];
+}
+
+uint8_t get_version_patch()
+{
+    return version[2];
+}
+
+
+char* get_system_string()
+{
+    uint8_t s = SYS_get_system();
+    switch(s) {
+        case 0: return "EU-PAL"; break;
+        case 1: return "NTSC-old"; break;
+        case 2: return "PAL-N"; break;
+        case 3: return "NTSC-new"; break;
+        default: return "Unknown"; break;
+    }
+}
+
+char* get_sid_string()
+{
+    uint8_t s = SYS_get_sid();
+    switch(s) {
+        case 1: return "SID6581"; break;
+        case 2: return "SID8580"; break;
+        default: return ""; break;
+    }
+}
+
+
+void draw_version(void)
+{
+    char text[8];
+    uint8_t n;
+    char* system;
+
+    system = get_system_string();
+    cputsxy(0, 24, system);
+    cputs(" C64");
+    system = get_sid_string();
+    if (strlen(system) > 0) {
+        cputs(", ");
+        cputs(system);
+    }
+
+    n = sprintf(text, "v%d.%d.%d", get_version_major(), get_version_minor(), get_version_patch());
+    cputsxy(39-n, 24, text);
 }

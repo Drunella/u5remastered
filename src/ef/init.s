@@ -14,6 +14,8 @@
 ; limitations under the License.
 ; ----------------------------------------------------------------------------
 
+.feature c_comments
+
 .import __BOOTSTRAP_LOAD__
 .import __BOOTSTRAP_RUN__
 .import __BOOTSTRAP_SIZE__
@@ -24,8 +26,13 @@ EASYFLASH_LED     = $80
 EASYFLASH_16K     = $07
 EASYFLASH_KILL    = $04
 
+LOADER_BANK = 0
 LOADER_SOURCE = $8000
 LOADER_DEST = $2000
+
+EDITOR_BANK = $2e
+EDITOR_SOURCE = $A000
+EDITOR_DEST = $5000
 
 
 .segment "ULTIMAX_VECTORS"
@@ -59,12 +66,13 @@ LOADER_DEST = $2000
         bne wait
 
         ; copy the final start-up code to RAM (bottom of CPU stack)
-        ldx #<__BOOTSTRAP_SIZE__ - 1
+        ldx #<__BOOTSTRAP_SIZE__ 
     copy:
-        lda __BOOTSTRAP_LOAD__,x
-        sta __BOOTSTRAP_RUN__,x    
         dex
-        bpl copy
+        lda __BOOTSTRAP_LOAD__,x
+        sta __BOOTSTRAP_RUN__,x
+        txa
+        bne copy
         jmp bootstrap
 
     dummy:
@@ -133,6 +141,26 @@ LOADER_DEST = $2000
         inc bytecopy + 5  ; high byte of sta
         dey
         bne pagecopy
+
+        ; copy editor code, resides on 2e:1:0000 and start
+        lda #EDITOR_BANK
+        sta EASYFLASH_BANK
+
+        ldy #$20
+    pagecopy2:
+        ldx #$00
+    bytecopy2:
+        lda EDITOR_SOURCE + $0000, x
+        sta EDITOR_DEST   + $0000, x
+        dex
+        bne bytecopy2
+        inc bytecopy2 + 2  ; high byte of lda
+        inc bytecopy2 + 5  ; high byte of sta
+        dey
+        bne pagecopy2
+
+        lda #LOADER_BANK
+        sta EASYFLASH_BANK
 
         ; start
         jmp LOADER_DEST
