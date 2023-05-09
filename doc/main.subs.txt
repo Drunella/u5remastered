@@ -1940,19 +1940,20 @@ size=8189
   ||| |||   0x00005b91      aea85b         ldx 0x5ba8                  ; load index x with memory
   ||| |||   0x00005b94      aca95b         ldy 0x5ba9                  ; load index y with memory
   ||| |||   0x00005b97      60             rts                         ; return from subroutine
-  ||| |||   0x00005b98      6161           adc (0x61,x)                ; add memory to accumulator with carry
-  ||| |||   0x00005b9a      6161           adc (0x61,x)                ; add memory to accumulator with carry
-  ||| |||   0x00005b9c      6161           adc (0x61,x)                ; add memory to accumulator with carry
-  ||| |||   0x00005b9e      6170           adc (0x70,x)                ; add memory to accumulator with carry
-  ||| |||   0x00005ba0      60             rts                         ; return from subroutine
-  ||| |||   0x00005ba1      60             rts                         ; return from subroutine
-  ||| |||   0x00005ba2      60             rts                         ; return from subroutine
-  ||| |||   0x00005ba3      60             rts                         ; return from subroutine
-  |||,====< 0x00005ba4      1070           bpl 0x4ed108                ; branch on result plus
-  |||||||   0x00005ba6      60             rts                         ; return from subroutine
-  |||||||   0x00005ba7      60             rts                         ; return from subroutine
-  |||||||   0x00005ba8      00             brk              ; variable
-  |||||||   0x00005ba9      00             brk              ; variable
+  
+  ||| |||   0x00005b98      6161                                       ; add memory to accumulator with carry
+  ||| |||   0x00005b9a      6161                                       ; add memory to accumulator with carry
+  ||| |||   0x00005b9c      6161                                       ; add memory to accumulator with carry
+  ||| |||   0x00005b9e      6170                                       ; add memory to accumulator with carry
+  ||| |||   0x00005ba0      60                                         ; return from subroutine
+  ||| |||   0x00005ba1      60                                         ; return from subroutine
+  ||| |||   0x00005ba2      60                                         ; return from subroutine
+  ||| |||   0x00005ba3      60                                         ; return from subroutine
+  |||,====< 0x00005ba4      1070                                       ; branch on result plus
+  |||||||   0x00005ba6      60                                         ; return from subroutine
+  |||||||   0x00005ba7      60                                         ; return from subroutine
+  |||||||   0x00005ba8      00                              ; variable
+  |||||||   0x00005ba9      00                              ; variable (probably pressed key?)
 
   --------> 0x00005baa      20b05b         jsr 0x5bb0                  ; jump to new location saving return address
   ========< 0x00005bad      4c595a         jmp 0x5a59                  ; jump to new location
@@ -1964,7 +1965,8 @@ size=8189
   |||||||   0x00005bb7      a000           ldy #0x00                   ; load index y with memory
   |||||||   0x00005bb9      28             plp                         ; pull processor status from stack
   |||||||   0x00005bba      60             rts                         ; return from subroutine
-  --------> 0x00005bbb      20df5b         jsr 0x5bdf                  ; jump to new location saving return address
+  
+  --------> 0x00005bbb      20df5b         jsr 0x5bdf                  ; get keyboard or joytick input
   ========< 0x00005bbe      3017           bmi 0x4ed108                ; branch on result minus
   |||||||   0x00005bc0      20fa5c         jsr 0x5cfa                  ; jump to new location saving return address
   |||||||   0x00005bc3      a980           lda #0x80                   ; load accumulator with memory
@@ -1984,7 +1986,7 @@ size=8189
 0x4c4e: get keyboard or joystick input
   --------> 0x00005bdf      adae4c         lda 0x4cae                  ; load accumulator with memory
   ========< 0x00005be2      d027           bne 0x4ed108                ; branch on result not zero
-  |||||||   0x00005be4      ad00dc         lda 0xdc00       ; DC00 is joystick port a
+  |||||||   0x00005be4      ad00dc         lda 0xdc00       ; DC00 keyboard matrix (here for joystick)
   |||||||   0x00005be7      aa             tax                         ; transfer accumulator to index x
   |||||||   0x00005be8      2910           and #0x10                   ; "and" memory with accumulator
   ========< 0x00005bea      d016           bne 0x4ed108                ; branch on result not zero
@@ -2023,10 +2025,10 @@ size=8189
   |||||||   0x00005c2c      a988           lda #0x88                   ; load accumulator with memory
   ---`----> 0x00005c2e      a2ff           ldx #0xff                   ; load index x with memory
   ||| |`--> 0x00005c30      60             rts                         ; return from subroutine
-  ||| | |   0x00005c31      afc0bb         
-  ||| | |   0x00005c34      bfafc0         
+  ||| | |   0x00005c31      af c0 bb         
+  ||| | |   0x00005c34      bf af c0         
   ||| | |   0x00005c37      ba             
-  ||| | |   0x00005c38      bfafc0         
+  ||| | |   0x00005c38      bf af c0         
   ||| | |   0x00005c3b      00             
 
   ---.-.--> 0x00005c3c      20b05b         jsr 0x5bb0                  ; jump to new location saving return address

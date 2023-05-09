@@ -20,10 +20,10 @@ Main Memory Map
    F
 0x2000    bitmap screen
 0x3000    bitmap screen
-0x4000
-   1
+0x4000    (unknown data)
+   1      (unknown data)
    2      (unknown data)
-   3
+   3      [ef: temp area for main.twn]
    4      map
    5      map
    6      map
@@ -229,7 +229,7 @@ Cartridge Memory Map
 17:0:0000      (file data)
 17:1:0000      (file data)
 18:0:0000      (music rom)
-18:1:0000      
+18:1:0000      (music rom)
 19:0:0000      (block britannia)
 19:1:0000      (block underworld)
 20:0:0000      (block britannia)
@@ -288,7 +288,7 @@ Cartridge Memory Map
 45:0:0000      (savefiles)
 45:1:0000      (block dungeon)
 46:0:0000      (savefiles)
-46:1:0000      
+46:1:0000      (editor rom)
 47:0:0000      (savefiles)
 47:1:0000      (block map)
 

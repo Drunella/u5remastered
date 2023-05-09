@@ -88,7 +88,7 @@ LABEL { ADDR $7667; NAME "note_data_insert_high"; };
 
 
 # data segments
-SEGMENT { START $7219;  END   $7302; NAME "MUSIC_CONTROL"; };
+SEGMENT { START $7219;  END   $7302; NAME "MUSIC_TEMP"; };
 SEGMENT { START $7ba8;  END   $7bc3; NAME "MUSIC_CONTROL"; };
 
 # ram data block 1: 7219 - 7302
