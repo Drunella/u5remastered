@@ -1,8 +1,0 @@
-type = hex
-; at 0x76c6: replace 0x7d00 with 0x4300
-; use different temp area, use any main.twn
-filename = "0x43/main.twn"
-offset = 2
-address  = 0x1b19
-original = 007d
-new      = 0043

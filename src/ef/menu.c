@@ -22,7 +22,6 @@
 
 #include <stdbool.h>
 #include <conio.h>
-#include <string.h>
 
 #include "menu_include.h"
 
@@ -51,7 +50,6 @@ void main(void)
     
     //  initialize_basic files: eapi, exocrunch for later
     load_basicfiles();
-    memset(0x4300, 0xaa, 0x100);
     
 restart:
     repaint = true;
