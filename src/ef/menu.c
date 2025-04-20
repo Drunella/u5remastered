@@ -49,7 +49,7 @@ void main(void)
     static bool repaint;
     
     //  initialize_basic files: eapi, exocrunch for later
-    load_basicfiles();
+    initialize_game();
     
 restart:
     repaint = true;
@@ -83,12 +83,12 @@ restart:
         case ' ':
         case 'g':
             clear_menu();
-            startupgame(0); // does not return
+            startup_game(0); // does not return
             return;
         
         case 'j':
             clear_menu();
-            startupgame(1); // does not return
+            startup_game(1); // does not return
             break;
 
         case 's':

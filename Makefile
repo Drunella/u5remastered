@@ -58,11 +58,12 @@ build/%.o: build/%.s
 # ------------------------------------------------------------------------
 # easyflash
 
-EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
+#EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
+EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/io-data.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
 EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
-# easyflash config.bin
-build/ef/efs-config.bin: build/ef/efs-config.o src/ef/efs-config.cfg
+# easyflash config.prg
+build/ef/efs-config.prg: build/ef/efs-config.o src/ef/efs-config.cfg
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/efs-config.map -Ln ./build/ef/efs-config.lst -o $@ -C src/ef/efs-config.cfg c64.lib build/ef/efs-config.o
 
 # easyflash init.prg -> directly to cart
@@ -76,19 +77,20 @@ build/ef/loader.prg: build/ef/loader.o
 # easyflash menu.prg -> to efs
 build/ef/menu.prg: $(EF_MENU_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/menu.map -o $@ -C src/ef/menu.cfg c64.lib $(EF_MENU_FILES)
-	echo "0x41/io.add io.add" >> build/ef.f/files.list
+#	echo "0x41/menu menu" >> build/ef.f/files.list
+#	echo "0x41/io.add io.add" >> build/ef.f/files.list
 
 # music -> directly to cart
 build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
 # io-replacement ###
-build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o
+build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/io-data.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
 
-# io-addendum ###
-build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/ef/subs128-disassemble.o
-	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
+# io-addendum
+#build/ef/io-addendum.prg: build/ef/io-code.o build/ef/io-data.o build/ef/io-rw.o build/ef/subs128-disassemble.o
+#	$(LD65) $(LD65FLAGS) -o $@ -C ./src/ef/io-addendum.cfg $^
 
 # transfer-load
 build/ef/transfer-load.prg build/ef/transfer-load.map: build/ef/transfer-load.o
@@ -101,11 +103,13 @@ build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info .
 	$(CA65) $(CA65FLAGS) -o ./build/ef/music-disassemble.o ./build/temp/music-disassemble.s
 
 # files with additional items
-build/ef.f/files.list: build/source/files.list build/ef/io-addendum.prg build/ef/music.prg
+build/ef.f/files.list: build/source/files.list build/ef/music.prg build/ef/menu.prg
 	cp ./build/source/* ./build/ef.f/
-	cp build/ef/io-addendum.prg build/ef.f/io.add.prg
+	#cp build/ef/io-addendum.prg build/ef.f/io.add.prg
+	cp build/ef/menu.prg build/ef.f/menu.prg
 	cp build/ef/music.prg build/ef.f/music.prg
-	echo "0x41/io.add io.add" >> build/ef.f/files.list
+	#echo "0x41/io.add io.add" >> build/ef.f/files.list
+	echo "0x41/menu menu" >> build/ef.f/files.list
 	echo "0x41/music music" >> build/ef.f/files.list
 
 # disassemble subs.128.prg
@@ -129,7 +133,7 @@ build/ef/crt.blocks.map: build/ef.f/files.list
 	tools/mkblocks.py -v -o ./src/disks.cfg -b ./src/ef/block.map -f ./build/ef.f -m ./build/ef/crt.blocks.map -d ./build/ef
 
 # cartridge binary
-build/ef/u5remastered.bin: build/ef/directory.data.prg build/ef/files.data.prg build/ef/lib-efs.prg build/ef/init.prg build/ef/loader.prg src/ef/eapi-am29f040.prg build/ef/crt.blocks.map build/ef/music_rom.aprg build/ef/efs-config.bin
+build/ef/u5remastered.bin: build/ef/directory.data.prg build/ef/files.data.prg build/ef/init.prg build/ef/loader.prg src/ef/eapi-am29f040.prg build/ef/crt.blocks.map build/ef/music_rom.aprg build/ef/efs-config.prg src/ef/lib-efs.prg
 	cp ./src/ef/crt.map ./build/ef/crt.map
 	cp ./src/ef/eapi-am29f040.prg ./build/ef/eapi-am29f040.prg
 	cp ./src/ef/lib-efs.prg ./build/ef/lib-efs.prg

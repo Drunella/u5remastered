@@ -2,14 +2,12 @@
 0 f lib-efs.prg addr 0x8000
 0 f init.prg addr 0xbf00
 0 f eapi-am29f040.prg addr 0xb800
-0 a efs-config.bin addr 0xbb00
+0 f efs-config.prg addr 0xbb00
 0 f loader.prg addr 0xbc00
 
 # data and dictionary
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
 
-# music bank ###
-18 f music_rom.aprg addr 0x8000
-
-# automatic additions
+# music bank
+26 f music_rom.aprg addr 0x8000

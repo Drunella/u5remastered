@@ -43,8 +43,8 @@ bool __fastcall__ savegame_roster(void);
 
 void __fastcall__ IO_request_disk_char_entry(uint8_t disk);
 
-void __fastcall__ load_basicfiles(void);
-void __fastcall__ startupgame(uint8_t how);
+void __fastcall__ initialize_game(void);
+void __fastcall__ startup_game(uint8_t how);
 
 uint8_t __fastcall__ SYS_get_system(void);
 uint8_t __fastcall__ SYS_get_sid();

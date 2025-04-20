@@ -87,7 +87,7 @@
 
         ; eapi / minieapi
 ;        jsr EFS_init_minieapi
-        lda #$cd
+        lda #$78  ; see memory.txt
         jsr EFS_init_eapi
 
         lda #$36
@@ -97,7 +97,7 @@
 
         ; load menu
         lda #$01  ; channel (only 15 matters)
-        ldy #$00  ; secondary address: relocate load
+        ldy #$01  ; secondary address: relocate load
         jsr EFS_setlfs
         lda #menu_name_length
         ldx #<menu_name
@@ -109,81 +109,8 @@
         jsr EFS_load
         
     startup:
-        jmp $0800
+        jmp $2000
 
-
-/*    init_loader_blank_body:
-        ; load segment LOADER
-        lda #<__LOADER_LOAD__
-        sta source_address_low
-        lda #>__LOADER_LOAD__
-        sta source_address_high
-        lda #<__LOADER_RUN__
-        sta destination_address_low
-        lda #>__LOADER_RUN__
-        sta destination_address_high
-        lda #<__LOADER_SIZE__
-        sta bytes_to_copy_low
-        lda #>__LOADER_SIZE__
-        sta bytes_to_copy_high
-        jsr copy_segment
-
-        ; load eapi
-        lda #>__EAPI_START__
-        jsr _load_eapi
-
-        ; load wrapper (IO_WRAPPER)
-        lda #<__IO_WRAPPER_LOAD__
-        sta source_address_low
-        lda #>__IO_WRAPPER_LOAD__
-        sta source_address_high
-        lda #<__IO_WRAPPER_RUN__
-        sta destination_address_low
-        lda #>__IO_WRAPPER_RUN__
-        sta destination_address_high
-        lda #<__IO_WRAPPER_SIZE__
-        sta bytes_to_copy_low
-        lda #>__IO_WRAPPER_SIZE__
-        sta bytes_to_copy_high
-        jsr copy_segment
-
-        rts
-*/
-/*
-    copy_segment:
-        lda bytes_to_copy_low
-        beq copy_segment_loop
-        inc bytes_to_copy_high
-    copy_segment_loop:
-    source_address_low = source_address + 1
-    source_address_high = source_address + 2
-    source_address:
-        lda $ffff
-    destination_address_low = destination_address + 1
-    destination_address_high = destination_address + 2
-    destination_address:
-        sta $ffff
-        ; increase source
-        inc source_address_low
-        bne :+
-        inc source_address_high
-    :   ; increase destination
-        inc destination_address_low
-        bne :+
-        inc destination_address_high
-    :   ; decrease size
-        dec bytes_to_copy_low
-        bne copy_segment_loop
-        dec bytes_to_copy_high
-        bne copy_segment_loop
-        rts
-
-
-    bytes_to_copy_low:
-         .byte $ff
-    bytes_to_copy_high:
-         .byte $ff
-*/
 
     loader_text:
         .byte $0c, $0f, $01, $04, $09, $0e, $07, $2e, $2e, $2e  ; "loading..."
@@ -192,7 +119,7 @@
 
 
     menu_name:
-        .byte $4d, $45, $4e, $55  ; "MENU"
+        .byte $41, $4d, $45, $4e, $55  ; "AMENU"
     menu_name_end:
     menu_name_length = menu_name_end - menu_name
 

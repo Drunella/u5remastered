@@ -25,8 +25,8 @@
 .import _IO_load_file_entry
 .import _music_init_impl
 
-.export _load_basicfiles
-.export _startupgame
+.export _initialize_game
+.export _startup_game
 
 
 
@@ -37,7 +37,7 @@
     ; will never return
     ; void __fastcall__ startupgame(uint8_t how);
     ; how == 1 then quick start
-    _startupgame:
+    _startup_game:
         ; we will never return, reset stack
         ldx #$ff  ;
         txs
@@ -106,8 +106,8 @@
         ;lda #$01    ; store ultima 5 drive setting selection (selected 1, 1541 or 1571) -> we hopefully do not need a drive
         ;sta $b000
 
-        ; initialize loader
-        jsr _load_basicfiles
+        ; initialize other stuff
+        jsr _initialize_game
 
         ; now bank out and set memory
         lda #EASYFLASH_KILL
@@ -121,12 +121,11 @@
         .byte $54, $45, $4d, $50, $2e, $53, $55, $42, $53, $00  ; "TEMP.SUBS"
 
         ; load io.add
-        ldx #$00    ; return after load
-        jsr _IO_load_file_entry
-        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
+;        ldx #$00    ; return after load
+;        jsr _IO_load_file_entry
+;        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
 
-        ; load here music
-        ; maybe I find a way to play music on c64
+        ; load music
         ldx #$00    ; return after load
         jsr _IO_load_file_entry
         .byte $4d, $55, $53, $49, $43, $00  ; "MUSIC"
@@ -188,7 +187,7 @@
 ;    exrom_routines_end:  ; $0123
 
 
-    _load_basicfiles:
+    _initialize_game:
 ;        ; copy bankin / bank out
 ;        ldx #(exrom_routines_end - exrom_routines)
 ;    @repeat:
@@ -204,60 +203,60 @@
         sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
         ; switch to bank 0
-        lda #$00
-        sta $de00
+;        lda #$00
+;        sta $de00
 
         ; copy code
-        ldx #$00
-        ; eapi
-    :   lda EAPI_SOURCE + $0000, x
-        sta EAPI_DESTINATION + $0000, x
-        lda EAPI_SOURCE + $0100, x
-        sta EAPI_DESTINATION + $0100, x
-        lda EAPI_SOURCE + $0200, x
-        sta EAPI_DESTINATION + $0200, x
+;        ldx #$00
+;        ; eapi
+;    :   lda EAPI_SOURCE + $0000, x
+;        sta EAPI_DESTINATION + $0000, x
+;        lda EAPI_SOURCE + $0100, x
+;        sta EAPI_DESTINATION + $0100, x
+;        lda EAPI_SOURCE + $0200, x
+;        sta EAPI_DESTINATION + $0200, x
 
-        ; exomizer
-        lda EXO_SOURCE, x
-        sta EXO_DESTINATION, x
+;        ; exomizer
+;        lda EXO_SOURCE, x
+;        sta EXO_DESTINATION, x
 
-        dex
-        bne :-
+;        dex
+;        bne :-
 
         ; initialize eapi
-        jsr EAPIInit
+;        jsr EAPIInit
 
         ; prepare directory entry io area
-        ldy #$18
-        lda #$00
-    :   dey
-        sta requested_disk, y
-        bne :-
+;        ldy #$18
+;        lda #$00
+;    :   dey
+;        sta requested_disk, y
+;        bne :-
 
         lda #$41
         sta requested_disk
 
-        lda #$62   ; prg with roml only
-        sta save_files_flags
+;        lda #$62   ; prg with roml only
+;        sta save_files_flags
 
-        lda #$42   ; 'B'
-        sta read_block_filename
-        lda #$4c   ; 'L'
-        sta read_block_filename+1
-        lda #$4f   ; 'O'
-        sta read_block_filename+2
-        lda #$43   ; 'C'
-        sta read_block_filename+3
-        lda #$4b   ; 'K'
-        sta read_block_filename+4
-        lda #$53   ; 'S'
-        sta read_block_filename+5
-        lda #$0   ; '\0'
-        sta read_block_filename+6
+;        lda #$42   ; 'B'
+;        sta read_block_filename
+;        lda #$4c   ; 'L'
+;        sta read_block_filename+1
+;        lda #$4f   ; 'O'
+;        sta read_block_filename+2
+;        lda #$43   ; 'C'
+;        sta read_block_filename+3
+;        lda #$4b   ; 'K'
+;        sta read_block_filename+4
+;        lda #$53   ; 'S'
+;        sta read_block_filename+5
+;        lda #$0   ; '\0'
+;        sta read_block_filename+6
 
         ; now bank out but do not set memory
         lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
+        sta EASYFLASH_CONTROL
         lda #$07
         sta $01
 
