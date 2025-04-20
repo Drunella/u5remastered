@@ -220,11 +220,14 @@ def main(argv):
         name["type"] = 0x60|0x01   # normal prg file with start address
         #pprint.pprint(name)
         if name["name"] in excludes_list:
-            #print("excluding " + name["name"])
+            print("excluding from directory " + name["name"])
             continue
-        content = load_file(os.path.join(files_path, fi + "." + args.fileending))
+        filename = os.path.join(files_path, fi + "." + args.fileending)
+        content = load_file(filename)
         entry = efs_makefileentry(fi, content)
         efs_makedirentry(name, entry)
+        print("adding to directory " + name["name"] + " (" + filename + ")")
+        
         #print("detail:" + detail[0] + " " + detail[1] + " f:" + f)
 
     # add blocks file

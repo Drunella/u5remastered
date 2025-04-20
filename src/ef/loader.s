@@ -1,5 +1,5 @@
 ; ----------------------------------------------------------------------------
-; Copyright 2019 Drunella
+; Copyright 2025 Drunella
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -14,257 +14,185 @@
 ; limitations under the License.
 ; ----------------------------------------------------------------------------
 
+
+.feature c_comments 
+
+
 .include "easyflash.i"
-.include "io.i"
-;.include "../io/io.exported.inc"
 
-.import read_block_filename
-.import save_files_flags
-.import requested_disk
 
-.import _IO_load_file_entry
-.import _music_init_impl
+.import __LOADER_LOAD__
+.import __LOADER_RUN__
+.import __LOADER_SIZE__
 
-.export _load_basicfiles
-.export _startupgame
+;.import __IO_WRAPPER_LOAD__
+;.import __IO_WRAPPER_RUN__
+;.import __IO_WRAPPER_SIZE__
+
+.import __EAPI_START__
+
+
+.import _load_eapi
+;.import _wrapper_setnam
+;.import _wrapper_load
+;.import _wrapper_save
+
+
+;.export _init_loader
+;.export _init_loader_blank
+
+
+.segment "LOADER_CALL"
+
+    _init_loader:
+        ; void __fastcall__ init_loader(void);
+        jmp init_loader_body
+
+/*    _init_loader_blank:
+        ; void __fastcall__ init_loader_blank(void);
+        jmp init_loader_blank_body*/
 
 
 
 .segment "LOADER"
 
-    ; initialize and load everything
-    ; mostly copied from xyzzy.prg from ultima 5 osi disk
-    ; will never return
-    ; void __fastcall__ startupgame(uint8_t how);
-    ; how == 1 then quick start
-    _startupgame:
-        ; we will never return, reset stack
-        ldx #$ff  ;
-        txs
+    init_loader_body:
+        ; lower character mode
+        lda #$17
+        sta $d018
 
-        ; put how to load on stack
-        pha
+        lda $d011  ; enable output
+        ora #$10
+        sta $d011
 
-        ; Maximum length of keyboard buffer.
-        lda #$04
-        sta $0289
-        sta $0a20  ; ?
-
-        ; fill non-bankable routines with rts
-        lda #$60
-        sta $0126
-        sta $0129
-
-        ; Keyboard repeat switch. Bits: 11101011
-        lda #$eb
-        sta $028a
-
-        ; c128 mmu check could be omitted
-        ; 0b00001110, IO, kernal, RAM0. 48K RAM
-        ;lda #$0e
-        ;sta $ff00
-        ;lda #$00
-
-        ; initialize vars
-        lda #$00   ; load accumulator with memory
-        sta $37    ; ???
-        sta $c8    ; is not c128
-        ;sta $79    ; music off
-        sta $71    ; ???
-        sec
-        ror $78    ; ???
-
-        lda #$80
-        sta $79    ; music on
-
-        ; check if this is a c128 (value $4c at this address) -> it should not
-        ;lda #$4c
-        ;cmp $c024
-
-        ; memory mapping 0b00000110, io visible, no basic, kernal   
-        ;lda #$06
-        ;sta $01
-        
-        ; restore / set vectors
-        sei
-        lda #$83    ; Execution address of BASIC idle loop. ???
-        sta $0302   ; default 0xa483
-        lda #$a4         
-        sta $0303        
-        
-        lda #$48    ; Execution address of routine that, based on the status of shift keys     ???
-        sta $028f   ; sets the pointer at memory address $00F5-$00F6 to the appropriate
-        lda #$eb    ; conversion table for converting keyboard matrix codes to PETSCII codes.
-        sta $0290   ; default 0xeb48
-        
-        lda #$a5    ; Execution address of LOAD, routine loading files.
-        sta $0330   ; default 0xf4a5
-        lda #$f4    ; no fast loader
-        sta $0331
-        cli
-        
-        ;lda #$01    ; store ultima 5 drive setting selection (selected 1, 1541 or 1571) -> we hopefully do not need a drive
-        ;sta $b000
-
-        ; initialize loader
-        jsr _load_basicfiles
-
-        ; now bank out and set memory
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
-        lda #$06
-        sta $01
-
-        ; load temp.subs
-        ldx #$00    ; return after load
-        jsr _IO_load_file_entry
-        .byte $54, $45, $4d, $50, $2e, $53, $55, $42, $53, $00  ; "TEMP.SUBS"
-
-        ; load io.add
-        ldx #$00    ; return after load
-        jsr _IO_load_file_entry
-        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
-
-        ; load here music
-        ; maybe I find a way to play music on c64
-        ldx #$00    ; return after load
-        jsr _IO_load_file_entry
-        .byte $4d, $55, $53, $49, $43, $00  ; "MUSIC"
-
-        ; and init interrupt handler
-        jsr _music_init_impl
-
-        ; Execution address of non-maskable interrupt service routine to 039e (single rti)
-        ; set Execution address of interrupt service routine to 0x0380
-        ; both done in music
-
-        ; load startup.prg or qs.prg, depending on parameter pressed
-        pla         ; how to load is on stack
-        cmp #$01
-        bne @regular
-        ldx #$01    ; jump to 0x8000 after load
-        jsr _IO_load_file_entry
-        .byte $51, $53, $00  ; ; "QS"
-    @regular:
-        ldx #$00    ; return after load
-        jsr _IO_load_file_entry
-        .byte $53, $54, $2a, $00  ; "ST*"
-        jmp $8000
-
-
-;    irq_routine:
-;        ; probably need to take care of bank in/out ###
-;        pha
-;        txa
-;        pha
-;        tya
-;        pha
-;        lda $ff00  ; c128 mmu ### not necessary
-;        pha
-;        jsr $6c03  ; set memory banking: set kernal and io visible
-;        jsr $ff9f  ; ROM_SCNKEY - scan keyboard, matrix code $cb, shift key $028d, keys in keyboard buffer
-;        lda $dc0d  ; CIA1: CIA Interrupt Control Register
-;        jsr $6c06  ; set memory banking: set ram visible in all areas
-;        pla        
-;        sta $ff00  ; c128 mmu ### not necessary
-;        pla
-;        tay
-;        pla
-;        tax
-;        pla
-;        rti
-;    irq_routine_end:
-;        nop
-
-;    exrom_routines:  ; (14 bytes)
-;        .byte $00
-;        sei
-;        sta $0115
-;        sta $de02
-;        cli
-;        rts
-;        lda $0115
-;        rts
-;    exrom_routines_end:  ; $0123
-
-
-    _load_basicfiles:
-;        ; copy bankin / bank out
-;        ldx #(exrom_routines_end - exrom_routines)
-;    @repeat:
-;        lda exrom_routines, x
-;        sta $0115, x
-;        dex
-;        bpl @repeat
-
-        ; bank in 16k mode
-        lda #$07
-        sta $01
-        lda #EASYFLASH_LED | EASYFLASH_16K
-        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
-
-        ; switch to bank 0
-        lda #$00
-        sta $de00
-
-        ; copy code
+        ; write loading...
         ldx #$00
-        ; eapi
-    :   lda EAPI_SOURCE + $0000, x
-        sta EAPI_DESTINATION + $0000, x
-        lda EAPI_SOURCE + $0100, x
-        sta EAPI_DESTINATION + $0100, x
-        lda EAPI_SOURCE + $0200, x
-        sta EAPI_DESTINATION + $0200, x
-
-        ; exomizer
-        lda EXO_SOURCE, x
-        sta EXO_DESTINATION, x
-
-        dex
+    :   lda loader_text, x
+        sta $07e8 - loader_text_len, x  ; write text
+        lda #$0c  ; COLOR_GRAY2
+        sta $dbe8 - loader_text_len, x  ; write color
+        inx
+        cpx #loader_text_len
         bne :-
 
-        ; initialize eapi
-        jsr EAPIInit
-
-        ; prepare directory entry io area
-        ldy #$18
-        lda #$00
-    :   dey
-        sta requested_disk, y
-        bne :-
-
-        lda #$41
-        sta requested_disk
-
-        lda #$62   ; prg with roml only
-        sta save_files_flags
-
-        lda #$42   ; 'B'
-        sta read_block_filename
-        lda #$4c   ; 'L'
-        sta read_block_filename+1
-        lda #$4f   ; 'O'
-        sta read_block_filename+2
-        lda #$43   ; 'C'
-        sta read_block_filename+3
-        lda #$4b   ; 'K'
-        sta read_block_filename+4
-        lda #$53   ; 'S'
-        sta read_block_filename+5
-        lda #$0   ; '\0'
-        sta read_block_filename+6
-
-        ; now bank out but do not set memory
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
-        lda #$07
+        ; load efs
+        lda #$37
         sta $01
+        lda #$87   ; led, 16k mode
+        sta $de02
+        lda #$00   ; EFSLIB_ROM_BANK
+        sta $de00
+        jsr EFS_init
+        ; bcs error ###
 
-        ; set music return calls
-        lda #$60   ; opcode rts
-        sta $0123
-        sta $0126
-        sta $0129
+        ; eapi / minieapi
+;        jsr EFS_init_minieapi
+        lda #$cd
+        jsr EFS_init_eapi
+
+        lda #$36
+        sta $01
+        lda #$04   ; easyflash off
+        sta $de02
+
+        ; load menu
+        lda #$01  ; channel (only 15 matters)
+        ldy #$00  ; secondary address: relocate load
+        jsr EFS_setlfs
+        lda #menu_name_length
+        ldx #<menu_name
+        ldy #>menu_name
+        jsr EFS_setnam
+        ldx #$00
+        ldy #$08
+        lda #$00  ; load to x/y
+        jsr EFS_load
+        
+    startup:
+        jmp $0800
+
+
+/*    init_loader_blank_body:
+        ; load segment LOADER
+        lda #<__LOADER_LOAD__
+        sta source_address_low
+        lda #>__LOADER_LOAD__
+        sta source_address_high
+        lda #<__LOADER_RUN__
+        sta destination_address_low
+        lda #>__LOADER_RUN__
+        sta destination_address_high
+        lda #<__LOADER_SIZE__
+        sta bytes_to_copy_low
+        lda #>__LOADER_SIZE__
+        sta bytes_to_copy_high
+        jsr copy_segment
+
+        ; load eapi
+        lda #>__EAPI_START__
+        jsr _load_eapi
+
+        ; load wrapper (IO_WRAPPER)
+        lda #<__IO_WRAPPER_LOAD__
+        sta source_address_low
+        lda #>__IO_WRAPPER_LOAD__
+        sta source_address_high
+        lda #<__IO_WRAPPER_RUN__
+        sta destination_address_low
+        lda #>__IO_WRAPPER_RUN__
+        sta destination_address_high
+        lda #<__IO_WRAPPER_SIZE__
+        sta bytes_to_copy_low
+        lda #>__IO_WRAPPER_SIZE__
+        sta bytes_to_copy_high
+        jsr copy_segment
 
         rts
+*/
+/*
+    copy_segment:
+        lda bytes_to_copy_low
+        beq copy_segment_loop
+        inc bytes_to_copy_high
+    copy_segment_loop:
+    source_address_low = source_address + 1
+    source_address_high = source_address + 2
+    source_address:
+        lda $ffff
+    destination_address_low = destination_address + 1
+    destination_address_high = destination_address + 2
+    destination_address:
+        sta $ffff
+        ; increase source
+        inc source_address_low
+        bne :+
+        inc source_address_high
+    :   ; increase destination
+        inc destination_address_low
+        bne :+
+        inc destination_address_high
+    :   ; decrease size
+        dec bytes_to_copy_low
+        bne copy_segment_loop
+        dec bytes_to_copy_high
+        bne copy_segment_loop
+        rts
+
+
+    bytes_to_copy_low:
+         .byte $ff
+    bytes_to_copy_high:
+         .byte $ff
+*/
+
+    loader_text:
+        .byte $0c, $0f, $01, $04, $09, $0e, $07, $2e, $2e, $2e  ; "loading..."
+    loader_text_end:
+    loader_text_len = loader_text_end - loader_text
+
+
+    menu_name:
+        .byte $4d, $45, $4e, $55  ; "MENU"
+    menu_name_end:
+    menu_name_length = menu_name_end - menu_name
+

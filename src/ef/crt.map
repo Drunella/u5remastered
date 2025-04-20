@@ -1,18 +1,15 @@
-# loader, init, exomizer and eapi
-0 f loader.prg addr 0x8000
+# loader, init, config libefs and eapi
+0 f lib-efs.prg addr 0x8000
 0 f init.prg addr 0xbf00
 0 f eapi-am29f040.prg addr 0xb800
-0 f ef-name.bin addr 0xbb00
-0 f exodecrunch.prg addr 0xbc00
+0 a efs-config.bin addr 0xbb00
+0 f loader.prg addr 0xbc00
 
 # data and dictionary
 0 f directory.data.prg addr 0xa000
 1 f files.data.prg addr 0x8000
 
-# music bank
+# music bank ###
 18 f music_rom.aprg addr 0x8000
-
-# editor bank
-46 f editor.aprg addr 0xa000
 
 # automatic additions

@@ -60,8 +60,26 @@ EAPISetSlot       = $df98
 EAPIGetSlot       = $df9b
 
 
-; efs struct
+; EFS lib
 
+EFS_init    = $8000
+EFS_init_minieapi = $8006
+EFS_init_eapi = $8003
+EFS_defragment = $8009
+EFS_format = $800c
+
+EFS_setlfs  = $DF00
+EFS_setnam  = $DF06
+EFS_load    = $DF0C
+EFS_open    = $DF12
+EFS_close   = $DF18
+EFS_chrin   = $DF1E
+EFS_readst  = $DF30
+EFS_save    = $DF24
+EFS_chrout  = $DF2A
+
+
+; efs struct
 .struct efs_directory
     .struct name
         .byte
@@ -90,4 +108,3 @@ EAPIGetSlot       = $df9b
     size_high .byte
     size_upper .byte
 .endstruct
-        

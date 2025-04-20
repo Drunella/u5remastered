@@ -1,5 +1,5 @@
 ; ----------------------------------------------------------------------------
-; Copyright 2019 Drunella
+; Copyright 2023 Drunella
 ; 
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
 ; limitations under the License.
 ; ----------------------------------------------------------------------------
 
-.feature c_comments
-
 .import __BOOTSTRAP_LOAD__
 .import __BOOTSTRAP_RUN__
 .import __BOOTSTRAP_SIZE__
+
+.import __LOADER_LOAD__
+.import __LOADER_RUN__
+.import __LOADER_SIZE__
 
 EASYFLASH_BANK    = $DE00
 EASYFLASH_CONTROL = $DE02
@@ -26,13 +28,9 @@ EASYFLASH_LED     = $80
 EASYFLASH_16K     = $07
 EASYFLASH_KILL    = $04
 
-LOADER_BANK = 0
-LOADER_SOURCE = $8000
-LOADER_DEST = $2000
-
-EDITOR_BANK = $2e
-EDITOR_SOURCE = $A000
-EDITOR_DEST = $5000
+LOADER_SOURCE = $bc00
+LOADER_DEST = $c000
+LOADER_START = $c000
 
 
 .segment "ULTIMAX_VECTORS"
@@ -65,14 +63,17 @@ EDITOR_DEST = $5000
         dex
         bne wait
 
+        lda $d011  ; disable output
+        and #$ef
+        sta $d011
+
         ; copy the final start-up code to RAM (bottom of CPU stack)
-        ldx #<__BOOTSTRAP_SIZE__ 
+        ldx #<__BOOTSTRAP_SIZE__ - 1
     copy:
-        dex
         lda __BOOTSTRAP_LOAD__,x
-        sta __BOOTSTRAP_RUN__,x
-        txa
-        bne copy
+        sta __BOOTSTRAP_RUN__,x    
+        dex
+        bpl copy
         jmp bootstrap
 
     dummy:
@@ -114,12 +115,22 @@ EDITOR_DEST = $5000
         and #$e0    ; only leave "Run/Stop", "Q" and "C="
         cmp #$e0
         bne kill    ; branch if one of these keys is pressed
-        
+ 
+        ; clear screen
+;        lda #$20
+;        ldx #$00
+;    :   sta $0400, x
+;        sta $0500, x
+;        sta $0600, x
+;        sta $0700, x
+;        dex
+;        bne :-
+
         ; c64 reset
         jsr $fda3  ; initialize i/o
         jsr $fd50  ; initialize memory
         jsr $fd15  ; set io vectors
-        jsr $ff5b  ; more init ; necesary?
+        jsr $ff5b  ; more init ; necessary?
         cli
 
         ; screen black again
@@ -128,13 +139,13 @@ EDITOR_DEST = $5000
         sta $d021
         sta $9d         ; no error messages
 
-        ; copy application code, resides on 00:0:0000 and start
-        ldy #$20
+        ; copy application code, resides on 00:1:bc00 and start
+        ldy #$03
     pagecopy:
         ldx #$00
     bytecopy:
-        lda LOADER_SOURCE + $0000, x
-        sta LOADER_DEST   + $0000, x
+        lda LOADER_SOURCE, x
+        sta LOADER_DEST, x
         dex
         bne bytecopy
         inc bytecopy + 2  ; high byte of lda
@@ -142,28 +153,9 @@ EDITOR_DEST = $5000
         dey
         bne pagecopy
 
-        ; copy editor code, resides on 2e:1:0000 and start
-        lda #EDITOR_BANK
-        sta EASYFLASH_BANK
-
-        ldy #$20
-    pagecopy2:
-        ldx #$00
-    bytecopy2:
-        lda EDITOR_SOURCE + $0000, x
-        sta EDITOR_DEST   + $0000, x
-        dex
-        bne bytecopy2
-        inc bytecopy2 + 2  ; high byte of lda
-        inc bytecopy2 + 5  ; high byte of sta
-        dey
-        bne pagecopy2
-
-        lda #LOADER_BANK
-        sta EASYFLASH_BANK
-
         ; start
-        jmp LOADER_DEST
+        jmp LOADER_START
+
 
     kill:
         lda #EASYFLASH_KILL
