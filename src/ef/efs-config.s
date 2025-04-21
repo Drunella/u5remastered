@@ -33,18 +33,17 @@
         .byte "libefs"
         .byte 0, 0, 0
 
-        .byte $03
+        .byte $03  ; 3 areas, rw possible
         ;    bank  dir  bank files size
         ;           hi        hi
-        .byte $00, $a0, $01, $80,   0  ; area 0: bank 0, $a000, mode lhlh, ignore size
-        .byte  56, $80,  32, $80,   8  ; area 1: lower banks of 65536 bytes
-        .byte  56, $a0,  48, $80,   8  ; area 2: upper banks of 65536 bytes
-        .byte $00                      ; defragment warning: no
+        .byte $00, $a0, $01, $80,  0, $d0  ; area 0: bank 0, $a000, mode lhlh, ignore size
+        .byte  56, $80,  56, $80,  8, $b0  ; area 1: lower banks of 65536 bytes
+        .byte  56, $a0,  56, $a0,  8, $d4  ; area 2: upper banks of 65536 bytes
+        .byte $00                          ; defragment warning: no
         .addr __EFS_CONFIG_RUN__ + efs_defragment_warning_offset
         .addr __EFS_CONFIG_RUN__ + efs_defragment_allclear_offset
         .byte $00, $00, $00, $00  ; unused
-        .byte $00, $00, $00, $00  ; unused
-        .byte $00, $00            ; unused
+        .byte $00, $00, $00       ; unused
 
     efs_config_size = * - efs_config
     .if efs_config_size <> 40

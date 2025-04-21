@@ -1,5 +1,5 @@
 ; ----------------------------------------------------------------------------
-; Copyright 2019 Drunella
+; Copyright 2025 Drunella
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
 ; you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 .include "easyflash.i"
 .include "io.i"
-;.include "../io/io.exported.inc"
 
 .import read_block_filename
 .import save_files_flags
-.import requested_disk
 
 .import _IO_load_file_entry
 .import _music_init_impl
@@ -120,11 +118,6 @@
         jsr _IO_load_file_entry
         .byte $54, $45, $4d, $50, $2e, $53, $55, $42, $53, $00  ; "TEMP.SUBS"
 
-        ; load io.add
-;        ldx #$00    ; return after load
-;        jsr _IO_load_file_entry
-;        .byte $49, $4f, $2e, $41, $44, $44, $00  ; ; "IO.ADD"
-
         ; load music
         ldx #$00    ; return after load
         jsr _IO_load_file_entry
@@ -151,108 +144,15 @@
         jmp $8000
 
 
-;    irq_routine:
-;        ; probably need to take care of bank in/out ###
-;        pha
-;        txa
-;        pha
-;        tya
-;        pha
-;        lda $ff00  ; c128 mmu ### not necessary
-;        pha
-;        jsr $6c03  ; set memory banking: set kernal and io visible
-;        jsr $ff9f  ; ROM_SCNKEY - scan keyboard, matrix code $cb, shift key $028d, keys in keyboard buffer
-;        lda $dc0d  ; CIA1: CIA Interrupt Control Register
-;        jsr $6c06  ; set memory banking: set ram visible in all areas
-;        pla        
-;        sta $ff00  ; c128 mmu ### not necessary
-;        pla
-;        tay
-;        pla
-;        tax
-;        pla
-;        rti
-;    irq_routine_end:
-;        nop
-
-;    exrom_routines:  ; (14 bytes)
-;        .byte $00
-;        sei
-;        sta $0115
-;        sta $de02
-;        cli
-;        rts
-;        lda $0115
-;        rts
-;    exrom_routines_end:  ; $0123
-
-
     _initialize_game:
-;        ; copy bankin / bank out
-;        ldx #(exrom_routines_end - exrom_routines)
-;    @repeat:
-;        lda exrom_routines, x
-;        sta $0115, x
-;        dex
-;        bpl @repeat
-
         ; bank in 16k mode
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
-        ; switch to bank 0
-;        lda #$00
-;        sta $de00
-
-        ; copy code
-;        ldx #$00
-;        ; eapi
-;    :   lda EAPI_SOURCE + $0000, x
-;        sta EAPI_DESTINATION + $0000, x
-;        lda EAPI_SOURCE + $0100, x
-;        sta EAPI_DESTINATION + $0100, x
-;        lda EAPI_SOURCE + $0200, x
-;        sta EAPI_DESTINATION + $0200, x
-
-;        ; exomizer
-;        lda EXO_SOURCE, x
-;        sta EXO_DESTINATION, x
-
-;        dex
-;        bne :-
-
-        ; initialize eapi
-;        jsr EAPIInit
-
-        ; prepare directory entry io area
-;        ldy #$18
-;        lda #$00
-;    :   dey
-;        sta requested_disk, y
-;        bne :-
-
-        lda #$41
-        sta requested_disk
-
-;        lda #$62   ; prg with roml only
-;        sta save_files_flags
-
-;        lda #$42   ; 'B'
-;        sta read_block_filename
-;        lda #$4c   ; 'L'
-;        sta read_block_filename+1
-;        lda #$4f   ; 'O'
-;        sta read_block_filename+2
-;        lda #$43   ; 'C'
-;        sta read_block_filename+3
-;        lda #$4b   ; 'K'
-;        sta read_block_filename+4
-;        lda #$53   ; 'S'
-;        sta read_block_filename+5
-;        lda #$0   ; '\0'
-;        sta read_block_filename+6
+        ; work banked in
+        ; ###
 
         ; now bank out but do not set memory
         lda #EASYFLASH_KILL

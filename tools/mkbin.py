@@ -114,7 +114,7 @@ def process(e):
                 raise Exception("must give address for non prg file")
             address = value
         bin_placedata(data, bank, address)
-        return address
+        return (bank,address)
     elif type == "a":
         # set binary file without load address
         # address must be given
@@ -126,7 +126,7 @@ def process(e):
         data[0] = value % 256
         data[1] = value // 256
         bin_placedata(data, bank, address)
-        return address
+        return (bank,address)
     else:
         raise Exception("unknown type " + type)
 
@@ -158,7 +158,7 @@ def main(argv):
         for e in map:
             a = process(e)
             if args.verbose:
-                print("included: {0} at ${1:04x}".format(e[2], a))
+                print("included: {0} at {2:d}:${1:04x}".format(e[2], a[1], a[0]))
 
     bin_write(args.outputfile)
     
