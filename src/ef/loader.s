@@ -29,7 +29,7 @@
 ;.import __IO_WRAPPER_RUN__
 ;.import __IO_WRAPPER_SIZE__
 
-.import __EAPI_START__
+;.import __EAPI_START__
 
 
 .import _load_eapi
@@ -87,7 +87,7 @@
 
         ; eapi / minieapi
 ;        jsr EFS_init_minieapi
-        lda #$78  ; see memory.txt
+        lda #>EAPI_DESTINATION  ; see memory.txt
         jsr EFS_init_eapi
 
         lda #$36

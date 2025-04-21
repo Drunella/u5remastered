@@ -78,6 +78,11 @@
 .export _IO_read_block_alt_entry
 
 ; imports
+.import name_address_low
+.import name_address_high
+.import name_length
+
+; imports
 ;.import EXO_decrunch
 ;.import load_prg
 ;.import load_block
@@ -128,43 +133,39 @@
     _IO_load_file_entry:
         stx requested_loadmode
         jsr $0126  ; sound off
+        sei        ; no interrupts
 
-        ; load return address to copy opcode
+        ; EFS_setlfs: load to loadable address
+        ldy #$01
+        jsr EFS_setlfs
+
+        ; load return address to get file, copy and count
         pla
         sta copy_name_address_low
         pla
         sta copy_name_address_high
         jsr copy_filename
+        ldx #<requested_fullname
+        ldy #>requested_fullname
+        jsr EFS_setnam
 
         ; process
-        ;goto filefound
+        lda #$00
+        jsr EFS_load
+        bcc filefound
 
-        ; not found, can happen, may crash afterwards
-        ;jsr finish_search
+        ; not found, can happen, will very likely crash afterwards        
+        cli
         jsr $0129  ; sound on
         sec
         jmp load_return
 
     filefound:
-        ;jsr prepare_filentry    ; returns bank in A
-        ;jsr EAPISetBank      ; now we cannot access the directory anymore
-
-        ;lda load_strategy    ; if zero, we decrunch prg
-        ;bne otherloader
-        ;lda $a7              ; save zp variables (except $fc-$ff)
-        ;pha
-        ;jsr EXO_decrunch
-        ;pla
-        ;sta $a7
+        cli
         jsr $0129  ; sound on
-        jmp startorreturn
-    ;otherloader:
-    ;    jsr load_prg
 
-    startorreturn:
-        ; decide how to start (if) te loaded prg
         lda requested_loadmode
-        clc        ; success
+        clc                            ; success
         beq load_return                ; 0: return
         cmp #$01
         beq load_jumptomain            ; 1: jump to $800
@@ -194,11 +195,11 @@
         sta copy_name_address_high
 
         ; skip over "S:"
-        ;jsr getnext_name_character
-        ;jsr getnext_name_character
+        jsr getnext_name_character
+        jsr getnext_name_character
 
         ; copy filename
-        ;jsr copy_filename
+        jsr copy_filename
 
         ; copy address and size
         ;jsr getnext_name_character
@@ -266,10 +267,9 @@
         jsr EAPISetPtr
 
         lda block_bank
-        ;jsr start_search
-        ;jmp load_block
-        rts ; ### temp
+        jmp load_block
         ; C is cleared in load_block
+        ; rts is called in load_block
 
 
     ; --------------------------------------------------------------------
@@ -305,12 +305,15 @@
 
     ; --------------------------------------------------------------------
     ; copies filename to temporary storage
+    ; returns length in A
     copy_filename:
         ldy #$ff
     :   iny
         jsr getnext_name_character     ; next char in A
         sta requested_filename, y      ; and store
         bne :-
+        iny
+        tya
         rts
 
 
@@ -328,276 +331,52 @@
 
 
     ; --------------------------------------------------------------------
-    ; A: bank, Y: address high
-    ; directory must be increased  before first usage
-    ; set bank
-    start_directory_search:
-        dey
-        sty $ff
-        ldy #$e8   ; 0x00 - 0x18
-        sty $fe
-        ; no rts here
+    ; loads block data to destination
+    ; high address byte is set in load_destination_high
+    ; low address byte is set in load_destination_low (usually 0)
+    ; eapi ptr set
+    ; eapi bank set
+    ; eapi size not set
+    load_block:
+        ; set length to 256
+        lda #$00
+        tax
+        ldy #$01
+        jsr EAPISetLen
 
-
-    ; --------------------------------------------------------------------
-    ; A: bank
-    ; set bank
-    ; must not use X
-    start_search:
-        jsr EAPISetBank
-
-        ; bank in and set ($fe) to one element before
+        ; bank in and memory
         lda #$07
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
-        rts
 
+        ; read byte
+    load_block_loop:
+        jsr EAPIReadFlashInc
+        tay
 
-    ; --------------------------------------------------------------------
-    ; banks out directory or block search
-    ; must not use X
-    finish_search:
-        lda #EASYFLASH_KILL
-        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
+        ; bank out and memory
         lda #$06
         sta $01
-        rts
+        lda #EASYFLASH_KILL
+        sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
 
+        ; if C set last byte read
+        bcs load_block_finish
 
-    ; --------------------------------------------------------------------
-    ; increases $fe, $ff to next entry
-    ; uses A, status
-    ; must not use X
-    next_directory_entry:
-        clc
-        lda #$18   ; size of dir element
-        adc $fe
-        sta $fe
-        bcc :+
-        inc $ff
-    :   rts
-
-
-    ; --------------------------------------------------------------------
-    ; returns C set if current entry is empty (terminator)
-    ; returns C clear if there are more entries
-    ; uses A, Y, status
-    ; sets fc,fd to next empty file space
-    ; must not use X
-    terminator_directory_entry:
-        ; test if directory overflow, unneccessary
-        ;lda $ff
-        ;and #$1f
-        ;cmp #$18
-        ;bcs lastentry     ; if A >= $18
-        
-        ; test if directory terminator
-        ldy #efs_directory::flags
-        lda ($fe), y
-;        beq moreentries     ; entry deleted, Z is set
-        and #$1f
-;        and ($fe), y
-        cmp #$1f
-        beq emptyentry
-        clc
-        rts
-    emptyentry:
-        sec
-        rts
-
-
-    ; --------------------------------------------------------------------
-    ; name set in fixed location: requested_fullname
-    ; set pointer fe,ff to matched directory entry
-    ; C set on not found or other error
-    ; C clear on found
-    ; modified register: A, Y, status
-    ; must prepare with start_directory_search
-    find_directoryentry:
-    nextname:
-        ; increase for next pointer
-        jsr next_directory_entry
-
-        ; test if more entries
-        jsr terminator_directory_entry
-;        beq nextname   ; if deleted (Z set) go directly to next name
-        bcc morefiles  ; if not terminator entry (C clear) inspect entry
-        sec
-        rts
-
-    morefiles:
-        ; check if deleted
-        ldy #efs_directory::flags
-        lda ($fe), y
-        beq nextname    ; if deleted go directly to next name
-
-        ; compare filename
-        ldy #$ff
-    nameloop:
-        iny
-;        lda #$3f   ; '?'
-;        cmp requested_fullname, y  ; character in name is '?', go to next character
-;        beq nameloop
-        lda #$2a   ; '*'
-        cmp requested_fullname, y  ; character in name is '*', we have a match
-        beq namematch
-        lda requested_fullname, y  ; compare character with character in entry
-        cmp ($fe), y               ; if not equal nextname
-        bne nextname
-        lda #$0                    ; compare if both character are zero
-        cmp ($fe), y               ; if not, next name
-        beq namematch
-        jmp nameloop
-        
-    namematch:
-        clc
-        rts
-
-
-    ; --------------------------------------------------------------------
-    ; sets eapi length and pointer to be ready to load file
-    ; also sets save_files_offset and saves_file_bank to next entry
-    ; bank is not changed
-    ; fe,ff must be set to the directory entry
-    ; bank_strategy must be set
-    ; returns bank in A
-    prepare_filentry:
-        ; load offset, set pointer and store in buffer (load and save)
-        ldy #efs_directory::offset_low
-        lda ($fe), y
-        sta save_files_offset_low  ; store offset in buffer
-        tax
-        iny        ; ldy #efs_directory::offset_high
-        lda ($fe),y
-        sta save_files_offset_high ; store offset in buffer
-        clc
-        adc #$80
-        tay
-        lda bank_strategy
-        jsr EAPISetPtr ; x: low; y: high; a: bank strategy (load)
-
-        ; load size, set and add to offset in buffer (load and save)
-        ldy #efs_directory::size_low
-        lda ($fe), y
-        tax
-        clc
-        adc save_files_offset_low ; add to offset buffer
-        sta save_files_offset_low
-        iny        ; ldy #efs_directory::size_high
-        lda ($fe), y
-        tay
-        adc save_files_offset_high ; add to offset buffer
-        sta save_files_offset_high
-
-        ; modify new offset to increase bank (only in A, save only)
-        rol        ; prepare what to add to bank
-        rol
-        rol
-        rol
-        and #$0f   ; 3 bits + carry relevant for bank (4 bits)
-        sta save_files_bank
-
-        lda #$00   ; no file is larger than 0xffff
-        jsr EAPISetLen ; size in A Y X (high to low)
-
-        ; offset (only for save)
-        lda save_files_offset_high
-        and #$1f
-        sta save_files_offset_high
-
-        ; add to bank
-        ldy #efs_directory::bank
-        lda ($fe),y
-        clc
-        adc save_files_bank
-        sta save_files_bank
-        lda ($fe),y  ; load bank again (for load)
-        rts
-
-
-    ; --------------------------------------------------------------------
-    ; save_directory
-    ; saves a new directory entry at fe,ff
-    ; can only be used in low ram
-    ; correct bank must be set
-    ; parameters
-    ;    fe,ff: address of directory entry
-    ;    save_files_directory_entry: completely filled
-    save_directory:
-        ; set bank
-
-        ; set address in rom bank
-        ldx $fe
-        ldy $ff
-        lda #$B0
-        jsr EAPISetPtr ; X:low, Y:high, A:bank mode
-
-        ; set size for directory entry
-        inc save_files_size_low
-        inc save_files_size_low
-
-        ; write name, we will write some garbage after the 0 terminator
-        ldy #$00
-    :   lda save_files_directory_entry, y
-        jsr EAPIWriteFlashInc
-        iny
-        cpy #$18
-        bcc :-
-
-        ; already done
-        rts
-
-
-    ; --------------------------------------------------------------------
-    ; save_file
-    ; saves file to flash
-    ; can only be used in low ram
-    ; parameters
-    ;    save_files_directory_entry: directory entry must be filled
-    ;    save_source_address
-    save_file:
-        ; set bank
-;        lda save_files_bank
-;        jsr EAPISetBank
-
-        ; set pointer
-;        ldx save_files_offset_low
-;        lda save_files_offset_high
-;        clc
-;        adc #$80
-;        tay
-;        lda #$B0
-;        jsr EAPISetPtr ; X:low, Y:high, A:bank mode
-        
-        ; write address
-;        lda save_source_low
-;        jsr EAPIWriteFlashInc
-;        lda save_source_high
-;        jsr EAPIWriteFlashInc
-
-        ; write data
-;        ldx save_files_size_low
-;        ldy save_files_size_high
-;        dex
-;        dex        ; we know that no file size crosses a page boundary
-;    save_file_repeat:
-;        jsr save_prg_byte
-;        dex
-;        bne save_file_repeat
-;        dey
-;        beq finish
-;        bmi finish
-;        jmp save_file_repeat   ; branch if positive (max 0x79 !)
-;finish:
-        rts
-
-    save_source_low = save_source + 1
-    save_source_high = save_source + 2
-    save_source:
-        .byte $00, $00
-
+        ; write byte to destination
+        tya
     load_destination_low = load_destination + 1
     load_destination_high = load_destination + 2
     load_destination:
-        .byte $00, $00
+        sta $ffff
+        inc load_destination_low
+        bne :+
+        inc load_destination_high
+    :   bne load_block_loop
+
+    load_block_finish:
+        jsr $0129  ; sound on
+        clc        ; indicate success
+        rts
+
