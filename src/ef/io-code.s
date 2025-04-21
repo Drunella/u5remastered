@@ -109,6 +109,7 @@
         pla
         sta copy_name_address_high
         jsr copy_filename
+        lda requested_filename_length
         ldx #<requested_fullname
         ldy #>requested_fullname
         jsr EFS_setnam
@@ -173,11 +174,25 @@
 
         ; copy filename
         jsr copy_filename
+
+        ; scratch old file
+        lda requested_filename_length
+        clc
+        adc #$02
+        ldx #<requested_erasename
+        ldy #>requested_erasename
+        jsr EFS_setnam
+
+        lda #$01
+        jsr EFS_open
+        jsr EFS_close
+        
+        ; save file
+        lda requested_filename_length
         ldx #<requested_fullname
         ldy #>requested_fullname
         jsr EFS_setnam
 
-        ; save file
         ; copy address and size
         jsr getnext_name_character
         sta $fe
@@ -355,7 +370,7 @@
         sta requested_filename, y      ; and store
         bne :-
         iny
-        tya
+        sty requested_filename_length
         rts
 
 
@@ -393,6 +408,8 @@
     ; --------------------------------------------------------------------
     ; data
 
+    requested_erasename:
+        .byte $53, $3a
     requested_fullname:
     requested_disk:
         .byte $41
@@ -401,6 +418,9 @@
         .byte $00, $00, $00, $00
         .byte $00, $00, $00, $00
         .byte $00, $00, $00
+
+    requested_filename_length:
+        .byte $00
 
     requested_loadmode:
         .byte $00
