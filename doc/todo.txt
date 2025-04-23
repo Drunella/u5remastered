@@ -4,8 +4,10 @@ Mission: Put the complete original game for the C64 on an EasyFlash cartridge
 ==============================================================================
 
 Features
+- import u4 directly from files
+- (no) remove exodecrunch
+
 - trainer
-- save game editor (both versions)
 - run music while loading (at least for block loading)
 - d81 version save file manager (save files in d81 version have different names)
 
@@ -100,6 +102,20 @@ ToDo
     (insert britannia)
     load TLIST
     load MAIN.OUT
+
+
+Build Process
+=============
+- extract from original disk
+- compile source code
+- disassemble binary files
+- patch disassemblies
+- patch programs
+- crunch programs
+- build easyflash file system
+- compile more programs
+- build block files
+- make binary and convert to cartridge
 
 
 Loading

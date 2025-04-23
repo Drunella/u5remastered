@@ -20,10 +20,10 @@ Main Memory Map
    F
 0x2000    bitmap screen
 0x3000    bitmap screen
-0x4000
-   1
+0x4000    (unknown data)
+   1      (unknown data)
    2      (unknown data)
-   3
+   3      (unknown temporary data)
    4      map
    5      map
    6      map
@@ -64,9 +64,9 @@ Main Memory Map
    8      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
    9      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
    A      u5siz.o (fast-loader) / eapi / [d81: u5siz.o or subs.128]
-   B      u5siz.o (fast-loader) / exomizer / [d81: u5siz.o or subs.128] / [d81: 0x7b80 - 0x7bff free]
-   C      (256 free) (music control and data) / [d81: exomizer]
-   D      (256 free) (music data) / [d81: free]
+   B      u5siz.o (fast-loader) / [ef: music control and data] / [d81: u5siz.o or subs.128] / [d81: 0x7b80 - 0x7bff free]
+   C      (256 free) [ef: music control and data] / [d81: exomizer]
+   D      (unknown temporary data)
    E      (ram, probably also temp)
    F      (ram, temporary storage for disk checking) [d81: in use in c128 mode between loading]
 0x8000    enter.play, main.combat(7x), main.dng, main.out, story, main.twn(4x), victory / banked code
@@ -119,7 +119,7 @@ Main Memory Map
    C
    D
    E      [Cartridge Registers] / [ram]
-   F      [Cartridge RAM: EAPI Jumptable, variables] / [ram]
+   F      [Cartridge RAM: EAPI Jumptable, LIBEFS] / [ram]
 0xE000    [kernel] / [ram] / [banked code on startup]
 0xF000    [kernel] / [ram] / [banked code on startup]
 
@@ -128,69 +128,17 @@ Main Memory Map
 Cartridge Memory Map
 ====================
 
-00:0:0000      (loader)
-     0100      (loader)
-     0200      (loader)
-     0300      (loader)
-     0400      (loader)
-     0500      (loader)
-     0600      (loader)
-     0700      (loader)
-     0800      (loader)
-     0900      (loader)
-     0A00      (loader)
-     0B00      (loader)
-     0C00      (loader)
-     0D00      (loader)
-     0E00      (loader)
-     0F00      (loader)
-     1000      (loader)
-     1100      (loader)
-     1200      (loader)
-     1300      (loader)
-     1400      (loader)
-     1500      (loader)
-     1600      (loader)
-     1700      (loader)
-     1800      (loader)
-     1900      (loader)
-     1A00      (loader)
-     1B00      (loader)
-     1C00      (loader)
-     1D00      (loader)
-     1E00      (loader)
-     1F00      (loader)
-00:1:0000      (directory)
-     0100      (directory)
-     0200      (directory)
-     0300      (directory)
-     0400      (directory)
-     0500      (directory)
-     0600      (directory)
-     0700      (directory)
-     0800      (directory)
-     0900      (directory)
-     0A00      (directory)
-     0B00      (directory)
-     0C00      (directory)
-     0D00      (directory)
-     0E00      (directory)
-     0F00      (directory)
-     1000      (directory)
-     1100      (directory)
-     1200      (directory)
-     1300      (directory)
-     1400      (directory)
-     1500      (directory)
-     1600      (directory)
-     1700      (directory)
+00:0:0000      (libefs rom)
+00:1:0000      (efs directory)
+     ...
+     1700      (efs directory)
      1800      EAPI
      1900      EAPI       
      1A00      EAPI
-     1B00      EF-NAME
-     1C00      (exodecrunch)
-     1D00      
-     1E00      
+     1B00      easycart name & efs configuration
+     1C00      loader
+     1D00      loader
+     1E00      loader
      1F00      Startup Code & Reset Vector (init.s)
 01:0:0000      (file data)
 01:1:0000      (file data)
@@ -228,100 +176,100 @@ Cartridge Memory Map
 16:1:0000      (file data)
 17:0:0000      (file data)
 17:1:0000      (file data)
-18:0:0000      (music rom)
-18:1:0000      
-19:0:0000      (block britannia)
-19:1:0000      (block underworld)
-20:0:0000      (block britannia)
-20:1:0000      (block underworld)
-21:0:0000      (block britannia)
-21:1:0000      (block underworld)
-22:0:0000      (block britannia)
-22:1:0000      (block underworld)
-23:0:0000      (block britannia)
-23:1:0000      (block underworld)
+18:0:0000      (file data)
+18:1:0000      (file data)
+19:0:0000      (music rom)
+19:1:0000      (music rom)
+20:0:0000      (block map)
+20:1:0000      
+21:0:0000      (britannia_00) 
+21:1:0000      (underworld_00)
+22:0:0000      (britannia_02) 
+22:1:0000      (underworld_02)
+23:0:0000      (britannia_04) 
+23:1:0000      (underworld_04)
                
-24:0:0000      (block britannia)
-24:1:0000      (block underworld)
-25:0:0000      (block britannia)
-25:1:0000      (block underworld)
-26:0:0000      (block britannia)
-26:1:0000      (block underworld)
-27:0:0000      (block britannia)
-27:1:0000      (block underworld)
-28:0:0000      (block towne)
-28:1:0000      (block dwelling)
-29:0:0000      (block towne)
-29:1:0000      (block dwelling)
-30:0:0000      (block towne)
-30:1:0000      (block dwelling)
-31:0:0000      (block towne)
-31:1:0000      (block dwelling)
-               
-32:0:0000      (block towne)
-32:1:0000      (block dwelling)
-33:0:0000      (block towne)
-33:1:0000      (block dwelling)
-34:0:0000      (block castle)
-34:1:0000      (block keep)
-35:0:0000      (block castle)
-35:1:0000      (block keep)
-36:0:0000      (block castle)
-36:1:0000      (block keep)
-37:0:0000      (block castle)
-37:1:0000      (block keep)
-38:0:0000      (block castle)
-38:1:0000      (block keep)
-39:0:0000      (block castle)
-39:1:0000      (block keep)
-               
-40:0:0000      (savefiles)
-40:1:0000      (block dungeon)
-41:0:0000      (savefiles)
-41:1:0000      (block dungeon)
-41:0:0000      (savefiles)
-42:1:0000      (block dungeon)
-42:0:0000      (savefiles)
-43:1:0000      (block dungeon)
-44:0:0000      (savefiles)
-44:1:0000      (block dungeon)
-45:0:0000      (savefiles)
-45:1:0000      (block dungeon)
-46:0:0000      (savefiles)
-46:1:0000      
-47:0:0000      (savefiles)
-47:1:0000      (block map)
+24:0:0000      (britannia_06) 
+24:1:0000      (underworld_06)
+25:0:0000      (britannia_08) 
+25:1:0000      (underworld_08)
+26:0:0000      (britannia_10) 
+26:1:0000      (underworld_10)
+27:0:0000      (britannia_12) 
+27:1:0000      (underworld_12)
+28:0:0000      (britannia_14) 
+28:1:0000      (underworld_14)
+29:0:0000      (britannia_16) 
+29:1:0000      (underworld_16)
+30:0:0000      (towne_00)   
+30:1:0000      (dwelling_00)
+31:0:0000      (towne_02)   
+31:1:0000      (dwelling_02)
+                  
+32:0:0000      (towne_04)
+32:1:0000      (dwelling_04)
+33:0:0000      (towne_06)   
+33:1:0000      (dwelling_06)
+34:0:0000      (towne_08)   
+34:1:0000      (dwelling_08)
+35:0:0000      (towne_10)   
+35:1:0000      (dwelling_10)
+36:0:0000      (castle_00) 
+36:1:0000      (keep_00)   
+37:0:0000      (castle_02) 
+37:1:0000      (keep_02)   
+38:0:0000      (castle_04) 
+38:1:0000      (keep_04)   
+39:0:0000      (castle_06) 
+39:1:0000      (keep_06)   
+                
+40:0:0000      (castle_08) 
+40:1:0000      (keep_08)   
+41:0:0000      (castle_10) 
+41:1:0000      (keep_10)  
+41:0:0000      (dungeon_00)
+42:1:0000                  
+42:0:0000      (dungeon_02)
+43:1:0000                  
+44:0:0000      (dungeon_04)
+44:1:0000                  
+45:0:0000      (dungeon_06)
+45:1:0000                  
+46:0:0000      (dungeon_08)
+46:1:0000                  
+47:0:0000      (dungeon_10)
+47:1:0000      
 
-48:0:0000      (tlist britannia)
-48:1:0000      
-49:0:0000      (tlist britannia)
-41:1:0000      
-50:0:0000      (tlist britannia)
-50:1:0000      
-51:0:0000      (tlist britannia)
-51:1:0000      
-52:0:0000      (tlist britannia)
-52:1:0000      
-53:0:0000      (tlist britannia)
-53:1:0000      
-54:0:0000      (tlist britannia)
-54:1:0000      
-55:0:0000      (tlist britannia)
-55:1:0000      
+48:0:0000      (save)
+48:1:0000      (save)
+49:0:0000      (save)
+41:1:0000      (save)
+50:0:0000      (save)
+50:1:0000      (save)
+51:0:0000      (save)
+51:1:0000      (save)
+52:0:0000      (save)
+52:1:0000      (save)
+53:0:0000      (save)
+53:1:0000      (save)
+54:0:0000      (save)
+54:1:0000      (save)
+55:0:0000      (save)
+55:1:0000      (save)
 
-56:0:0000      (tlist underworld)
-56:1:0000      
-57:0:0000      (tlist underworld)
-57:1:0000      
-58:0:0000      (tlist underworld)
-58:1:0000      
-59:0:0000      (tlist underworld)
-59:1:0000      
-60:0:0000      (tlist underworld)
-60:1:0000      
-61:0:0000      (tlist underworld)
-61:1:0000      
-62:0:0000      (tlist underworld)
-62:1:0000      
-63:0:0000      (tlist underworld)
-63:1:0000      
+56:0:0000      (save)
+56:1:0000      (save)
+57:0:0000      (save)
+57:1:0000      (save)
+58:0:0000      (save)
+58:1:0000      (save)
+59:0:0000      (save)
+59:1:0000      (save)
+60:0:0000      (save)
+60:1:0000      (save)
+61:0:0000      (save)
+61:1:0000      (save)
+62:0:0000      (save)
+62:1:0000      (save)
+63:0:0000      (save)
+63:1:0000      (save)
