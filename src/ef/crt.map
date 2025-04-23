@@ -10,4 +10,4 @@
 1 f files.data.prg addr 0x8000
 
 # music bank
-26 f music_rom.aprg addr 0x8000
+19 f music_rom.aprg addr 0x8000

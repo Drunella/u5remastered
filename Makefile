@@ -59,7 +59,7 @@ build/%.o: build/%.s
 # easyflash
 
 #EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
-EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
+EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/exo/exodecrunch.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
 EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
 
 # easyflash config.prg
@@ -71,21 +71,19 @@ build/ef/init.prg: build/ef/init.o
 	$(LD65) $(LD65FLAGS) -o $@ -C src/ef/init.cfg $^
 
 # easyflash loader.bin -> directly to cart
-build/ef/loader.prg: build/ef/loader.o
-	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -Ln ./build/ef/loader.lst -C src/ef/loader.cfg c64.lib build/ef/loader.o
+build/ef/loader.prg: build/ef/loader.o build/exo/exodecrunch.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/loader.map -o $@ -Ln ./build/ef/loader.lst -C src/ef/loader.cfg c64.lib build/ef/loader.o build/exo/exodecrunch.o
 
 # easyflash menu.prg -> to efs
 build/ef/menu.prg: $(EF_MENU_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/menu.map -o $@ -C src/ef/menu.cfg c64.lib $(EF_MENU_FILES)
-#	echo "0x41/menu menu" >> build/ef.f/files.list
-#	echo "0x41/io.add io.add" >> build/ef.f/files.list
 
 # music -> directly to cart
 build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
 # io-replacement -> replacement code
-build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o
+build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/exo/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
 
 # transfer-load
@@ -101,17 +99,14 @@ build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info .
 # files with additional items
 build/ef.f/files.list: build/source/files.list build/ef/music.prg build/ef/menu.prg
 	cp ./build/source/* ./build/ef.f/
-	#cp build/ef/io-addendum.prg build/ef.f/io.add.prg
 	cp build/ef/menu.prg build/ef.f/menu.prg
 	cp build/ef/music.prg build/ef.f/music.prg
-	#echo "0x41/io.add io.add" >> build/ef.f/files.list
 	echo "0x41/menu menu" >> build/ef.f/files.list
 	echo "0x41/music music" >> build/ef.f/files.list
 
 # disassemble subs.128.prg
 build/ef/subs128-disassemble.o: build/source/subs.128.prg src/ef/subs128-disassemble.info
 	$(DA65) -i ./src/ef/subs128-disassemble.info -o ./build/temp/subs128-disassemble.s
-#	cat ./src/ef/subs128-export.i >> ./build/temp/subs128-disassemble.s
 	$(CA65) $(CA65FLAGS) -o ./build/ef/subs128-disassemble.o ./build/temp/subs128-disassemble.s
 	
 # patch
@@ -119,10 +114,15 @@ build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build
 	tools/u5patch.py -v -l ./build/ef.f/files.list -f ./build/ef.f -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map ./patches/ef/*.patch ./patches/*.patch
 	cp build/ef.f/music_rom.bin build/ef/music_rom.aprg
 	touch ./build/ef.f/patched.done
+
+# crunch
+build/ef.f/crunched.done: build/ef.f/patched.done
+	tools/crunch.py -v -t level -b ./build/ef.f
+	touch build/ef.f/crunched.done
 	 
 # build efs
-build/ef/directory.data.prg build/ef/files.data.prg: build/ef.f/patched.done
-	tools/mkefs.py -v -o ./src/disks.cfg  -x ./src/ef/exclude.cfg -f ./build/ef.f -e prg -d ./build/ef
+build/ef/directory.data.prg build/ef/files.data.prg: build/ef.f/crunched.done
+	tools/mkefs.py -v -o ./src/disks.cfg  -x ./src/ef/exclude.cfg -f ./build/ef.f -e crunch -d ./build/ef
 
 # build blocks
 build/ef/crt.blocks.map: build/ef.f/files.list

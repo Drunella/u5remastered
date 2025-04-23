@@ -25,21 +25,12 @@
 .import __LOADER_RUN__
 .import __LOADER_SIZE__
 
-;.import __IO_WRAPPER_LOAD__
-;.import __IO_WRAPPER_RUN__
-;.import __IO_WRAPPER_SIZE__
-
-;.import __EAPI_START__
-
-
 .import _load_eapi
-;.import _wrapper_setnam
-;.import _wrapper_load
-;.import _wrapper_save
 
+.import EXO_decrunch
 
-;.export _init_loader
-;.export _init_loader_blank
+.export get_crunched_byte
+.export decrunch_table
 
 
 .segment "LOADER_CALL"
@@ -47,10 +38,6 @@
     _init_loader:
         ; void __fastcall__ init_loader(void);
         jmp init_loader_body
-
-/*    _init_loader_blank:
-        ; void __fastcall__ init_loader_blank(void);
-        jmp init_loader_blank_body*/
 
 
 
@@ -103,13 +90,37 @@
         ldx #<menu_name
         ldy #>menu_name
         jsr EFS_setnam
-        ldx #$00
-        ldy #$08
-        lda #$00  ; load to x/y
-        jsr EFS_load
+;        ldx #$00
+;        ldy #$08
+        lda #$00  ; read
+        jsr EFS_open
+
+        jsr EXO_decrunch
+        jsr EFS_close
         
     startup:
         jmp $2000
+
+
+    ; --------------------------------------------------------------------
+    ; get_crunched_byte
+    ; must preserve stat, X, Y
+    ; return value in A
+    get_crunched_byte:
+        php
+        txa
+        pha
+        tya
+        pha
+        jsr EFS_chrin
+        sta get_byte_temp
+        pla
+        tay
+        pla
+        tax
+        lda get_byte_temp
+        plp
+        rts
 
 
     loader_text:
@@ -123,3 +134,28 @@
     menu_name_end:
     menu_name_length = menu_name_end - menu_name
 
+
+    ; --------------------------------------------------------------------
+    ; exo decrunch table
+
+.segment "EXO_DATA"
+
+    get_byte_temp:
+        .byte $00
+
+    decrunch_table:
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.ENDIF
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0

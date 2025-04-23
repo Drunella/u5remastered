@@ -75,6 +75,11 @@
 .export _IO_read_block_entry
 .export _IO_read_block_alt_entry
 
+.export decrunch_table
+.export get_crunched_byte
+
+.import EXO_decrunch
+
 
 .segment "IO_CODE"
 
@@ -83,12 +88,15 @@
     _IO_request_disk_id_entry:
         clc
         adc #$40   ; add 40 to get the character
+        ; no rts, continue with next function
+
 
     ; --------------------------------------------------------------------
     _IO_request_disk_char_entry:
         sta requested_disk
         clc        ; disk request always succeeds
         rts
+
 
     ; --------------------------------------------------------------------
     ; IO_load_file_entry: load file
@@ -116,17 +124,31 @@
 
         ; process
         lda #$00
-        jsr EFS_load
+        jsr EFS_open
         bcc filefound
 
-        ; not found, can happen, will very likely crash afterwards        
+        ; not found, can happen, will very likely crash afterwards
+        jsr EFS_close
         cli
         jsr $0129  ; sound on
         sec
         jmp load_return
 
     filefound:
-        cli
+        jsr EFS_readst
+        and #$80  ; file is in rw area
+        beq :+
+        ; file will be normal loaded
+        jsr EFS_close
+        lda #$00
+        jsr EFS_load
+        jmp :++
+
+        ; file will be decrunched
+      : jsr EXO_decrunch
+        jsr EFS_close
+
+      : cli
         jsr $0129  ; sound on
 
         lda requested_loadmode
@@ -142,6 +164,27 @@
         pha
         lda copy_name_address_low
         pha
+        rts
+
+
+    ; --------------------------------------------------------------------
+    ; get_crunched_byte
+    ; must preserve stat, X, Y
+    ; return value in A
+    get_crunched_byte:
+        php
+        txa
+        pha
+        tya
+        pha
+        jsr EFS_chrin
+        sta get_byte_temp
+        pla
+        tay
+        pla
+        tax
+        lda get_byte_temp
+        plp
         rts
 
 
@@ -183,7 +226,7 @@
         ldy #>requested_erasename
         jsr EFS_setnam
 
-        lda #$01
+        lda #$00
         jsr EFS_open
         jsr EFS_close
         
@@ -431,3 +474,29 @@
         .byte $00
     block_bank:
         .byte $00
+
+
+    ; --------------------------------------------------------------------
+    ; exo
+
+.segment "EXO_DATA"
+
+    get_byte_temp:
+        .byte $00
+
+    decrunch_table:
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.ENDIF
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        .byte 0,0,0,0,0,0,0,0,0,0,0,0

@@ -37,8 +37,8 @@
         ;    bank  dir  bank files size
         ;           hi        hi
         .byte $00, $a0, $01, $80,  0, $d0  ; area 0: bank 0, $a000, mode lhlh, ignore size
-        .byte  56, $80,  56, $80,  8, $b0  ; area 1: lower banks of 65536 bytes
-        .byte  56, $a0,  56, $a0,  8, $d4  ; area 2: upper banks of 65536 bytes
+        .byte  48, $80,  48, $80, 16, $d0  ; area 1: lower banks of 65536 bytes
+        .byte  56, $80,  56, $80, 16, $d0  ; area 2: upper banks of 65536 bytes
         .byte $00                          ; defragment warning: no
         .addr __EFS_CONFIG_RUN__ + efs_defragment_warning_offset
         .addr __EFS_CONFIG_RUN__ + efs_defragment_allclear_offset
