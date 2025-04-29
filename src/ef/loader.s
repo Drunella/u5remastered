@@ -27,10 +27,10 @@
 
 .import _load_eapi
 
-.import EXO_decrunch
-
-.export get_crunched_byte
-.export decrunch_table
+;.import EXO_decrunch
+;
+;.export get_crunched_byte
+;.export decrunch_table
 
 
 .segment "LOADER_CALL"
@@ -93,10 +93,11 @@
 ;        ldx #$00
 ;        ldy #$08
         lda #$00  ; read
-        jsr EFS_open
-
-        jsr EXO_decrunch
-        jsr EFS_close
+        jsr EFS_load
+;        jsr EFS_open
+;
+;        jsr EXO_decrunch
+;        jsr EFS_close
         
     startup:
         jmp $2000
@@ -106,21 +107,29 @@
     ; get_crunched_byte
     ; must preserve stat, X, Y
     ; return value in A
-    get_crunched_byte:
-        php
-        txa
-        pha
-        tya
-        pha
-        jsr EFS_chrin
-        sta get_byte_temp
-        pla
-        tay
-        pla
-        tax
-        lda get_byte_temp
-        plp
-        rts
+;    get_crunched_byte:
+;        php
+;        txa
+;        pha
+;        tya
+;        pha
+;        jsr EFS_chrin
+;        sta get_byte_temp
+;
+;        lda $d020
+;        tax
+;        lda #$01
+;        sta $d020
+;        txa
+;        sta $d020
+;
+;        pla
+;        tay
+;        pla
+;        tax
+;        lda get_byte_temp
+;        plp
+;        rts
 
 
     loader_text:
@@ -138,24 +147,24 @@
     ; --------------------------------------------------------------------
     ; exo decrunch table
 
-.segment "EXO_DATA"
-
-    get_byte_temp:
-        .byte $00
-
-    decrunch_table:
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.ENDIF
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0
+;.segment "EXO_DATA"
+;
+;    get_byte_temp:
+;        .byte $00
+;
+;    decrunch_table:
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;.ENDIF
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0

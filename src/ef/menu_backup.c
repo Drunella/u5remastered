@@ -210,6 +210,10 @@ void restore_from_disk(uint8_t device)
     ok = savegame_roster();
     if (!ok) goto flash_error2;
 
+    // scratch tlist
+    scratch_tlist_britannia();
+    scratch_tlist_underworld();
+    
     cputs("finished.\r\n");
 
 flash_end:

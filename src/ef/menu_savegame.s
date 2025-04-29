@@ -14,6 +14,8 @@
 ; limitations under the License.
 ; ----------------------------------------------------------------------------
 
+.include "easyflash.i"
+
 .import _IO_load_file_entry
 .import _IO_save_file_entry
 
@@ -26,6 +28,9 @@
 .export _savegame_list
 .export _savegame_slist
 .export _savegame_roster
+
+.export _scratch_tlist_britannia
+.export _scratch_tlist_underworld
 
 
 .segment "LOADSAVEGAME"
@@ -129,3 +134,46 @@
         rts
     :   lda #$00
         rts
+
+
+    ; bool __fastcall__ scratch_tlist_britannia(void);
+    _scratch_tlist_britannia:
+        ldy #$00
+        jsr EFS_setlfs
+        lda #name_tlist_britannia_end - name_tlist_britannia
+        ldx #<name_tlist_britannia
+        ldy #>name_tlist_britannia
+        jsr EFS_setnam
+
+        lda #$00
+        jsr EFS_open
+        jsr EFS_close
+
+        lda #$01
+        rts
+
+    name_tlist_britannia:
+        .byte $53, $3a, $42, $54, $4c, $49, $53, $54  ; S:BTLIST
+    name_tlist_britannia_end:
+
+
+    ; bool __fastcall__ scratch_tlist_underworld(void);
+    _scratch_tlist_underworld:
+        ldy #$00
+        jsr EFS_setlfs
+        lda #name_tlist_underworld_end - name_tlist_underworld
+        ldx #<name_tlist_underworld
+        ldy #>name_tlist_underworld
+        jsr EFS_setnam
+
+        lda #$00
+        jsr EFS_open
+        jsr EFS_close
+
+        lda #$01
+        rts
+
+    name_tlist_underworld:
+        .byte $53, $3a, $48, $54, $4c, $49, $53, $54  ; S:HTLIST
+    name_tlist_underworld_end:
+

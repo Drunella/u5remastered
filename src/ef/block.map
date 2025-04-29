@@ -1,8 +1,8 @@
-blockmap 20 0
-britannia 21 0
-towne 30 0
-dwelling 30 1
-castle 36 0
-keep 36 1
-dungeon 41 0
-underworld 21 1
+blockmap 28 0
+britannia 29 0
+towne 38 0
+dwelling 38 1
+castle 44 0
+keep 44 1
+dungeon 50 0
+underworld 29 1

@@ -75,10 +75,10 @@
 .export _IO_read_block_entry
 .export _IO_read_block_alt_entry
 
-.export decrunch_table
-.export get_crunched_byte
+;.export decrunch_table
+;.export get_crunched_byte
 
-.import EXO_decrunch
+;.import EXO_decrunch
 
 
 .segment "IO_CODE"
@@ -123,32 +123,46 @@
         jsr EFS_setnam
 
         ; process
+;        lda #$00
+;        jsr EFS_open
+;        bcc filefound
+;
+;        ; not found, can happen, will very likely crash afterwards
+;        jsr EFS_close
+;        cli
+;        jsr $0129  ; sound on
+;        sec
+;        jmp load_return
+;
+;    filefound:
+;        jsr EFS_readst
+;        and #$80  ; file is in rw area
+;        beq :+
+;        ; file will be normal loaded
+;        jsr EFS_close
+;        lda #$00
+;        jsr EFS_load
+;        jmp :++
+;
+;        ; file will be decrunched
+;      : jsr EXO_decrunch
+;        jsr EFS_close
+;
+;      : cli
+;        jsr $0129  ; sound on
+
         lda #$00
-        jsr EFS_open
+        jsr EFS_load
         bcc filefound
 
         ; not found, can happen, will very likely crash afterwards
-        jsr EFS_close
         cli
         jsr $0129  ; sound on
         sec
         jmp load_return
 
     filefound:
-        jsr EFS_readst
-        and #$80  ; file is in rw area
-        beq :+
-        ; file will be normal loaded
-        jsr EFS_close
-        lda #$00
-        jsr EFS_load
-        jmp :++
-
-        ; file will be decrunched
-      : jsr EXO_decrunch
-        jsr EFS_close
-
-      : cli
+        cli
         jsr $0129  ; sound on
 
         lda requested_loadmode
@@ -171,21 +185,29 @@
     ; get_crunched_byte
     ; must preserve stat, X, Y
     ; return value in A
-    get_crunched_byte:
-        php
-        txa
-        pha
-        tya
-        pha
-        jsr EFS_chrin
-        sta get_byte_temp
-        pla
-        tay
-        pla
-        tax
-        lda get_byte_temp
-        plp
-        rts
+;    get_crunched_byte:
+;        php
+;        txa
+;        pha
+;        tya
+;        pha
+;        jsr EFS_chrin
+;        sta get_byte_temp
+;
+;        lda $d020
+;        tax
+;        lda #$01
+;        sta $d020
+;        txa
+;        sta $d020
+;
+;        pla
+;        tay
+;        pla
+;        tax
+;        lda get_byte_temp
+;        plp
+;        rts
 
 
     ; --------------------------------------------------------------------
@@ -479,24 +501,24 @@
     ; --------------------------------------------------------------------
     ; exo
 
-.segment "EXO_DATA"
-
-    get_byte_temp:
-        .byte $00
-
-    decrunch_table:
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.ENDIF
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-        .byte 0,0,0,0,0,0,0,0,0,0,0,0
+;.segment "EXO_DATA"
+;
+;    get_byte_temp:
+;        .byte $00
+;
+;    decrunch_table:
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;.ENDIF
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;        .byte 0,0,0,0,0,0,0,0,0,0,0,0

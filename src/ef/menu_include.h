@@ -40,6 +40,8 @@ bool __fastcall__ savegame_prtydata(void);
 bool __fastcall__ savegame_list(void);
 bool __fastcall__ savegame_slist(void);
 bool __fastcall__ savegame_roster(void);
+bool __fastcall__ scratch_tlist_britannia(void);
+bool __fastcall__ scratch_tlist_underworld(void);
 
 void __fastcall__ IO_request_disk_char_entry(uint8_t disk);
 
