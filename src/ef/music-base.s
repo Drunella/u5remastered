@@ -34,6 +34,7 @@
 .import music_timer
 .import music_activity
 .import song_data
+.import control_values
 
 ; exports
 .export _music_init_impl
@@ -153,6 +154,14 @@
         dex
         bne :-
 
+        ; set values
+        lda #$01
+        sta control_values + 2
+        sta control_values + 3
+        lda #$02
+        sta control_values + 4
+        sta control_values + 5
+
         php
         sei
         ; set nmi handler to single rti
@@ -209,8 +218,15 @@
 
 ; ----------------------------------------------------------------------------
 
+.segment "MUSIC_CALL"
+
+    playsound:
+        jmp _play_song
+        jmp _play_song
+
+
 ; any place
-.segment "MUSIC_CONTROL"
+.segment "MUSIC_CODE"
 
     music_activatecontrol:
         ; set CIA1 Timer B enable interrupts

@@ -88,8 +88,8 @@ LABEL { ADDR $7667; NAME "note_data_insert_high"; };
 
 
 # data segments
-SEGMENT { START $7219;  END   $7302; NAME "MUSIC_CONTROL"; };
-SEGMENT { START $7ba8;  END   $7bc3; NAME "MUSIC_CONTROL"; };
+SEGMENT { START $7219;  END   $7302; NAME "MUSIC_CONTROL_1"; };
+SEGMENT { START $7ba8;  END   $7bc3; NAME "MUSIC_CONTROL_2"; };
 
 # ram data block 1: 7219 - 7302
 RANGE { START $7219;  END $7302; TYPE ByteTable; };
@@ -102,4 +102,5 @@ SEGMENT { START $7c9e;  END   $9fa5; NAME "MUSIC_SOURCE"; };
 RANGE { START $79b8;  END $7ba7; TYPE ByteTable; };
 RANGE { START $7c9e;  END $9fa5; TYPE byteTable; };
 LABEL { ADDR $79b8; NAME "note_data"; };
+LABEL { ADDR $7ba8; NAME "control_values"; };
 LABEL { ADDR $7ca0; NAME "song_data"; };

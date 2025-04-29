@@ -29,3 +29,4 @@
 .export note_data_insert_high
 
 .export music_setvolume
+.export control_values

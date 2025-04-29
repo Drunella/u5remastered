@@ -94,42 +94,9 @@
 ;        ldy #$08
         lda #$00  ; read
         jsr EFS_load
-;        jsr EFS_open
-;
-;        jsr EXO_decrunch
-;        jsr EFS_close
         
     startup:
         jmp $2000
-
-
-    ; --------------------------------------------------------------------
-    ; get_crunched_byte
-    ; must preserve stat, X, Y
-    ; return value in A
-;    get_crunched_byte:
-;        php
-;        txa
-;        pha
-;        tya
-;        pha
-;        jsr EFS_chrin
-;        sta get_byte_temp
-;
-;        lda $d020
-;        tax
-;        lda #$01
-;        sta $d020
-;        txa
-;        sta $d020
-;
-;        pla
-;        tay
-;        pla
-;        tax
-;        lda get_byte_temp
-;        plp
-;        rts
 
 
     loader_text:
@@ -142,29 +109,3 @@
         .byte $41, $4d, $45, $4e, $55  ; "AMENU"
     menu_name_end:
     menu_name_length = menu_name_end - menu_name
-
-
-    ; --------------------------------------------------------------------
-    ; exo decrunch table
-
-;.segment "EXO_DATA"
-;
-;    get_byte_temp:
-;        .byte $00
-;
-;    decrunch_table:
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;.IFDEF EXTRA_TABLE_ENTRY_FOR_LENGTH_THREE
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;.ENDIF
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-;        .byte 0,0,0,0,0,0,0,0,0,0,0,0
