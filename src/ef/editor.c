@@ -110,7 +110,6 @@ typedef struct {
     uint8_t dummy2;
     uint16_t dungeonrooms[0x07]; // 7 dungeons
     uint8_t dummy3;
-    
 } roster_t;
 
 typedef struct {
@@ -121,13 +120,13 @@ typedef struct {
 } inventory_t;
 
 
-static uint8_t index_offset = 0;
-static roster_t* roster;
-
-
 #pragma code-name ("EDITOR")
 #pragma data-name ("DAEDITOR")
 #pragma rodata-name ("ROEDITOR")
+
+
+static uint8_t index_offset = 0;
+static roster_t* roster;
 
 
 inventory_t inventory[INVENTORY_ITEMS] = {

@@ -34,6 +34,9 @@
 #define MENU_START_X 12
 #define MENU_START_Y 15
 
+#define LIST_STORAGE 0x4a00
+#define SLIST_STORAGE 0x4800
+
 
 static void print_device(uint8_t device) 
 {
@@ -113,7 +116,7 @@ void backup_to_disk(uint8_t device)
     ok = loadgame_slist();
     if (!ok) goto disk_error1;
     // $7c00 is a free area to temporary save SLIST
-    memcpy ((void*)0x7c00, (void*)0x4a00, 0x0200);
+    memcpy ((void*)SLIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
 
     cputs("Backing up LIST ...\r\n");
     ok = loadgame_list();
@@ -129,12 +132,12 @@ void backup_to_disk(uint8_t device)
     if (!ok) goto disk_error2;
 
     cputs("Saving LIST ...\r\n");
-    ok = disk_save_file(device, "list", 0x4a00, (void*)0x4a00, 0x0200);
+    ok = disk_save_file(device, "list", LIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     if (!ok) goto disk_error2;
-    memcpy ((void*)0x4a00, (void*)0x7c00, 0x0200);
+    memcpy ((void*)LIST_STORAGE, (void*)SLIST_STORAGE, 0x0200);
 
     cputs("Saving SLIST ...\r\n");
-    ok = disk_save_file(device, "slist", 0x4a00, (void*)0x4a00, 0x0200);
+    ok = disk_save_file(device, "slist", LIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     if (!ok) goto disk_error2;
 
     cputs("Saving ROSTER ...\r\n");
@@ -180,7 +183,7 @@ void restore_from_disk(uint8_t device)
     size = cbm_load("slist", device, NULL);
     if (size == 0) goto flash_error1;
     // $7c00 is a free area to temporary save SLIST
-    memcpy((void*)0x7c00, (void*)0x4a00, 0x0200);
+    memcpy((void*)SLIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     
     cputs("Loading LIST ...\r\n");
     size = cbm_load("list", device, NULL);
@@ -202,7 +205,7 @@ void restore_from_disk(uint8_t device)
     if (!ok) goto flash_error2;
 
     cputs("Storing SLIST ...\r\n");
-    memcpy((void*)0x4a00, (void*)0x7c00, 0x0200);
+    memcpy((void*)LIST_STORAGE, (void*)SLIST_STORAGE, 0x0200);
     ok = savegame_slist();
     if (!ok) goto flash_error2;
 

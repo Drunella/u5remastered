@@ -37,6 +37,8 @@
 .import control_values
 
 ; exports
+.export music_lastconfig
+.export music_lastbank
 .export _music_init_impl
 .export _play_song
 
@@ -44,11 +46,20 @@
 
 ; ----------------------------------------------------------------------------
 
-; 0x0100, 22 bytes
+; 0x0100, 35 (0x23) bytes
 .segment "MUSIC_DATA"
 
     music_save_zeropage:
-        .res $0a, $00
+        .res $0a, $00   ; 10 bytes
+
+    music_unused:
+        .res $17, $00
+
+    ; do NOT change the size of the data before
+    music_lastbank:    ; $0121
+        .byte $00
+    music_lastconfig:  ; $0122 (this address is referenced as value)
+        .byte $00
 
 
 
@@ -75,7 +86,7 @@
 
 ; ----------------------------------------------------------------------------
 
-; 0x12c
+; 0x380
 .segment "MUSIC_IRQHANDLER"
 
     ; 33 bytes (max 34 bytes)
@@ -187,6 +198,8 @@
         pha
         lda #$06
         sta $01
+        lda #EASYFLASH_KILL  ; init default config
+        sta music_lastconfig
 
         ; bank in music bank
         jsr music_bankin
@@ -209,7 +222,7 @@
         ; turn on
         jsr $0129
 
-        ; wait for sound activity ###
+        ; wait for sound activity
         jsr _sid_initialize_waitforirq
 
         rts
@@ -315,11 +328,13 @@
 
 
     music_bankin:
+        ; save port
+        jsr EAPIGetBank
+        sta music_lastbank
+
         ; bank in music bank
         lda #$07
         sta $01
-;        jsr EAPIGetBank
-;        sta $0114
         lda #MUSIC_BANK
         jsr EAPISetBank
         lda #EASYFLASH_16K ; bank in without led
@@ -331,9 +346,10 @@
         ; bank out
         lda #$06
         sta $01
-;        lda $0114
-;        jsr EAPISetBank
-        lda #EASYFLASH_KILL ; jsr GetMemConfiguration ; bank out
+        lda music_lastbank
+        jsr EAPISetBank
+        ;lda #EASYFLASH_KILL ; jsr GetMemConfiguration ; bank out
+        lda music_lastconfig  ; usually #EASYFLASH_KILL, sometimes other
         sta EASYFLASH_CONTROL
         rts
 

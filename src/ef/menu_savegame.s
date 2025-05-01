@@ -176,4 +176,3 @@
     name_tlist_underworld:
         .byte $53, $3a, $48, $54, $4c, $49, $53, $54  ; S:HTLIST
     name_tlist_underworld_end:
-

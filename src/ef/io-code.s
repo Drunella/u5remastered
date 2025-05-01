@@ -75,6 +75,8 @@
 .export _IO_read_block_entry
 .export _IO_read_block_alt_entry
 
+music_lastconfig := $0122  ; see music-base.s for more information
+
 
 .segment "IO_CODE"
 
@@ -252,13 +254,16 @@
         pha        ; sector on stack
         tya
         pha        ; track on stack
-        jsr $0126  ; sound off
-        sei
+
+;        jsr $0126  ; sound off
+;        sei
 
         ; bank in block map
         lda #BLOCKMAP_BANK
         jsr EAPISetBank
+        sei
         jsr bank_in
+        cli
 
         ; fe,ff now shows to the page area with the line data per disk
         lda requested_disk
@@ -298,15 +303,21 @@
 
         ; read byte
     load_block_loop:
+        sei
         jsr bank_in
+        cli
         jsr EAPIReadFlashInc
+        ; if C set last byte read
+        bcs load_block_finish
         tay
 
         ; bank out and memory
+        sei
         jsr bank_out
+        cli
 
-        ; if C set last byte read
-        bcs load_block_finish
+;        ; if C set last byte read
+;        bcs load_block_finish
 
         ; write byte to destination
         tya
@@ -320,9 +331,11 @@
     :   bne load_block_loop
 
     load_block_finish:
+        sei
         jsr bank_out
         cli
-        jsr $0129  ; sound on
+;        cli
+;        jsr $0129  ; sound on
         clc        ; indicate success
         rts
 
@@ -393,11 +406,13 @@
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
+        sta music_lastconfig
         rts
 
     bank_out:
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
+        sta music_lastconfig
         lda #$06
         sta $01
         rts
