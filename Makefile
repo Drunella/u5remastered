@@ -58,9 +58,8 @@ build/%.o: build/%.s
 # ------------------------------------------------------------------------
 # easyflash
 
-#EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-data.o build/ef/io-rw.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
-EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o
-EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o
+EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o build/ef/music-playsound.o
+EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o build/ef/music-playsound.o
 
 # easyflash config.prg
 build/ef/efs-config.prg: build/ef/efs-config.o src/ef/efs-config.cfg
@@ -78,7 +77,7 @@ build/ef/loader.prg: build/ef/loader.o
 build/ef/menu.prg: $(EF_MENU_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/menu.map -o $@ -C src/ef/menu.cfg c64.lib $(EF_MENU_FILES)
 
-# music -> directly to cart
+# music -> to efs, directly to cart
 build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
@@ -96,6 +95,12 @@ build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info .
 	cat ./src/ef/music-export.i >> ./build/temp/music-disassemble.s
 	$(CA65) $(CA65FLAGS) -o ./build/ef/music-disassemble.o ./build/temp/music-disassemble.s
 
+# playsound
+build/ef/music-playsound.o: build/ef/io-replacement.map
+	tools/getsymbol.py -m build/ef/io-replacement.map -s playsound > build/temp/music-playsound.s
+	cat ./src/ef/music-playsound-template.s >> build/temp/music-playsound.s
+	$(CA65) $(CA65FLAGS) -o ./build/ef/music-playsound.o ./build/temp/music-playsound.s
+	
 # disassemble subs.128.prg
 build/ef/subs128-disassemble.o: build/source/subs.128.prg src/ef/subs128-disassemble.info
 	$(DA65) -i ./src/ef/subs128-disassemble.info -o ./build/temp/subs128-disassemble.s

@@ -35,6 +35,7 @@
 .import music_activity
 .import song_data
 .import control_values
+.import init_playsound
 
 ; exports
 .export music_lastconfig
@@ -172,13 +173,14 @@
         inx
         bne :-
 
-        ; set jmp at 7b00
-        lda #$4c
-        sta $7b00
-        lda #$01
-        sta $7b01
-        lda #$6e
-        sta $7b02
+        ; set jmp at 7b00 ### address should be inserted by variable
+        jsr init_playsound
+;        lda #$4c
+;        sta $7b00
+;        lda #<playsound
+;        sta $7b01
+;        lda #>playsound
+;        sta $7b02
 
         php
         sei
