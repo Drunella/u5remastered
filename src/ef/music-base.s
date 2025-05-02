@@ -165,13 +165,20 @@
         dex
         bne :-
 
-        ; set values
+        ; clear memory
+        ldx #$00
+        txa
+    :   sta $7b00, x
+        inx
+        bne :-
+
+        ; set jmp at 7b00
+        lda #$4c
+        sta $7b00
         lda #$01
-        sta control_values + 2
-        sta control_values + 3
-        lda #$02
-        sta control_values + 4
-        sta control_values + 5
+        sta $7b01
+        lda #$6e
+        sta $7b02
 
         php
         sei
@@ -233,9 +240,28 @@
 
 .segment "MUSIC_CALL"
 
-    playsound:
+    subs128calls:
+        rts             ; unknown call
+        nop
+        nop
+
         jmp _play_song
-        jmp _play_song
+
+        rts             ; unknown call
+        nop
+        nop
+
+        rts             ; unknown call
+        nop
+        nop
+
+        rts             ; unknown call
+        nop
+        nop
+
+        rts             ; unknown call
+        nop
+        nop
 
 
 ; any place

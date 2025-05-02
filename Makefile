@@ -83,7 +83,7 @@ build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
 # io-replacement -> replacement code
-build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o
+build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/subs128-disassemble.o build/ef/music-disassemble.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
 
 # transfer-load
@@ -96,6 +96,11 @@ build/ef/music-disassemble.o: build/source/m.prg src/ef/music-disassemble.info .
 	cat ./src/ef/music-export.i >> ./build/temp/music-disassemble.s
 	$(CA65) $(CA65FLAGS) -o ./build/ef/music-disassemble.o ./build/temp/music-disassemble.s
 
+# disassemble subs.128.prg
+build/ef/subs128-disassemble.o: build/source/subs.128.prg src/ef/subs128-disassemble.info
+	$(DA65) -i ./src/ef/subs128-disassemble.info -o ./build/temp/subs128-disassemble.s
+	$(CA65) $(CA65FLAGS) -o ./build/ef/subs128-disassemble.o ./build/temp/subs128-disassemble.s
+
 # files with additional items
 build/ef.f/files.list: build/source/files.list build/ef/music.prg build/ef/menu.prg
 	cp ./build/source/* ./build/ef.f/
@@ -103,11 +108,6 @@ build/ef.f/files.list: build/source/files.list build/ef/music.prg build/ef/menu.
 	cp build/ef/music.prg build/ef.f/music.prg
 	echo "0x41/menu menu" >> build/ef.f/files.list
 	echo "0x41/music music" >> build/ef.f/files.list
-
-# disassemble subs.128.prg
-build/ef/subs128-disassemble.o: build/source/subs.128.prg src/ef/subs128-disassemble.info
-	$(DA65) -i ./src/ef/subs128-disassemble.info -o ./build/temp/subs128-disassemble.s
-	$(CA65) $(CA65FLAGS) -o ./build/ef/subs128-disassemble.o ./build/temp/subs128-disassemble.s
 	
 # patch
 build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/ef.f/music_rom.bin

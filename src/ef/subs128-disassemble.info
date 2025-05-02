@@ -28,6 +28,6 @@ GLOBAL {
 SEGMENT { START $7700; END $7b57; NAME "PLAYSOUND"; };
 RANGE { START $7700;  END $7aff; TYPE skip; };
 
-LABEL { ADDR $7b00; NAME "playsound"; };
+LABEL { ADDR $7b00; NAME "playsound"; COMMENT "export\n.export playsound"; };
 RANGE { START $7b00;  END $7b52; TYPE code; };
 RANGE { START $7b53;  END $7b56; TYPE bytetable; };
