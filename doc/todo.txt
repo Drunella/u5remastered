@@ -4,23 +4,14 @@ Mission: Put the complete original game for the C64 on an EasyFlash cartridge
 ==============================================================================
 
 Features
-- import u4 directly from files
-- (no) remove exodecrunch
-
-- trainer
-- run music while loading (at least for block loading)
 - d81 version save file manager (save files in d81 version have different names)
+- show karma with CTRL+K
 
 ToDo
+- import u4 directly from remastered files
 - identify the meaning of list, slist and tlist saving
   look in create.prg
-- cleanup for release
-  + write small documentation
-  + ok apache 2.0 licence
-  + cleanup of repository, rewrite history, one commit only
-- make block loading not interrupt music
 - sound and effect mixing is not good
-- show karma with CTRL+K
 - change own file formats to json
 - check Underworld/startup.prg for menu modifications
 - d81 version u4 import
@@ -233,7 +224,14 @@ Internal text encoding
 Old stuff
 
 Done:
-
+- (ok) cleanup for release
+  + (ok) write small documentation
+  + (ok) apache 2.0 licence
+  + (no) cleanup of repository, rewrite history, one commit only
+- (ok) make block loading not interrupt music
+- (ok) remove exodecrunch
+- (no) trainer, we have an editor
+- (ok) run music while loading (at least for block loading)
 - ok better patch mechanism
 - ok check for irq handling while loading
 - ok add patching of prg files with other prg files
