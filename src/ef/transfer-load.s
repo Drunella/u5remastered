@@ -19,6 +19,7 @@
 ; starts at $8d26
 
 drive_number = $6c33
+ultima4_character_data := $bd00
 
 .export _disk_load_block
 .export _disk_check_type
@@ -46,7 +47,14 @@ drive_number = $6c33
         lda #$00
         sta $4c
         sta $4a
-        jsr $0126
+
+        lda disk_load_mode
+        beq execute_disk_load_block
+        clc
+        rts
+
+    execute_disk_load_block:
+        jsr $0126  ; music off
         lda #$01
         ldx #<disk_load_block_hash
         ldy #>disk_load_block_hash
@@ -73,6 +81,7 @@ drive_number = $6c33
         sta ( $4a ), y
         inc $4c
         bne :-
+
         clc
         php
         lda #$0f
@@ -80,7 +89,9 @@ drive_number = $6c33
         lda #$05
         jsr $ffc3  ; CLOSE. Close file.
         jsr $ffe7  ; CLALL
-        jsr $0129
+
+    done_load_block:
+        jsr $0129  ; music on
         plp
         rts
 
@@ -120,31 +131,39 @@ drive_number = $6c33
         ;     'U' '1' ' ' '5' ' ' '0' ' ' '0' '0' ' ' '0' '0' 
         .byte $55,$31,$20,$35,$20,$30,$20,$30,$30,$20,$30,$30,$00
 
+    disk_load_mode:
+        .byte $00
+
 
     ; --------------------------------------------------------------------
     ; disk_check_type
-    ; A: value, X: offset in string
+    ; A: value
     _disk_check_type:
         sta disk_check_type_requested + 1
+        lda #$00
+        sta disk_load_mode
         lda $c8
         and #$01
         beq one_drive
-        lda $6c33
+        lda drive_number
         eor #$01
-        sta $6c33
+        sta drive_number
         jsr disk_check_type_loadid
         beq disk_inserted
-        lda $6c33
+        lda drive_number
         eor #$01
-        sta $6c33
+        sta drive_number
     one_drive:
         jsr disk_check_type_loadid
         beq disk_inserted
+        jsr _disk_check_remastered
+        bcc disk_inserted
         sec
         rts
     disk_inserted:
         clc
         rts
+
 
     disk_check_type_loadid:
         lda #$7f
@@ -155,4 +174,55 @@ drive_number = $6c33
     disk_check_type_requested:
         cmp #$ff
         rts
-       
+
+
+    ; --------------------------------------------------------------------
+    ; check for ultima remastered save file (s80)
+    ; returns: C = 0 if exists, C = 1 if not (A = error code).
+    _disk_check_remastered:
+        ; load file
+        jsr $0126  ; music off
+        lda #remastered_filename_end - remastered_filename
+        ldx #<remastered_filename
+        ldy #>remastered_filename
+        jsr $ffbd  ; SETNAM. Set file name parameters. A = File name length; X/Y = Pointer to file name.
+        lda #$01
+        ldy #$00
+        ldx drive_number
+        jsr $ffba  ; SETLFS. Set file parameters. A = Logical number; X = Device number; Y = Secondary address.
+
+        lda #$0
+        ldx #<ultima4_character_data
+        ldy #>ultima4_character_data
+        jsr $ffd5  ; LOAD
+        bcc @found ; no error, file loaded
+
+        lda #$00
+        sta disk_load_mode  ; 0 means load blocks
+        jsr $0129  ; music on
+        sec        ; not found
+        rts
+
+    @found:
+        lda #$01
+        sta disk_load_mode  ; 1 means file loaded, do not load blocks
+
+        ; simulate a found disk
+        lda #$55          ; U
+        sta $7f90
+        lda #$34          ; 4
+        sta $7f91
+        lda #$43          ; C
+        sta $7f98
+        lda #$30          ; 
+        sta $7fa2
+
+        jsr $0129  ; music on
+        clc        ; found
+        rts
+
+    remastered_filename:
+        .byte "s80"
+    remastered_filename_end:
+
+
