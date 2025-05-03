@@ -94,7 +94,7 @@ check if disk 0x41 is inserted
 
    |||  |   0x000080e2      20c680         jsr 0x80c6                  ; jump to new location saving return address
    |||  |   0x000080e5      a930           lda #0x30                   ; load accumulator with memory
-   |||  |   0x000080e7      202a6c         jsr 0x6c2a       ; check inserted disk with id 0x30, probably u4 disk ### needs real load block ###
+   |||  |   0x000080e7      202a6c         jsr 0x6c2a       ; check inserted disk with id 0x30, probably u4 disk => _disk_check_type
    ||| ,==< 0x000080ea      b017           bcs 0x459108     ; 0x8103           ; branch on carry set
    ||| ||   0x000080ec      ad907f         lda 0x7f90       ; in 0x7f?? the disk block 18/0 will be loaded, at 90 the name starts U4 DISK C
    ||| ||   0x000080ef      c955           cmp #0x55        ; 'U'
@@ -169,11 +169,11 @@ check if disk 0x41 is inserted
    |||  |   0x000081f4      a9bd           lda #0xbd                   ; load accumulator with memory
    |||  |   0x000081f6      a00e           ldy #0x0e                   ; load index y with memory
    |||  |   0x000081f8      a200           ldx #0x00                   ; load index x with memory
-   |||  |   0x000081fa      20006c         jsr 0x6c00       ; load block from disk: Y: track 0e, X: sector 0, A: address high byte 0xbd ### real block load necessary ###
+   |||  |   0x000081fa      20006c         jsr 0x6c00       ; load block from disk: Y: track 0e, X: sector 0, A: address high byte 0xbd => _disk_load_block
    |||  |   0x000081fd      a9be           lda #0xbe                   ; load accumulator with memory
    |||  |   0x000081ff      a00e           ldy #0x0e                   ; load index y with memory
    |||  |   0x00008201      a201           ldx #0x01                   ; load index x with memory
-   `======< 0x00008203      4c006c         jmp 0x6c00       ; load block from disk: Y: track 0e, X: sector 1, A: address high byte 0xbe ### real block load necessary ###
+   `======< 0x00008203      4c006c         jmp 0x6c00       ; load block from disk: Y: track 0e, X: sector 1, A: address high byte 0xbe => _disk_load_block
    
     ||  |   0x00008206      a200           ldx #0x00                   ; load index x with memory
     ||  |   0x00008208      a000           ldy #0x00                   ; load index y with memory

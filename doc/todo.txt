@@ -8,7 +8,6 @@ Features
 - show karma with CTRL+K
 
 ToDo
-- import u4 directly from remastered files
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - sound and effect mixing is not good
@@ -224,6 +223,7 @@ Internal text encoding
 Old stuff
 
 Done:
+- (ok) import u4 directly from remastered files
 - (ok) cleanup for release
   + (ok) write small documentation
   + (ok) apache 2.0 licence

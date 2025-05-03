@@ -76,9 +76,9 @@
   |||||||   0x000080ab      850c           sta 0x0c                    ; store accumulator in memory
   --------> 0x000080ad      a200           ldx #0x00                   ; load index x with memory
   |||||||   0x000080af      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |||||||   0x000080b2      4445           nop 0x45                    ; no operation
-  |||||||   0x000080b4      4154           eor (0x54,x)                ; "exclusive-or" memory with accumulator
-  |||||||   0x000080b6      48             pha                         ; push accumulator on stack
+  |||||||   0x000080b2      4445           nop 0x45                    ; DEATH
+  |||||||   0x000080b4      4154           eor (0x54,x)                ; 
+  |||||||   0x000080b6      48             pha                         ; 
   |||||||   0x000080b7      00             brk                         ; force break
   ========< 0x000080b8      b0f3           bcs 0x514108                ; branch on carry set
   ========< 0x000080ba      4c00a7         jmp 0xa700                  ; jump to new location
@@ -1018,10 +1018,10 @@
   |||||||   0x000088ba      467a           lsr 0x7a                    ; shift right one bit (memory or accumulator)
   --------> 0x000088bc      a200           ldx #0x00                   ; load index x with memory
   |||||||   0x000088be      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |||||||   0x000088c1      5348           sre (0x48),y
+  |||||||   0x000088c1      5348           sre (0x48),y                ; SHRINE
   |||||||   0x000088c3      52             hlt
-  |||||||   0x000088c4      494e           eor #0x4e                   ; "exclusive-or" memory with accumulator
-  |||||||   0x000088c6      4500           eor 0x00                    ; "exclusive-or" memory with accumulator
+  |||||||   0x000088c4      494e           eor #0x4e                   
+  |||||||   0x000088c6      4500           eor 0x00                    
   ========< 0x000088c8      b0f2           bcs 0x514108                ; branch on carry set
   ========< 0x000088ca      4c00a7         jmp 0xa700                  ; jump to new location
   |||||||   0x000088cd      00             brk                         ; force break
@@ -1841,9 +1841,9 @@
   |||||||   0x00008fd7      02             hlt
   |||||||   0x00008fd8      a200           ldx #0x00                   ; load index x with memory
   |||||||   0x00008fda      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  |||||||   0x00008fdd      544c           nop 0x4c,x                  ; no operation
-  |||||||   0x00008fdf      4953           eor #0x53                   ; "exclusive-or" memory with accumulator
-  |||||||   0x00008fe1      5400           nop 0x00,x                  ; no operation
+  |||||||   0x00008fdd      544c           nop 0x4c,x                  ; TLIST
+  |||||||   0x00008fdf      4953           eor #0x53                   
+  |||||||   0x00008fe1      5400           nop 0x00,x                  
   |||||||   0x00008fe3      202d6c         jsr 0x6c2d                  ; jump to new location saving return address
   |||||||   0x00008fe6      533a           sre (0x3a),y
   |||||||   0x00008fe8      534c           sre (0x4c),y
@@ -1855,8 +1855,8 @@
   |||||||   0x00008ff1      02             hlt
   |||||||   0x00008ff2      a200           ldx #0x00                   ; load index x with memory
   |||||||   0x00008ff4      20246c         jsr 0x6c24                  ; jump to new location saving return address
-  ========< 0x00008ff7      4c4953         jmp 0x5349                  ; jump to new location
-  |||||||   0x00008ffa      5400           nop 0x00,x                  ; no operation
+  ========< 0x00008ff7      4c4953         jmp 0x5349                  ; LIST
+  |||||||   0x00008ffa      5400           nop 0x00,x                  
   |||||||   0x00008ffc      202d6c         jsr 0x6c2d                  ; jump to new location saving return address
   |||||||   0x00008fff      533a           sre (0x3a),y
   |||||||   0x00009001      52             hlt
@@ -2739,17 +2739,17 @@
    |  | |   0x00009795      48             pha                         ; push accumulator on stack
    |  | |   0x00009796      a200           ldx #0x00                   ; load index x with memory
    |  | |   0x00009798      20246c         jsr 0x6c24                  ; jump to new location saving return address
-   |  | |   0x0000979b      544c           nop 0x4c,x                  ; no operation
-   |  | |   0x0000979d      4953           eor #0x53                   ; "exclusive-or" memory with accumulator
-   |  | |   0x0000979f      5400           nop 0x00,x                  ; no operation
+   |  | |   0x0000979b      544c           nop 0x4c,x                  ; TLIST
+   |  | |   0x0000979d      4953           eor #0x53                   
+   |  | |   0x0000979f      5400           nop 0x00,x                  
    |  | |   0x000097a1      68             pla                         ; pull accumulator from stack
    |  | |   0x000097a2      8dc04a         sta 0x4ac0                  ; store accumulator in memory
    |  | |   0x000097a5      a201           ldx #0x01                   ; load index x with memory
    |  | |   0x000097a7      20246c         jsr 0x6c24                  ; jump to new location saving return address
-   |  | |   0x000097aa      4d4149         eor 0x4941                  ; "exclusive-or" memory with accumulator
-   |  | |   0x000097ad      4e2e4f         lsr 0x4f2e                  ; shift right one bit (memory or accumulator)
-   |  | |   0x000097b0      5554           eor 0x54,x                  ; "exclusive-or" memory with accumulator
-   |  | |   0x000097b2      00             brk                         ; force break
+   |  | |   0x000097aa      4d4149         eor 0x4941                  ; MAIN.OUT
+   |  | |   0x000097ad      4e2e4f         lsr 0x4f2e                  
+   |  | |   0x000097b0      5554           eor 0x54,x                  
+   |  | |   0x000097b2      00             brk                         
    |  |,==< 0x000097b3      d03c           bne 0x514108                ; branch on result not zero
    |  |||   0x000097b5      20394c         jsr 0x4c39                  ; jump to new location saving return address
    |  |||   0x000097b8      20424c         jsr 0x4c42                  ; jump to new location saving return address

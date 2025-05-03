@@ -64,8 +64,8 @@ Main Memory Map
    8      u5siz.o (fast-loader) / [ef: eapi] / [d81: u5siz.o or subs.128]
    9      u5siz.o (fast-loader) / [ef: eapi] / [d81: u5siz.o or subs.128]
    A      u5siz.o (fast-loader) / [ef: eapi] / [d81: u5siz.o or subs.128]
-   B      u5siz.o (fast-loader) / [ef: empty] / [d81: u5siz.o or subs.128] / [d81: 0x7b80 - 0x7bff free]
-   C      (256 free) [ef: empty] / [d81: exomizer]
+   B      u5siz.o (fast-loader) / [ef: playsound, music control] / [d81: u5siz.o or subs.128] / [d81: 0x7b80 - 0x7bff free]
+   C      (256 free) [ef: empty] / [d81: playsound, exomizer]
    D      (unknown temporary data)
    E      (ram, probably also temp)
    F      (ram, temporary storage for disk checking) [d81: in use in c128 mode between loading]
