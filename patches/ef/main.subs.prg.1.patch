@@ -5,4 +5,4 @@ filename = "0x41/main.subs"
 offset = 2
 address = 0x1ff0
 original = a900
-new      = a908
+new      = a900

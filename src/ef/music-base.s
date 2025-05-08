@@ -350,7 +350,7 @@
         ; set music control to off
         lda #$ff
         sta music_masterswitch
-        
+
         jmp music_leave
         ; no rts, cli is set by plp on exit
 
