@@ -5,7 +5,7 @@ Mission: Put the complete original game for the C64 on an EasyFlash cartridge
 
 Features
 - d81 version save file manager (save files in d81 version have different names)
-- show karma with CTRL+K
+- show karma with CTRL+K (difficult)
 
 ToDo
 - identify the meaning of list, slist and tlist saving

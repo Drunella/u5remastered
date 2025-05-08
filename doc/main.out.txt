@@ -286,9 +286,9 @@
   --------> 0x00008272      ca             dex                         ; decrement index x by one
   ========< 0x00008273      10e8           bpl 0x514108                ; branch on result plus
   |||||||   0x00008275      20004c         jsr 0x4c00                  ; jump to new location saving return address
-  |||||||   0x00008278      d7e8           dcp 0xe8,x
-  |||||||   0x0000827a      e1f4           sbc (0xf4,x)                ; subtract memory from accumulator with borrow
-  |||||||   0x0000827c      bf8d00         lax 0x008d,y
+  |||||||   0x00008278      d7e8           
+  |||||||   0x0000827a      e1f4           
+  |||||||   0x0000827c      bf8d00         
   |||||||   0x0000827f      4c0295         jmp 0x9502                  ; jump to new location
   |||||||   0x00008282      f985f3         sbc 0xf385,y                ; subtract memory from accumulator with borrow
   |||||||   0x00008285      85c3           sta 0xc3                    ; store accumulator in memory
@@ -673,34 +673,36 @@
   |||||||   0x000085c3      2c0781         bit 0x8107                  ; test bits in memory with accumulator
   ========< 0x000085c6      101b           bpl 0x514108                ; branch on result plus
   |||||||   0x000085c8      20004c         jsr 0x4c00                  ; jump to new location saving return address
-  |||||||   0x000085cb      d3e8           dcp (0xe8),y
-  |||||||   0x000085cd      e5e5           sbc 0xe5                    ; subtract memory from accumulator with borrow
-  |||||||   0x000085cf      f4f3           nop 0xf3,x                  ; no operation
-  |||||||   0x000085d1      a0e9           ldy #0xe9                   ; load index y with memory
-  |||||||   0x000085d3      ee8de9         inc 0xe98d                  ; increment memory by one
-  |||||||   0x000085d6      f2             hlt
-  |||||||   0x000085d7      efeef3         isb 0xf3ee
-  |||||||   0x000085da      a18d           lda (0x8d,x)                ; load accumulator with memory
-  |||||||   0x000085dc      00             brk                         ; force break
+  |||||||   0x000085cb      d3e8           
+  |||||||   0x000085cd      e5e5           
+  |||||||   0x000085cf      f4f3           
+  |||||||   0x000085d1      a0e9           
+  |||||||   0x000085d3      ee8de9         
+  |||||||   0x000085d6      f2             
+  |||||||   0x000085d7      efeef3         
+  |||||||   0x000085da      a18d           
+  |||||||   0x000085dc      00             
   |||||||   0x000085dd      4e0781         lsr 0x8107                  ; shift right one bit (memory or accumulator)
   |||||||   0x000085e0      4c0295         jmp 0x9502                  ; jump to new location
   --------> 0x000085e3      20004c         jsr 0x4c00                  ; jump to new location saving return address
-  |||||||   0x000085e6      d0e1           bne 0x514108                ; branch on result not zero
-  |||||||   0x000085e8      f3f3           isb (0xf3),y
-  |||||||   0x000085ea      8d0038         sta 0x3800                  ; store accumulator in memory
+  |||||||   0x000085e6      d0e1           
+  |||||||   0x000085e8      f3f3           
+  |||||||   0x000085ea      8d00
+                            38             sec
   |||||||   0x000085ed      6e1393         ror 0x9313                  ; rotate one bit right (memory or accumulator)
   ========< 0x000085f0      4c0295         jmp 0x9502                  ; jump to new location
+  
   |||||||   0x000085f3      20436c         jsr 0x6c43                  ; jump to new location saving return address
   ========< 0x000085f6      4c7a80         jmp 0x807a                  ; jump to new location
   |||||||   0x000085f9      a578           lda 0x78                    ; load accumulator with memory
   |||||||   0x000085fb      4980           eor #0x80                   ; "exclusive-or" memory with accumulator
   |||||||   0x000085fd      8578           sta 0x78                    ; store accumulator in memory
   |||||||   0x000085ff      20004c         jsr 0x4c00                  ; jump to new location saving return address
-  |||||||   0x00008602      d3ef           dcp (0xef),y
-  |||||||   0x00008604      f5ee           sbc 0xee,x                  ; subtract memory from accumulator with borrow
-  |||||||   0x00008606      e4f3           cpx 0xf3                    ; compare memory and index x
-  |||||||   0x00008608      a0cf           ldy #0xcf                   ; load index y with memory
-  |||||||   0x0000860a      00             brk                         ; force break
+  |||||||   0x00008602      d3ef           
+  |||||||   0x00008604      f5ee           
+  |||||||   0x00008606      e4f3           
+  |||||||   0x00008608      a0cf           
+  |||||||   0x0000860a      00             
   |||||||   0x0000860b      2478           bit 0x78                    ; test bits in memory with accumulator
   ========< 0x0000860d      300a           bmi 0x514108                ; branch on result minus
   |||||||   0x0000860f      20004c         jsr 0x4c00                  ; jump to new location saving return address
