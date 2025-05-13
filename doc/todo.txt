@@ -8,6 +8,14 @@ Features
 - show karma with CTRL+K (difficult)
 
 ToDo
+- enhance blockmap (there are probably rooms missing in dungeons)
+  7 disks: from track 19 to 35 (17 tracks) with space for max 19 sectors (32)
+  every entry has 4 bytes: bank, high, low address
+  every disk needs 2176 bytes, alltogether 15232
+  the disk start addresses are put at the beginning (32 bytes)
+  (32 and 4 are easy to multiply)
+- reset rooms does not get all rooms
+  see covetous
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - sound and effect mixing is not good
@@ -93,6 +101,34 @@ ToDo
     load TLIST
     load MAIN.OUT
 
+- Enter Room in Dungeon
+    load DNG.* (DNG.PRECOM)
+    load S3
+    load S2
+    load S1
+    load S0
+    load COLORS
+    block Y, X
+    load MAIN.COMBAT
+
+- Leave Room in Dungeon
+    load MAIN.DNG
+    load DNG3A (dungeon specific?)
+    load DNG3B (dungeon specific?)
+    load DNG3C (dungeon specific?)
+    load ITEMS
+    load MS0 (dungeon specific?)
+
+- Enter Dungeon
+    load E* (underworld/britannia)
+    load MAIN.DNG (dungeon)
+    load DNG3A (dungeon specific?)
+    load DNG3B (dungeon specific?)
+    load DNG3C (dungeon specific?)
+    load ITEMS
+    load MS6 (dungeon specific?)
+    block_alt 0x23 0x08 0x23 0x09 (dungeon map)
+    
 
 Build Process
 =============

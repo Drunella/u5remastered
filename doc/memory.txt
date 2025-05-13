@@ -28,8 +28,8 @@ Main Memory Map
    5      map
    6      map
    7      map
-   8      (unknown data)
-   9      (unknown data)
+   8      (temporary data: room data)
+   9      (temporary data: room creatures)
    A      list, slist, tlist, blank.ulist
    B      list, slist, tlist, blank.ulist
    C      main.subs
@@ -103,7 +103,7 @@ Main Memory Map
    E
    F
 0xB000    colors, dng*
-0xC000    osi, print, s*, u5.logo*
+0xC000    osi, print, s*, u5.logo* / [ram]
 0xD000    [i/o] / [ram]
    1
    2
