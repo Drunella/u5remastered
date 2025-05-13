@@ -64,8 +64,13 @@ typedef struct  {
 } character_stats_t;
 
 typedef struct {
-    char names[16][8];
-    character_stats_t stats[16];
+    // 0x1000
+    char names[16][8];             // 128
+
+    // 0x1080
+    character_stats_t stats[16];   // 256
+    
+    // 0x1180
     uint16_t food; // changeable
     uint16_t gold; // changeable
     uint8_t keys; // changeable
@@ -77,8 +82,12 @@ typedef struct {
     uint8_t shadowlord_hatred;
     uint8_t shadowlord_cowardice;
     uint16_t ordained_shrines;
-    uint16_t completed_shrines;
-    uint8_t equipment[16][6];  // changeable
+    uint16_t completed_shrines;    // 16
+
+    // 0x1190
+    uint8_t equipment[16][6];  // changeable, 96
+
+    // 0x11f0    
     uint8_t shard_falsehood;
     uint8_t shard_hatred;
     uint8_t shard_cowardice;
@@ -92,21 +101,33 @@ typedef struct {
     uint8_t sceptre;
     uint8_t blackbadge;
     uint8_t sandalwood;
-    uint8_t dummy1[3];
-    uint8_t armors[0x10]; // changeable
+    uint8_t dummy1[3];             // 16, (512)
+    
+    // 0x1200
+    uint8_t armors[0x10]; // changeable, 16
     uint8_t weapons[0x1a]; // changeable
     uint8_t rings[3]; // changeable
-    uint8_t amulets[3]; // changeable
+    uint8_t amulets[3]; // changeable, 32
     uint8_t dungeons_sealed[8];
-    uint8_t shrines_destroyed[8];
-    uint8_t spells[0x30]; // changeable
+    uint8_t shrines_destroyed[8];  // 16
+
+    // 0x1240
+    uint8_t spells[0x30]; // changeable, 48
+    
+    // 0x1270
     uint8_t scrolls[8]; // changeable
     uint8_t potions[8]; // changeable
+
+    // 0x1280
     uint8_t moonstone_x[8];
     uint8_t moonstone_y[8];
     uint8_t moonstone_flag[8];
     uint8_t moonstone_z[8];
-    uint8_t reagents[8];
+
+    // 0x12a0
+    uint8_t reagents[8];          // 56, (680)
+    
+    // 0x12a8
     uint8_t dummy2;
     uint16_t dungeonrooms[0x07]; // 7 dungeons
     uint8_t dummy3;
@@ -623,7 +644,7 @@ void draw_editor_help(bool change)
     cputsxy(0, LEGENDE_STARTY, "( )exit  (     )change    (    )navigate");
 
     //              0123456789012345678901234567890123456789
-    cputsxy(0, LEGENDE_STARTY+1, "( )eset Rooms"); //               (S)ave
+// ###    cputsxy(0, LEGENDE_STARTY+1, "( )eset Rooms"); //               (S)ave
     if (change) cputsxy(34, LEGENDE_STARTY+1, "( )ave"); else cclearxy(34, LEGENDE_STARTY+1, 6);
 
     cputsxy(2, 2, "[  ]"); // F1
@@ -636,7 +657,7 @@ void draw_editor_help(bool change)
     cputsxy(11+1, 2, "F3");
     cputsxy(11+1, 11, "F5");
     cputsxy(22+1, 2, "F7");
-    cputcxy(1, LEGENDE_STARTY+1, 'R');
+// ###    cputcxy(1, LEGENDE_STARTY+1, 'R');
     if (change) cputsxy(35, LEGENDE_STARTY+1, "S");
     cputcxy(1, LEGENDE_STARTY, 0x5f);
     cputsxy(10, LEGENDE_STARTY, "Enter");
@@ -851,13 +872,13 @@ void savegameeditor(void)
                 repaint = 0xff;
                 break;
 
-            case 'r': // reset rooms
+/* ###            case 'r': // reset rooms
                 if (ok && sure(0, 24)) {
                     memset(roster->dungeonrooms, 0, 0x0e);
                     changed = true;
                     repaint = 1;
                 }
-                break;
+                break;*/
 
             case 's': // save
                 if (ok && changed && sure(0, 24)) {
