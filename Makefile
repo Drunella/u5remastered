@@ -28,7 +28,7 @@ CC65FLAGS=-t $(TARGET) -O
 export LD65_LIB=/opt/cc65/share/cc65/lib
 
 .SUFFIXES: .prg .s .c
-.PHONY: clean subdirs all easyflash mrproper
+.PHONY: clean subdirs all easyflash mrproper pngs
 
 # all
 all: easyflash d81 backbit
@@ -184,6 +184,7 @@ build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map bu
 build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg
 	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
 
+
 # ------------------------------------------------------------------------
 # backbit
 
@@ -223,6 +224,13 @@ build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/lo
 	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f
 
 # ------------------------------------------------------------------------
+# map pngs
+
+pngs: build/source/files.list
+	tools/create_maps.sh
+
+
+# ------------------------------------------------------------------------
 
 subdirs:
 	@mkdir -p ./build/temp 
@@ -244,9 +252,12 @@ clean:
 	rm -rf build/backbit.f
 	rm -rf build/temp
 	rm -rf build/exo
+	rm -rf build/source
+	rm -rf build/png
 	rm -f build/u5remastered.crt
 	rm -f build/u5remastered.d81
 	rm -f build/u5remastered-BackBit.d81
+	rm -rf build/*.png
 
 mrproper:
 	rm -rf build

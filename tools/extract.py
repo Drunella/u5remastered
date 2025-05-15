@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import traceback
 #import pprint
+import re
 
 
 def readdisks_info(filename):
@@ -48,13 +49,17 @@ def readdisk_getdiskfile(directory, diskname):
 def readdisk_directory(filename):
     global my_env
     result = subprocess.run(["c1541", filename, "-list"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
-    lines = result.stdout.splitlines()[1:-1]
+    lines = result.stdout.splitlines()
+    pattern = re.compile(r'^\s*(\d+)\s+"([^"]+)"')
     retval = []
     for l in lines:
-        content = l.split()[1][1:-1]
-        retval.append(content)
+        match = pattern.match(l)
+        if match:
+            num, text = match.groups()
+            if (int(num) == 0):
+                continue
+            retval.append(text)
     return retval
-
 
 def readdisk_checktype(filename, typeid, typename):
     global my_env

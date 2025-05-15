@@ -31,6 +31,16 @@ Find the crt and d81 image in the build sub-directory:
 `build/u5remastered.crt`, 
 `build/u5remastered.d81`.
 
+## Maps
+To create Ultima V maps run the following command. You need python pillow to
+create maps.
+
+```
+make pngs
+```
+
+Find the images in the build sub-directory.
+
 # Bugs
 
 I did not test it thoroughly. Please report bugs or suggestions to drunella@gmx.de.
