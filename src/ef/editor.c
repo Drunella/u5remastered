@@ -46,6 +46,8 @@
 
 #define LEGENDE_STARTY 20
 
+#define DUNGEON_ROOM_DATA (8 + 80 + 256)
+
 
 typedef struct  {
     uint8_t location;
@@ -128,9 +130,8 @@ typedef struct {
     uint8_t reagents[8];          // 56, (680)
     
     // 0x12a8
-    uint8_t dummy2;
-    uint16_t dungeonrooms[0x07]; // 7 dungeons
-    uint8_t dummy3;
+    uint8_t dungeonrooms[DUNGEON_ROOM_DATA];
+    
 } roster_t;
 
 typedef struct {
@@ -644,7 +645,7 @@ void draw_editor_help(bool change)
     cputsxy(0, LEGENDE_STARTY, "( )exit  (     )change    (    )navigate");
 
     //              0123456789012345678901234567890123456789
-// ###    cputsxy(0, LEGENDE_STARTY+1, "( )eset Rooms"); //               (S)ave
+    cputsxy(0, LEGENDE_STARTY+1, "( )eset Rooms and Other"); //               (S)ave
     if (change) cputsxy(34, LEGENDE_STARTY+1, "( )ave"); else cclearxy(34, LEGENDE_STARTY+1, 6);
 
     cputsxy(2, 2, "[  ]"); // F1
@@ -657,7 +658,7 @@ void draw_editor_help(bool change)
     cputsxy(11+1, 2, "F3");
     cputsxy(11+1, 11, "F5");
     cputsxy(22+1, 2, "F7");
-// ###    cputcxy(1, LEGENDE_STARTY+1, 'R');
+    cputcxy(1, LEGENDE_STARTY+1, 'R');
     if (change) cputsxy(35, LEGENDE_STARTY+1, "S");
     cputcxy(1, LEGENDE_STARTY, 0x5f);
     cputsxy(10, LEGENDE_STARTY, "Enter");
@@ -872,13 +873,19 @@ void savegameeditor(void)
                 repaint = 0xff;
                 break;
 
-/* ###            case 'r': // reset rooms
-                if (ok && sure(0, 24)) {
-                    memset(roster->dungeonrooms, 0, 0x0e);
-                    changed = true;
-                    repaint = 1;
+            case 'r': // reset rooms
+                if (ok) {
+                    cputsxy(0,23, "Untested! Use only outside of a dungeon!");
+                    if (sure(0, 24)) {
+                        memset(roster->dungeonrooms, 0, DUNGEON_ROOM_DATA);
+                        changed = true;
+                        repaint = 1;
+                    } else {
+                        repaint = 1;
+                    }
+                    cclearxy(0, 23, 40);
                 }
-                break;*/
+                break;
 
             case 's': // save
                 if (ok && changed && sure(0, 24)) {
