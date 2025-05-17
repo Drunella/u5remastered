@@ -21,30 +21,30 @@ fi
 mkdir -p build/png
 
 # get tiles and colors
-c1541 disks/osi.d64 -read s0 ./build/png/s0.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read s0 ./build/png/s0.prg
 dd status=none bs=1 if=build/png/s0.prg skip=2 of=build/png/s0.bin >/dev/null
 rm build/png/s0.prg
 
-c1541 disks/osi.d64 -read s1 ./build/png/s1.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read s1 ./build/png/s1.prg
 dd status=none bs=1 if=build/png/s1.prg skip=2 of=build/png/s1.bin >/dev/null
 rm build/png/s1.prg
 
-c1541 disks/osi.d64 -read s2 ./build/png/s2.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read s2 ./build/png/s2.prg
 dd status=none bs=1 if=build/png/s2.prg skip=2 of=build/png/s2.bin >/dev/null
 rm build/png/s2.prg
 
-c1541 disks/osi.d64 -read s3 ./build/png/s3.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read s3 ./build/png/s3.prg
 dd status=none bs=1 if=build/png/s3.prg skip=2 of=build/png/s3.bin >/dev/null
 rm build/png/s3.prg
 
-c1541 disks/osi.d64 -read colors ./build/png/colors.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read colors ./build/png/colors.prg
 dd status=none bs=1 if=build/png/colors.prg skip=2 of=build/png/colors.bin
 rm build/png/colors.prg
 
 tools/tilesbuilder.py
 
 # get fonts
-c1541 disks/osi.d64 -read htxt ./build/png/htxt.prg
+SDL_VIDEODRIVER=dummy c1541 disks/osi.d64 -read htxt ./build/png/htxt.prg
 dd status=none bs=1 if=build/png/htxt.prg skip=2 of=build/png/htxt.bin >/dev/null
 tools/font2png.py -o ./build/png/font.png ./build/png/htxt.bin
 
