@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 # ------------------------------------------------------------------------------
 # Copyright 2025 Drunella
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +16,7 @@
 # a language model by OpenAI.
 # ------------------------------------------------------------------------------
 
-#!/usr/bin/env python3
-"""map_builder.py – Assemble a map image from a *block‑based* map file.
+"""mapbuilder.py – Assemble a map image from a *block‑based* map file.
 
 Layout hierarchy
 ================

@@ -61,15 +61,28 @@ def readdisk_directory(filename):
             retval.append(text)
     return retval
 
+
 def readdisk_checktype(filename, typeid, typename):
     global my_env
     result = subprocess.run(["c1541", filename, "-block", "18", "0", "162"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, env=my_env)
-    content = result.stdout.splitlines()
-    value = content[1].split()[2]
-    if int(value, 16) != typeid:
-        raise Exception("disk type mismatch")
-    return typeid
-    
+    lines = result.stdout.splitlines()
+    pattern = re.compile(
+    r'''^            # beginning of the line
+        \s*>\s*      # '>' with optional leading/trailing blanks
+        (?:0x)?a2    # literal a2, optional 0x, case-insensitive
+        \s*          # blanks between a2 and the value you need
+        ([0-9A-Fa-f]+)  # ← group 1: one or more hex digits
+    ''',
+    re.I | re.X)     # re.I = ignore case, re.X = verbose mode
+    for l in lines:
+        value = pattern.match(l)
+        if value is None:
+           continue
+        if int(value.group(1), 16) != typeid:
+            raise Exception("disk type mismatch")
+        return typeid
+    raise Exception("cannot identify disk type") 
+
     
 def readdisk_extractfile(diskfile, filename, destfile):
     global my_env

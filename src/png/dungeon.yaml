@@ -1,0 +1,80 @@
+0x00: {glyph: 32 }  # empty floor
+0x04: {glyph: 32 }  # empty floor, ???
+0x08: {glyph: 50 }  # empty floor, visible ceiling hole
+
+
+0x10: {glyph: 43 }  # ladder up
+0x20: {glyph: 45 }  # ladder down
+0x30: {glyph: 44 }  # ladder up&down
+0x40: {glyph: 36 }  # closed chest
+0x41: {glyph: 36 }  # closed chest, trapped
+0x42: {glyph: 36 }  # closed chest, trapped
+0x44: {glyph: 36 }  # closed chest, poisoned
+
+0x50: {glyph: 25, colour: "#00007f" }
+0x51: {glyph: 25, colour: "#0000ff" }
+0x52: {glyph: 25, colour: "#00ff00" }
+0x53: {glyph: 25, colour: "#ff0000" }
+0x54: {glyph: 25, colour: "#ff0000" }
+0x55: {glyph: 25, colour: "#ff0000" }
+0x56: {glyph: 25, colour: "#ff0000" }
+0x57: {glyph: 25, colour: "#ff0000" }
+0x58: {glyph: 25, colour: "#ff0000" }
+0x59: {glyph: 25, colour: "#ff0000" }
+0x5a: {glyph: 25, colour: "#ff0000" }
+0x5b: {glyph: 25, colour: "#ff0000" }
+0x5c: {glyph: 25, colour: "#ff0000" }
+0x5d: {glyph: 25, colour: "#ff0000" }
+0x5e: {glyph: 25, colour: "#ff0000" }
+0x5f: {glyph: 25, colour: "#ff0000" }
+
+0x60: {glyph: 52 }  # 0: visible floor hole
+0x61: {glyph: 46 }  # 1: invisible floor hole trap
+0x62: {glyph: 33 }  # 2: bomb trap
+0x68: {glyph: 50 }  # 8: visible ceiling hole
+0x69: {glyph: 50 }  # 9: visible ceiling hole and invisible floor hole trap
+
+0x70: {glyph: 36 }  # open chest
+
+0x80: {glyph: 37, colour: "#00ff00" }  # poison field
+0x81: {glyph: 37, colour: "#800080" }  # sleep field
+0x82: {glyph: 37, colour: "#ff0000" }  # fire field
+0x83: {glyph: 37, colour: "#0000ff" }  # energy field
+
+0xb0: {glyph: 42 }  # wall
+0xb1: {glyph: 40 }  # wall with text
+0xb2: {glyph: 40 }  # wall with text
+0xb3: {glyph: 40 }  # wall with text
+0xb4: {glyph: 40 }  # wall with text
+0xb5: {glyph: 40 }  # wall with text
+0xb6: {glyph: 40 }  # wall with text
+0xb7: {glyph: 40 }  # wall with text
+0xb8: {glyph: 40 }  # wall with text
+0xb9: {glyph: 40 }  # wall with text
+0xba: {glyph: 40 }  # wall with text
+0xbb: {glyph: 40 }  # wall with text
+0xbc: {glyph: 40 }  # wall with text
+0xbd: {glyph: 40 }  # wall with text
+0xbe: {glyph: 40 }  # wall with text
+0xbf: {glyph: 40 }  # wall with text
+
+0xc0: {glyph: 41 }  # alternate wall
+0xd0: {glyph: 47 }  # secret door
+0xe0: {glyph: 34 }  # normal door
+
+0xf0: {glyph: 35}  # room
+0xf1: {glyph: 35}  # room
+0xf2: {glyph: 35}  # room
+0xf3: {glyph: 35}  # room
+0xf4: {glyph: 35}  # room
+0xf5: {glyph: 35}  # room
+0xf6: {glyph: 35}  # room
+0xf7: {glyph: 35}  # room
+0xf8: {glyph: 35}  # room
+0xf9: {glyph: 35}  # room
+0xfa: {glyph: 35}  # room
+0xfb: {glyph: 35}  # room
+0xfc: {glyph: 35}  # room
+0xfd: {glyph: 35}  # room
+0xfe: {glyph: 35}  # room
+0xff: {glyph: 35}  # room

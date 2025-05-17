@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 # ------------------------------------------------------------------------------
 # Copyright 2025 Drunella
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,7 @@
 # This file includes code generated with assistance from ChatGPT,
 # a language model by OpenAI.
 # ------------------------------------------------------------------------------
+
 """
 C-64 hi-res tile viewer – *2×2-square aware*
 
