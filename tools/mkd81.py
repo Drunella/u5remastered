@@ -234,12 +234,15 @@ def disk_findemptyentry(data):
     return None
 
 
-def disk_makeentry(filename, original):
+def disk_makeentry(filename, original, protected):
     # reset entry
     data = bytearray(32)
     data[0x00] = 0  # track / sector, must be set later eventually
     data[0x01] = 0
-    data[0x02] = 0x82  # prg file
+    if protected:
+        data[0x02] = 0xc2  # prg file, protected
+    else:
+        data[0x02] = 0x82  # prg file
     # 3 and 4 will not be changed, track and sector of first data
     data[0x03] = original[0x03]
     data[0x04] = original[0x04]
@@ -259,7 +262,7 @@ def disk_makeadditionaldirentry(originalfile, newfile, verbose=False):
     original = disk_finddirentry(disk_image, originalfile)
     if original is None:
         raise Exception("could not find file " + originalfile + " on disk")
-    newentry = disk_makeentry(newfile, original)
+    newentry = disk_makeentry(newfile, original, False)
     position = disk_findemptyentry(disk_image)
     if position is None:
         raise Exception("could not find empty directory entry on disk")
@@ -349,6 +352,9 @@ def main(argv):
     # copy startup file (as first file) and other non crunched files
     sourcefilename = files_list["0x41/meow"] + ".prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "ultima v", verbose=args.verbose)
+
+    sourcefilename = "editor.prg"
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "editor", verbose=args.verbose)
 
     sourcefilename = "loader.prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "xyzzy", verbose=args.verbose)

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../common/menu_include.h"
+#include "menu_include.h"
 
 #define MENU_START 13
 

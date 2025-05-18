@@ -81,6 +81,11 @@ build/ef/menu.prg: $(EF_MENU_FILES)
 build/ef/music.prg build/ef.f/music_rom.bin build/ef/music.map: $(EF_MUSIC_FILES)
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/music.map -o build/ef/music.prg -C src/ef/music.cfg $(EF_MUSIC_FILES)
 
+# editor.o
+build/ef/editor.o:
+	$(CC65) $(CC65FLAGS) -DEASYFLASH -o build/ef/editor.s src/common/editor.c
+	$(CA65) $(CA65FLAGS) -o $@ build/ef/editor.s
+
 # io-replacement -> replacement code
 build/ef/io-replacement.prg build/ef/io-replacement.map: build/ef/io-code.o build/ef/subs128-disassemble.o build/ef/music-disassemble.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/ef/io-replacement.map -o build/ef/io-replacement.prg -C ./src/ef/io-replacement.cfg $^
@@ -149,7 +154,7 @@ build/u5remastered.crt: build/ef/u5remastered.bin
 # d81
 
 # io-replacement d81
-build/d81/io-replacement.prg build/d81/io-replacement.map: build/d81/io-code.o build/exo/exodecrunch.o
+build/d81/io-replacement.prg build/d81/io-replacement.map: build/d81/io-code.o build/common/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/io-replacement.map -o build/d81/io-replacement.prg -C ./src/d81/io-replacement.cfg $^
 
 # loader
@@ -159,12 +164,18 @@ build/d81/loader.prg: build/d81/loader.o
 build/d81.f/loader.prg: build/d81/loader.prg
 	cp ./build/d81/loader.prg build/d81.f/loader.prg
 
-# exomizer for d81 todo
-build/d81/exodecrunch.prg: build/exo/exodecrunch.o build/d81/io-code.o
+# exomizer for d81
+build/d81/exodecrunch.prg: build/common/exodecrunch.o build/d81/io-code.o
 	$(LD65) $(LD65FLAGS) -o $@ -C ./src/d81/exodecrunch.cfg $^
 
 build/d81.f/exodecrunch.prg: build/d81/exodecrunch.prg
 	cp ./build/d81/exodecrunch.prg ./build/d81.f/exodecrunch.prg
+
+# editor.prg
+build/d81.f/editor.prg: build/d81/savegame.o
+	$(CC65) $(CC65FLAGS) -DD81 -o build/d81/editor.s src/common/editor.c
+	$(CA65) $(CA65FLAGS) -o build/d81/editor.o build/d81/editor.s
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/d81/editor.o build/d81/savegame.o
 
 # files with additional items
 build/d81.f/files.list: build/source/files.list
@@ -181,7 +192,7 @@ build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map bu
 	touch ./build/d81.f/patched.done
 
 # build disk
-build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg
+build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg build/d81.f/editor.prg
 	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
 
 
@@ -189,7 +200,7 @@ build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d
 # backbit
 
 # io-replacement d81
-build/backbit/io-replacement.prg build/backbit/io-replacement.map: build/backbit/io-code.o build/exo/exodecrunch.o
+build/backbit/io-replacement.prg build/backbit/io-replacement.map: build/backbit/io-code.o build/common/exodecrunch.o
 	$(LD65) $(LD65FLAGS) -vm -m ./build/backbit/io-replacement.map -o build/backbit/io-replacement.prg -C ./src/backbit/io-replacement.cfg $^
 
 # loader
@@ -199,11 +210,17 @@ build/backbit/loader.prg: build/backbit/loader.o
 build/backbit.f/loader.prg: build/backbit/loader.prg
 	cp ./build/backbit/loader.prg build/backbit.f/loader.prg
 
-build/backbit/exodecrunch.prg: build/exo/exodecrunch.o build/backbit/io-code.o
+build/backbit/exodecrunch.prg: build/common/exodecrunch.o build/backbit/io-code.o
 	$(LD65) $(LD65FLAGS) -o $@ -C ./src/backbit/exodecrunch.cfg $^
 
 build/backbit.f/exodecrunch.prg: build/backbit/exodecrunch.prg
 	cp ./build/backbit/exodecrunch.prg ./build/backbit.f/exodecrunch.prg
+
+# editor.prg
+build/backbit.f/editor.prg: build/d81/savegame.o
+	$(CC65) $(CC65FLAGS) -DD81 -o build/backbit/editor.s src/common/editor.c
+	$(CA65) $(CA65FLAGS) -o build/backbit/editor.o build/backbit/editor.s
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/backbit/editor.o build/d81/savegame.o
 
 # files with additional items
 build/backbit.f/files.list: build/source/files.list
@@ -220,7 +237,7 @@ build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replac
 	touch ./build/backbit.f/patched.done
 
 # build disk
-build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg
+build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/backbit.f/editor.prg
 	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f
 
 # ------------------------------------------------------------------------
@@ -234,7 +251,7 @@ pngs: build/source/files.list
 
 subdirs:
 	@mkdir -p ./build/temp 
-	@mkdir -p ./build/exo
+	@mkdir -p ./build/common
 	@mkdir -p ./build/d81.f
 	@mkdir -p ./build/d81
 	@mkdir -p ./build/backbit.f
@@ -251,7 +268,7 @@ clean:
 	rm -rf build/d81.f
 	rm -rf build/backbit.f
 	rm -rf build/temp
-	rm -rf build/exo
+	rm -rf build/common
 	rm -rf build/source
 	rm -rf build/png
 	rm -f build/u5remastered.crt

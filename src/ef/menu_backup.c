@@ -25,7 +25,7 @@
 #include <conio.h>
 #include <string.h>
 
-#include "../common/menu_include.h"
+#include "menu_include.h"
 
 
 #define DEV_X 20

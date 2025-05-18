@@ -23,7 +23,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "menu_include.h"
+#ifdef EASYFLASH
+#include "../ef/menu_include.h"
+#endif
+
+#ifdef D81
+#include "../d81/editor.h"
+#endif
 
 
 #define NAME_STARTX 1
@@ -311,6 +317,22 @@ char* getvocation(uint8_t c)
     }
     return "?      ";
 }
+
+
+#ifdef D81
+bool sure(uint8_t x, uint8_t y)
+{
+    char c;
+
+    textcolor(COLOR_GRAY2);
+    cputsxy(x, y, "Are you sure? ");
+    cursor(1);
+    c = cgetc();
+    cursor(0);
+    cclearxy(x, y, 16);
+    return c == 'y';
+}
+#endif
 
 
 uint16_t swap16(uint16_t value)
@@ -642,7 +664,13 @@ void draw_editor_help(bool change)
 {
 
     //              0123456789012345678901234567890123456789
+#ifdef EASYFLASH
     cputsxy(0, LEGENDE_STARTY, "( )exit  (     )change    (    )navigate");
+#endif
+
+#ifdef D81
+    cputsxy(0, LEGENDE_STARTY, "( )reset (     )change    (    )navigate");
+#endif
 
     //              0123456789012345678901234567890123456789
     cputsxy(0, LEGENDE_STARTY+1, "( )eset Rooms and Other"); //               (S)ave
@@ -729,10 +757,12 @@ bool load_savegame(void)
     ok = true;
 
     cclearxy(0, 24, 40);
-    cart_bankout();
 
     // load from flash
+#ifdef EASYFLASH
+    cart_bankout();
     IO_request_disk_char_entry(0x42); // britannia disk
+#endif
 
     //cputsxy(0, 24, "Loading PRTY.DATA");
     ok = loadgame_prtydata();
@@ -743,8 +773,10 @@ bool load_savegame(void)
     if (!ok) goto load_error;
 
 load_end:
+#ifdef EASYFLASH
     IO_request_disk_char_entry(0x41); // osi disk
     cart_bankout();
+#endif
     return ok;
     
 load_error:
@@ -760,10 +792,12 @@ bool save_savegame(void)
     ok = true;
 
     cclearxy(0, 24, 40);
-    cart_bankout();
 
+#ifdef EASYFLASH
     // save to flash
+    cart_bankout();
     IO_request_disk_char_entry(0x42); // britannia disk
+#endif
 
     //cputsxy(0, 24, "Saving PRTY.DATA ...\r\n");
     ok = savegame_prtydata();
@@ -774,8 +808,10 @@ bool save_savegame(void)
     if (!ok) goto save_error;
 
 save_end:
+#ifdef EASYFLASH
     IO_request_disk_char_entry(0x41); // osi disk
     cart_bankout();
+#endif
     return ok;
 
 save_error:
@@ -877,7 +913,7 @@ void savegameeditor(void)
                 if (ok) {
                     cputsxy(0,23, "Untested! Use only outside of a dungeon!");
                     if (sure(0, 24)) {
-                        memset(roster->dungeonrooms, 0, DUNGEON_ROOM_DATA);
+                        memset(roster->dungeonrooms, 0, sizeof(roster->dungeonrooms));
                         changed = true;
                         repaint = 1;
                     } else {
@@ -911,3 +947,12 @@ void savegameeditor(void)
 
     }
 }
+
+#ifdef D81
+void main()
+{
+    loadsave_device(*((uint8_t*)0xba));
+    savegameeditor();
+    soft_reset();
+}
+#endif

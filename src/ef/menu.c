@@ -23,7 +23,7 @@
 #include <stdbool.h>
 #include <conio.h>
 
-#include "../common/menu_include.h"
+#include "menu_include.h"
 
 
 static void draw_game_info(void) {
