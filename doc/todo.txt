@@ -8,7 +8,7 @@ Features
 - show karma with CTRL+K (difficult)
 
 ToDo
-- enhance blockmap (there are probably rooms missing in dungeons)
+- enhance blockmap (are there rooms missing in dungeons? -> probably not)
   7 disks: from track 19 to 35 (17 tracks) with space for max 19 sectors (32)
   every entry has 4 bytes: bank, high, low address
   every disk needs 2176 bytes, alltogether 15232
@@ -19,15 +19,9 @@ ToDo
 - identify the meaning of list, slist and tlist saving
   look in create.prg
 - sound and effect mixing is not good
-- change own file formats to json
 - check Underworld/startup.prg for menu modifications
 - d81 version u4 import
 - quickstart in d81 does not work (c128)
-- does not work in c64 standard emulator
-
-- VICE & VICE Monitor
-  Alt+F12: Hard Reset
-  d [addr]: disassemble
 
 - Save Game
     save S:PRTY.DATA (bc00, 0030)

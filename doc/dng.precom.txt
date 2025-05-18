@@ -116,7 +116,7 @@ $A807:  8D 10 A8   sta $a810
 $A80A:  20 53 AB   jsr label_ab53
 $A80D:  29 0F      and #$0f
 $A80F:  09 FF      ora #$ff
-$A811:  20 2D AB   jsr label_ab2d  (load block)
+$A811:  20 2D AB   jsr label_ab2d  (load block, dungeon room)
 $A814:  A5 0F      lda $0f
 $A816:  18         clc
 $A817:  69 02      adc #$02
@@ -631,7 +631,10 @@ $AB72:
 $AB72: label_ab72
 $AB72:  A9 02      lda #$02
 $AB74:  2C A9 06   bit $06a9
-$AB77:  2C A9 82   bit $82a9
+$AB77:  2C 
+
+copy room
+$AB78:  A9 82      lda #$82
 $AB7A:  85 89      sta $89
 $AB7C:  A2 78      ldx #$78
 $AB7E: 
@@ -784,6 +787,7 @@ $AC70: label_ac70
 $AC70:  A2 01      ldx #$01
 $AC72:  20 24 6C   jsr $6c24             ; load file MAIN.COMBAT
 $AC75:  4D 41 49 4E 2E 43 4F 4D 42 41 54 00
+
 $AC81:  00         brk
 $AC82:  00         brk
 $AC83:  00         brk
