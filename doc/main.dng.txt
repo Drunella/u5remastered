@@ -1035,6 +1035,7 @@
   |.------> 0x0000894b      a900           lda #0x00                   ; load accumulator with memory
   |||||||   0x0000894d      8d15d0         sta 0xd015                  ; store accumulator in memory
   |||||||   0x00008950      60             rts                         ; return from subroutine
+
   |||||||   0x00008951      85fd           sta 0xfd                    ; store accumulator in memory
   |||||||   0x00008953      a9c0           lda #0xc0                   ; load accumulator with memory
   |||||||   0x00008955      85ff           sta 0xff                    ; store accumulator in memory
@@ -1052,6 +1053,7 @@
   |||||||   0x0000896d      ca             dex                         ; decrement index x by one
   ========< 0x0000896e      d0f2           bne 0x4b2108                ; branch on result not zero
   ========< 0x00008970      4c036c         jmp 0x6c03                  ; jump to new location
+
   |||||||   0x00008973      8df6a6         sta 0xa6f6                  ; store accumulator in memory
   ========< 0x00008976      f003           beq 0x4b2108                ; branch on result zero
   |||||||   0x00008978      a90e           lda #0x0e                   ; load accumulator with memory
@@ -4329,544 +4331,75 @@
   | `-`===< 0x0000a3b7      4c9ca3         jmp 0xa39c                  ; jump to new location
   |  `----> 0x0000a3ba      eebea3         inc 0xa3be                  ; increment memory by one
   |    ||   0x0000a3bd      60             rts                         ; return from subroutine
-  |    ||   0x0000a3be      00             brk                         ; force break
-  |    ||   0x0000a3bf      00             brk                         ; force break
-  |    ||   0x0000a3c0      a7a7           lax 0xa7
-  |    ||   0x0000a3c2      a7a7           lax 0xa7
-  |    ||   0x0000a3c4      a7a7           lax 0xa7
-  |    ||   0x0000a3c6      a7a7           lax 0xa7
-  |    ||   0x0000a3c8      a7a7           lax 0xa7
-  |    ||   0x0000a3ca      a7a7           lax 0xa7
-  |    ||   0x0000a3cc      a7a8           lax 0xa8
-  |    ||   0x0000a3ce      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3cf      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d0      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d1      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d2      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d3      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d4      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d5      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d6      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d7      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d8      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3d9      a8             tay                         ; transfer accumulator to index y
-  |    ||   0x0000a3da      a9a9           lda #0xa9                   ; load accumulator with memory
-  |    ||   0x0000a3dc      a9a9           lda #0xa9                   ; load accumulator with memory
-  |    ||   0x0000a3de      a9a9           lda #0xa9                   ; load accumulator with memory
-  |    ||   0x0000a3e0      a9a9           lda #0xa9                   ; load accumulator with memory
-  |    ||   0x0000a3e2      a9a9           lda #0xa9                   ; load accumulator with memory
-  |    ||   0x0000a3e4      a9a9           lda #0xa9                   ; load accumulator with memory
-  |   .---> 0x0000a3e6      a9aa           lda #0xaa                   ; load accumulator with memory
-  |  .----> 0x0000a3e8      aa             tax                         ; transfer accumulator to index x
-  |  ||||   0x0000a3e9      aa             tax                         ; transfer accumulator to index x
-  | .-----> 0x0000a3ea      aa             tax                         ; transfer accumulator to index x
-  | |||||   0x0000a3eb      aa             tax                         ; transfer accumulator to index x
-  |.------> 0x0000a3ec      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3ed      aa             tax                         ; transfer accumulator to index x
-  --------> 0x0000a3ee      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3ef      aa             tax                         ; transfer accumulator to index x
-  --------> 0x0000a3f0      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3f1      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3f2      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3f3      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a3f4      abab           lxa #0xab
-  |||||||   0x0000a3f6      abab           lxa #0xab
-  |||||||   0x0000a3f8      abab           lxa #0xab
-  |||||||   0x0000a3fa      abab           lxa #0xab
-  |||||||   0x0000a3fc      abab           lxa #0xab
-  |||||||   0x0000a3fe      abab           lxa #0xab
-  |||||||   0x0000a400      acacac         ldy 0xacac                  ; load index y with memory
-  |||||||   0x0000a403      acacac         ldy 0xacac                  ; load index y with memory
-  |||||||   0x0000a406      acacac         ldy 0xacac                  ; load index y with memory
-  |||||||   0x0000a409      acacac         ldy 0xacac                  ; load index y with memory
-  |||||||   0x0000a40c      acadad         ldy 0xadad                  ; load index y with memory
-  |||||||   0x0000a40f      adadad         lda 0xadad                  ; load accumulator with memory
-  |||||||   0x0000a412      adadad         lda 0xadad                  ; load accumulator with memory
-  |||||||   0x0000a415      adadad         lda 0xadad                  ; load accumulator with memory
-  |||||||   0x0000a418      adadae         lda 0xaead                  ; load accumulator with memory
-  |||||||   0x0000a41b      aeaeae         ldx 0xaeae                  ; load index x with memory
-  |||||||   0x0000a41e      aeaeae         ldx 0xaeae                  ; load index x with memory
-  |||||||   0x0000a421      aeaeae         ldx 0xaeae                  ; load index x with memory
-  |||||||   0x0000a424      aeaeae         ldx 0xaeae                  ; load index x with memory
-  |||||||   0x0000a427      afafaf         lax 0xafaf
-  |||||||   0x0000a42a      afafaf         lax 0xafaf
-  |||||||   0x0000a42d      afafaf         lax 0xafaf
-  |||||||   0x0000a430      afafaf         lax 0xafaf
-  |||||||   0x0000a433      afb0b0         lax 0xb0b0
-  |||`====< 0x0000a436      b0b0           bcs 0x4b2108                ; branch on carry set
-  ||`=====< 0x0000a438      b0b0           bcs 0x4b2108                ; branch on carry set
-  |`======< 0x0000a43a      b0b0           bcs 0x4b2108                ; branch on carry set
-  ========< 0x0000a43c      b0b0           bcs 0x4b2108                ; branch on carry set
-  ========< 0x0000a43e      b0b0           bcs 0x4b2108                ; branch on carry set
-  |    ||   0x0000a440      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |   .---> 0x0000a442      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |   |||   0x0000a444      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |   |||   0x0000a446      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |   |||   0x0000a448      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |  .----> 0x0000a44a      b1b1           lda (0xb1),y                ; load accumulator with memory
-  |  ||||   0x0000a44c      b1b2           lda (0xb2),y                ; load accumulator with memory
-  |  ||||   0x0000a44e      b2             hlt
-  |  ||||   0x0000a44f      b2             hlt
-  |  ||||   0x0000a450      00             brk                         ; force break
-  |  ||||   0x0000a451      1428           nop 0x28,x                  ; no operation
-  | |||||   0x0000a453      3c5064         nop 0x6450,x                ; no operation
-  |||||||   0x0000a456      78             sei                         ; set interrupt disable status
-  |||||||   0x0000a457      8ca0b4         sty 0xb4a0                  ; store index y in memory
-  |||||||   0x0000a45a      c8             iny                         ; increment index y by one
-  |||||||   0x0000a45b      dcf004         nop 0x04f0,x                ; no operation
-  |||||||   0x0000a45e      18             clc                         ; clear carry flag
-  |||||||   0x0000a45f      2c4054         bit 0x5440                  ; test bits in memory with accumulator
-  --------> 0x0000a462      68             pla                         ; pull accumulator from stack
-  |||||||   0x0000a463      7c90a4         nop 0xa490,x                ; no operation
-  |||||||   0x0000a466      b8             clv                         ; clear overflow flag
-  |||||||   0x0000a467      cce0f4         cpy 0xf4e0                  ; compare memory and index y
-  |||||||   0x0000a46a      08             php                         ; push processor status on stack
-  |||||||   0x0000a46b      1c3044         nop 0x4430,x                ; no operation
-  |||||||   0x0000a46e      58             cli                         ; clear interrupt disable bit
-  |||||||   0x0000a46f      6c8094         jmp (0x9480)                ; jump to new location
-  |||||||   0x0000a472      a8             tay                         ; transfer accumulator to index y
-  |||||||   0x0000a473      bcd0e4         ldy 0xe4d0,x                ; load index y with memory
-  |||||||   0x0000a476      f8             sed                         ; set decimal mode
-  |||||||   0x0000a477      0c2034         nop 0x3420                  ; no operation
-  |||||||   0x0000a47a      48             pha                         ; push accumulator on stack
-  |||||||   0x0000a47b      5c7084         nop 0x8470,x                ; no operation
-  |||||||   0x0000a47e      98             tya                         ; transfer index y to accumulator
-  |||||||   0x0000a47f      acc0d4         ldy 0xd4c0                  ; load index y with memory
-  |||||||   0x0000a482      e8             inx                         ; increment index x by one
-  |||||||   0x0000a483      fc1024         nop 0x2410,x                ; no operation
-  |||||||   0x0000a486      38             sec                         ; set carry flag
-  ========< 0x0000a487      4c6074         jmp 0x7460                  ; jump to new location
-  |||||||   0x0000a48a      88             dey                         ; decrement index y by one
-  |||||||   0x0000a48b      9cb0c4         shy 0xc4b0,x
-  || ||||   0x0000a48e      d8             cld                         ; clear decimal mode
-  || ||||   0x0000a48f      ec0014         cpx 0x1400                  ; compare memory and index x
-  ||.-----> 0x0000a492      28             plp                         ; pull processor status from stack
-  |||||||   0x0000a493      3c5064         nop 0x6450,x                ; no operation
-  |||||||   0x0000a496      78             sei                         ; set interrupt disable status
-  |||||||   0x0000a497      8ca0b4         sty 0xb4a0                  ; store index y in memory
-  |||||||   0x0000a49a      c8             iny                         ; increment index y by one
-  |||||||   0x0000a49b      dcf004         nop 0x04f0,x                ; no operation
-  |||||||   0x0000a49e      18             clc                         ; clear carry flag
-  |||||||   0x0000a49f      2c4054         bit 0x5440                  ; test bits in memory with accumulator
-  --------> 0x0000a4a2      68             pla                         ; pull accumulator from stack
-  |||||||   0x0000a4a3      7c90a4         nop 0xa490,x                ; no operation
-  ||| |||   0x0000a4a6      b8             clv                         ; clear overflow flag
-  ||| |||   0x0000a4a7      cce0f4         cpy 0xf4e0                  ; compare memory and index y
-  --------> 0x0000a4aa      08             php                         ; push processor status on stack
-  ||| |||   0x0000a4ab      1c3044         nop 0x4430,x                ; no operation
-  |||||||   0x0000a4ae      58             cli                         ; clear interrupt disable bit
-  |||||||   0x0000a4af      6c8094         jmp (0x9480)                ; jump to new location
-  --------> 0x0000a4b2      a8             tay                         ; transfer accumulator to index y
-  |||||||   0x0000a4b3      bcd0e4         ldy 0xe4d0,x                ; load index y with memory
-  |||||||   0x0000a4b6      f8             sed                         ; set decimal mode
-  |||||||   0x0000a4b7      0c2034         nop 0x3420                  ; no operation
-  |`------> 0x0000a4ba      48             pha                         ; push accumulator on stack
-  | |||||   0x0000a4bb      5c7084         nop 0x8470,x                ; no operation
-  | || ||   0x0000a4be      98             tya                         ; transfer index y to accumulator
-  | || ||   0x0000a4bf      acc0d4         ldy 0xd4c0                  ; load index y with memory
-  | || ||   0x0000a4c2      e8             inx                         ; increment index x by one
-  | || ||   0x0000a4c3      fc1024         nop 0x2410,x                ; no operation
-  | |||||   0x0000a4c6      38             sec                         ; set carry flag
-  ========< 0x0000a4c7      4c6074         jmp 0x7460                  ; jump to new location
-  | |||||   0x0000a4ca      88             dey                         ; decrement index y by one
-  | |||||   0x0000a4cb      9cb0c4         shy 0xc4b0,x
-  |  ||||   0x0000a4ce      d8             cld                         ; clear decimal mode
-  |  ||||   0x0000a4cf      ec0014         cpx 0x1400                  ; compare memory and index x
-  |  ||||   0x0000a4d2      28             plp                         ; pull processor status from stack
-  |  ||||   0x0000a4d3      3c5064         nop 0x6450,x                ; no operation
-  | |||||   0x0000a4d6      78             sei                         ; set interrupt disable status
-  | |||||   0x0000a4d7      8ca0b4         sty 0xb4a0                  ; store index y in memory
-  | |||||   0x0000a4da      c8             iny                         ; increment index y by one
-  | |||||   0x0000a4db      dcf004         nop 0x04f0,x                ; no operation
-  |||||||   0x0000a4de      18             clc                         ; clear carry flag
-  |||||||   0x0000a4df      2c0080         bit 0x8000                  ; test bits in memory with accumulator
-  |`------> 0x0000a4e2      40             rti                         ; return from interrupt
-  | |||||   0x0000a4e3      c020           cpy #0x20                   ; compare memory and index y
-  | |||||   0x0000a4e5      a060           ldy #0x60                   ; load index y with memory
-  | |||||   0x0000a4e7      e010           cpx #0x10                   ; compare memory and index x
-  |,======< 0x0000a4e9      9050           bcc 0x4b2108                ; branch on carry clear
-  ||||,===< 0x0000a4eb      d030           bne 0x4b2108                ; branch on result not zero
-  ========< 0x0000a4ed      b070           bcs 0x4b2108                ; branch on carry set
-  ========< 0x0000a4ef      f008           beq 0x4b2108                ; branch on result zero
-  |||||||   0x0000a4f1      88             dey                         ; decrement index y by one
-  |||`----> 0x0000a4f2      48             pha                         ; push accumulator on stack
-  ||| |||   0x0000a4f3      c8             iny                         ; increment index y by one
-  ||| |||   0x0000a4f4      28             plp                         ; pull processor status from stack
-  ||| |||   0x0000a4f5      a8             tay                         ; transfer accumulator to index y
-  ||| |||   0x0000a4f6      68             pla                         ; pull accumulator from stack
-  |||.----> 0x0000a4f7      e8             inx                         ; increment index x by one
-  |||||||   0x0000a4f8      18             clc                         ; clear carry flag
-  --------> 0x0000a4f9      98             tya                         ; transfer index y to accumulator
-  --------> 0x0000a4fa      58             cli                         ; clear interrupt disable bit
-  |||||||   0x0000a4fb      d8             cld                         ; clear decimal mode
-  |||||||   0x0000a4fc      38             sec                         ; set carry flag
-  |||||||   0x0000a4fd      b8             clv                         ; clear overflow flag
-  |||||||   0x0000a4fe      78             sei                         ; set interrupt disable status
-  |||||||   0x0000a4ff      f8             sed                         ; set decimal mode
-  |||||||   0x0000a500      0484           nop 0x84                    ; no operation
-  |||||||   0x0000a502      44c4           nop 0xc4                    ; no operation
-  |||||||   0x0000a504      24a4           bit 0xa4                    ; test bits in memory with accumulator
-  |||||||   0x0000a506      64e4           nop 0xe4                    ; no operation
-  |||||||   0x0000a508      1494           nop 0x94,x                  ; no operation
-  |||||||   0x0000a50a      54d4           nop 0xd4,x                  ; no operation
-  |||||||   0x0000a50c      34b4           nop 0xb4,x                  ; no operation
-  |||||||   0x0000a50e      74f4           nop 0xf4,x                  ; no operation
-  |||||||   0x0000a510      0c8c4c         nop 0x4c8c                  ; no operation
-  |||||||   0x0000a513      cc2cac         cpy 0xac2c                  ; compare memory and index y
-  |||||||   0x0000a516      6cec1c         jmp (0x1cec)                ; jump to new location
-  |||||||   0x0000a519      9c5cdc         shy 0xdc5c,x
-  |||||||   0x0000a51c      3cbc7c         nop 0x7cbc,x                ; no operation
-  |||| ||   0x0000a51f      fc0282         nop 0x8202,x                ; no operation
-  |||| ||   0x0000a522      42             hlt
-  |||| ||   0x0000a523      c222           nop #0x22                   ; no operation
-  |||| ||   0x0000a525      a262           ldx #0x62                   ; load index x with memory
-  |||| ||   0x0000a527      e212           nop #0x12                   ; no operation
-  |||| ||   0x0000a529      92             hlt
-  |||| ||   0x0000a52a      52             hlt
-  |||| ||   0x0000a52b      d2             hlt
-  |||| ||   0x0000a52c      32             hlt
-  |||| ||   0x0000a52d      b2             hlt
-  |||| ||   0x0000a52e      72             hlt
-  |||| ||   0x0000a52f      f2             hlt
-  ||||.---> 0x0000a530      0a             asl a                       ; shift left one bit (memory or accumulator)
-  |||||||   0x0000a531      8a             txa                         ; transfer index x to accumulator
-  |||||||   0x0000a532      4a             lsr a                       ; shift right one bit (memory or accumulator)
-  |||||||   0x0000a533      ca             dex                         ; decrement index x by one
-  |||||||   0x0000a534      2a             rol a                       ; rotate one bit left (memory or accumulator)
-  |||||||   0x0000a535      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a536      6a             ror a                       ; rotate one bit right (memory or accumulator)
-  |||||||   0x0000a537      ea             nop                         ; no operation
-  |||||||   0x0000a538      1a             nop                         ; no operation
-  |||||||   0x0000a539      9a             txs                         ; transfer index x to stack pointer
-  ||`-----> 0x0000a53a      5a             nop                         ; no operation
-  |`------> 0x0000a53b      da             nop                         ; no operation
-  |  ||||   0x0000a53c      3a             nop                         ; no operation
-  |  ||||   0x0000a53d      ba             tsx                         ; transfer stack pointer to index x
-  |  ||||   0x0000a53e      7a             nop                         ; no operation
-  |  ||||   0x0000a53f      fa             nop                         ; no operation
-  |  ||||   0x0000a540      0686           asl 0x86                    ; shift left one bit (memory or accumulator)
-  |  ||||   0x0000a542      46c6           lsr 0xc6                    ; shift right one bit (memory or accumulator)
-  |  ||||   0x0000a544      26a6           rol 0xa6                    ; rotate one bit left (memory or accumulator)
-  |  ||||   0x0000a546      66e6           ror 0xe6                    ; rotate one bit right (memory or accumulator)
-  | |||||   0x0000a548      1696           asl 0x96,x                  ; shift left one bit (memory or accumulator)
-  | |||||   0x0000a54a      56d6           lsr 0xd6,x                  ; shift right one bit (memory or accumulator)
-  |.------> 0x0000a54c      36b6           rol 0xb6,x                  ; rotate one bit left (memory or accumulator)
-  |||||||   0x0000a54e      76f6           ror 0xf6,x                  ; rotate one bit right (memory or accumulator)
-  |||||||   0x0000a550      0e8e4e         asl 0x4e8e                  ; shift left one bit (memory or accumulator)
-  --------> 0x0000a553      ce2eae         dec 0xae2e                  ; decrement memory by one
-  |||||||   0x0000a556      6eee1e         ror 0x1eee                  ; rotate one bit right (memory or accumulator)
-  |||||||   0x0000a559      9e5ede         shx 0xde5e,y
-  |||||||   0x0000a55c      3ebe7e         rol 0x7ebe,x                ; rotate one bit left (memory or accumulator)
-  --------> 0x0000a55f      fe00b0         inc 0xb000,x                ; increment memory by one
-  |||||||   0x0000a562      f010           beq 0x4b2108                ; branch on result zero
-  |||||||   0x0000a564      a050           ldy #0x50                   ; load index y with memory
-  ||| |||   0x0000a566      90b0           bcc 0x4b2108                ; branch on carry clear
-  |||||||   0x0000a568      7040           bvs 0x4b2108                ; branch on overflow set
-  |`======< 0x0000a56a      30e0           bmi 0x4b2108                ; branch on result minus
-  |,======< 0x0000a56c      7010           bvs 0x4b2108                ; branch on overflow set
-  |||||||   0x0000a56e      00             brk                         ; force break
-  ========< 0x0000a56f      b040           bcs 0x4b2108                ; branch on carry set
-  ========< 0x0000a571      f030           beq 0x4b2108                ; branch on result zero
-  ========< 0x0000a573      50e0           bvc 0x4b2108                ; branch on overflow clear
-  ||`=====< 0x0000a575      90d0           bcc 0x4b2108                ; branch on carry clear
-  ||,=====< 0x0000a577      f070           beq 0x4b2108                ; branch on result zero
-  |||||||   0x0000a579      8070           nop #0x70                   ; no operation
-  |||||||   0x0000a57b      207070         jsr 0x7070                  ; jump to new location saving return address
-  |`--`===< 0x0000a57e      70b0           bvs 0x4b2108                ; branch on overflow set
-  | || ||   0x0000a580      0e6cff         asl 0xff6c                  ; shift left one bit (memory or accumulator)
-  | || ||   0x0000a583      92             hlt
-  | || ||   0x0000a584      bce6ed         ldy 0xede6,x                ; load index y with memory
-  | || ||   0x0000a587      f452           nop 0x52,x                  ; no operation
-  | ||,===< 0x0000a589      b043           bcs 0x4b2108                ; branch on carry set
-  | |||||   0x0000a58b      d600           dec 0x00,x                  ; decrement memory by one
-  | |||||   0x0000a58d      2a             rol a                       ; rotate one bit left (memory or accumulator)
-  | |||||   0x0000a58e      3138           and (0x38),y                ; "and" memory with accumulator
-  | |||||   0x0000a590      a10a           lda (0x0a,x)                ; load accumulator with memory
-  |||||||   0x0000a592      5eb2ce         lsr 0xceb2,x                ; shift right one bit (memory or accumulator)
-  |||||||   0x0000a595      ea             nop                         ; no operation
-  |||||||   0x0000a596      f1f8           sbc (0xf8),y                ; subtract memory from accumulator with borrow
-  |||||||   0x0000a598      61ca           adc (0xca,x)                ; add memory to accumulator with carry
-  |||||||   0x0000a59a      1e728e         asl 0x8e72,x                ; shift left one bit (memory or accumulator)
-  |||||||   0x0000a59d      aa             tax                         ; transfer accumulator to index x
-  |||||||   0x0000a59e      b1b8           lda (0xb8),y                ; load accumulator with memory
-  |||||||   0x0000a5a0      218a           and (0x8a,x)                ; "and" memory with accumulator
-  |||||||   0x0000a5a2      de324e         dec 0x4e32,x                ; decrement memory by one
-  |||||||   0x0000a5a5      6a             ror a                       ; rotate one bit right (memory or accumulator)
-  |||||||   0x0000a5a6      7100           adc (0x00),y                ; add memory to accumulator with carry
-  |||||||   0x0000a5a8      00             brk                         ; force break
-  |||||||   0x0000a5a9      00             brk                         ; force break
-  |||||||   0x0000a5aa      8000           nop #0x00                   ; no operation
-  |||||||   0x0000a5ac      8000           nop #0x00                   ; no operation
-  |||||||   0x0000a5ae      c0c0           cpy #0xc0                   ; compare memory and index y
-  |||||||   0x0000a5b0      c040           cpy #0x40                   ; compare memory and index y
-  |||||||   0x0000a5b2      88             dey                         ; decrement index y by one
-  |||||||   0x0000a5b3      c0c1           cpy #0xc1                   ; compare memory and index y
-  |||||||   0x0000a5b5      c3c5           dcp (0xc5,x)
-  |||||||   0x0000a5b7      c5c7           cmp 0xc7                    ; compare memory and accumulator
-  |||||||   0x0000a5b9      c9ca           cmp #0xca                   ; compare memory and accumulator
-  |||||||   0x0000a5bb      d1cb           cmp (0xcb),y                ; compare memory and accumulator
-  |||||||   0x0000a5bd      cfd0d1         dcp 0xd1d0
-  | |||||   0x0000a5c0      d7db           dcp 0xdb,x
-  | |||||   0x0000a5c2      dcddde         nop 0xdedd,x                ; no operation
-  | |||||   0x0000a5c5      e1e2           sbc (0xe2,x)                ; subtract memory from accumulator with borrow
-  | |||||   0x0000a5c7      e2e4           nop #0xe4                   ; no operation
-  | |||||   0x0000a5c9      e6e7           inc 0xe7                    ; increment memory by one
-  | |||||   0x0000a5cb      d1e8           cmp (0xe8),y                ; compare memory and accumulator
-  | |||||   0x0000a5cd      eceed1         cpx 0xd1ee                  ; compare memory and index x
-  | || ||   0x0000a5d0      d1d1           cmp (0xd1),y                ; compare memory and accumulator
-  | || ||   0x0000a5d2      eef0f1         inc 0xf1f0                  ; increment memory by one
-  | || ||   0x0000a5d5      f1f2           sbc (0xf2),y                ; subtract memory from accumulator with borrow
-  | || ||   0x0000a5d7      f2             hlt
-  | || ||   0x0000a5d8      f2             hlt
-  | |`----> 0x0000a5d9      f2             hlt
-  | |  ||   0x0000a5da      f2             hlt
-  | |  ||   0x0000a5db      f4f5           nop 0xf5,x                  ; no operation
-  | |  ||   0x0000a5dd      f6f6           inc 0xf6,x                  ; increment memory by one
-  | |  ||   0x0000a5df      f7f7           isb 0xf7,x
-  | |  ||   0x0000a5e1      f7f7           isb 0xf7,x
-  | |  ||   0x0000a5e3      f7f8           isb 0xf8,x
-  | |  ||   0x0000a5e5      f8             sed                         ; set decimal mode
-  | |  ||   0x0000a5e6      f8             sed                         ; set decimal mode
-  | |  ||   0x0000a5e7      f8             sed                         ; set decimal mode
-  | |  ||   0x0000a5e8      f8             sed                         ; set decimal mode
-  | `-----> 0x0000a5e9      f8             sed                         ; set decimal mode
-  |    ||   0x0000a5ea      f8             sed                         ; set decimal mode
-  |    ||   0x0000a5eb      f9f9fa         sbc 0xfaf9,y                ; subtract memory from accumulator with borrow
-  --------> 0x0000a5ee      fa             nop                         ; no operation
-  |    ||   0x0000a5ef      fa             nop                         ; no operation
-  |    ||   0x0000a5f0      fa             nop                         ; no operation
-  |    ||   0x0000a5f1      fa             nop                         ; no operation
-  |    ||   0x0000a5f2      fa             nop                         ; no operation
-  |    ||   0x0000a5f3      fbfbfb         isb 0xfbfb,y
-  |    ||   0x0000a5f6      fcfcfc         nop 0xfcfc,x                ; no operation
-  |    ||   0x0000a5f9      fc0b0d         nop 0x0d0b,x                ; no operation
-  |    ||   0x0000a5fc      08             php                         ; push processor status on stack
-  |    ||   0x0000a5fd      0e0f0f         asl 0x0f0f                  ; shift left one bit (memory or accumulator)
-  |    ||   0x0000a600      0c0d08         nop 0x080d                  ; no operation
-  |    ||   0x0000a603      0e0f0f         asl 0x0f0f                  ; shift left one bit (memory or accumulator)
-  |    ||   0x0000a606      0120           ora (0x20,x)                ; "or" memory with accumulator
-  |    ||   0x0000a608      202050         jsr 0x5020                  ; jump to new location saving return address
-  |    ||   0x0000a60b      4954           eor #0x54                   ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a60d      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a610      201f42         jsr 0x421f                  ; jump to new location saving return address
-  |    ||   0x0000a613      4f5454         sre 0x5454
-  |    ||   0x0000a616      4f4d4c         sre 0x4c4d
-  |    ||   0x0000a619      4553           eor 0x53                    ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a61b      5300           sre (0x00),y
-  |    ||   0x0000a61d      02             hlt
-  |    ||   0x0000a61e      202053         jsr 0x5320                  ; jump to new location saving return address
-  |    ||   0x0000a621      4f554c         sre 0x4c55
-  |    ||   0x0000a624      5320           sre (0x20),y
-  |    ||   0x0000a626      20201f         jsr 0x1f20                  ; jump to new location saving return address
-  |    ||   0x0000a629      20204f         jsr 0x4f20                  ; jump to new location saving return address
-  |    ||   0x0000a62c      4620           lsr 0x20                    ; shift right one bit (memory or accumulator)
-  |    ||   0x0000a62e      4c4f5f         jmp 0x5f4f                  ; jump to new location
-  |    ||   0x0000a631      20201f         jsr 0x1f20                  ; jump to new location saving return address
-  |    ||   0x0000a634      205b45         jsr 0x455b                  ; jump to new location saving return address
-  |    ||   0x0000a637      204d41         jsr 0x414d                  ; jump to new location saving return address
-  |    ||   0x0000a63a      5a             nop                         ; no operation
-  |    ||   0x0000a63b      4520           eor 0x20                    ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a63d      200003         jsr 0x0300                  ; jump to new location saving return address
-  |    ||   0x0000a640      a000           ldy #0x00                   ; load index y with memory
-  |    ||   0x0000a642      0420           nop 0x20                    ; no operation
-  |    ||   0x0000a644      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a647      5752           sre 0x52,x
-  |    ||   0x0000a649      4f5d20         sre 0x205d
-  |    ||   0x0000a64c      201f20         jsr 0x201f                  ; jump to new location saving return address
-  |    ||   0x0000a64f      5b4520         sre 0x2045,y
-  |    ||   0x0000a652      5052           bvc 0x4b2108                ; branch on overflow clear
-  |    ||   0x0000a654      4953           eor #0x53                   ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a656      4f4e00         sre 0x004e
-  |    ||   0x0000a659      0520           ora 0x20                    ; "or" memory with accumulator
-  |    ||   0x0000a65b      5b4520         sre 0x2045,y
-  |    ||   0x0000a65e      4352           sre (0x52,x)
-  |    ||   0x0000a660      595054         eor 0x5450,y                ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a663      200020         jsr 0x2000                  ; jump to new location saving return address
-  |    ||   0x0000a666      204352         jsr 0x5243                  ; jump to new location saving return address
-  |    ||   0x0000a669      595054         eor 0x5450,y                ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a66c      5320           sre (0x20),y
-  |    ||   0x0000a66e      201f20         jsr 0x201f                  ; jump to new location saving return address
-  |    ||   0x0000a671      205550         jsr 0x5055                  ; jump to new location saving return address
-  |    ||   0x0000a674      5045           bvc 0x4b2108                ; branch on overflow clear
-  |    ||   0x0000a676      52             hlt
-  |    ||   0x0000a677      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a67a      00             brk                         ; force break
-  |    ||   0x0000a67b      202043         jsr 0x4320                  ; jump to new location saving return address
-  |    ||   0x0000a67e      52             hlt
-  |    ||   0x0000a67f      595054         eor 0x5450,y                ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a682      5320           sre (0x20),y
-  |    ||   0x0000a684      201f20         jsr 0x201f                  ; jump to new location saving return address
-  |    ||   0x0000a687      204c4f         jsr 0x4f4c                  ; jump to new location saving return address
-  |    ||   0x0000a68a      5745           sre 0x45,x
-  |    ||   0x0000a68c      52             hlt
-  |    ||   0x0000a68d      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a690      00             brk                         ; force break
-  |    ||   0x0000a691      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a694      414c           eor (0x4c,x)                ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a696      4c4559         jmp 0x5945                  ; jump to new location
-  |    ||   0x0000a699      20201f         jsr 0x1f20                  ; jump to new location saving return address
-  |    ||   0x0000a69c      202044         jsr 0x4420                  ; jump to new location saving return address
-  |    ||   0x0000a69f      4542           eor 0x42                    ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a6a1      544f           nop 0x4f,x                  ; no operation
-  |    ||   0x0000a6a3      52             hlt
-  |    ||   0x0000a6a4      5320           sre (0x20),y
-  |    ||   0x0000a6a6      00             brk                         ; force break
-  |    ||   0x0000a6a7      0620           asl 0x20                    ; shift left one bit (memory or accumulator)
-  |    ||   0x0000a6a9      202044         jsr 0x4420                  ; jump to new location saving return address
-  |    ||   0x0000a6ac      5c5020         nop 0x2050,x                ; no operation
-  |    ||   0x0000a6af      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a6b2      00             brk                         ; force break
-  |    ||   0x0000a6b3      202044         jsr 0x4420                  ; jump to new location saving return address
-  |    ||   0x0000a6b6      5c5045         nop 0x4550,x                ; no operation
-  |    ||   0x0000a6b9      52             hlt
-  |    ||   0x0000a6ba      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a6bd      00             brk                         ; force break
-  |    ||   0x0000a6be      202044         jsr 0x4420                  ; jump to new location saving return address
-  |    ||   0x0000a6c1      5c5045         nop 0x4550,x                ; no operation
-  |    ||   0x0000a6c4      5f2020         sre 0x2020,x
-  |    ||   0x0000a6c7      200007         jsr 0x0700                  ; jump to new location saving return address
-  |    ||   0x0000a6ca      202020         jsr 0x2020                  ; jump to new location saving return address
-  |    ||   0x0000a6cd      4d415a         eor 0x5a41                  ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a6d0      4520           eor 0x20                    ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a6d2      20201f         jsr 0x1f20                  ; jump to new location saving return address
-  |    ||   0x0000a6d5      4d4f5b         eor 0x5b4f                  ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a6d8      4552           eor 0x52                    ; "exclusive-or" memory with accumulator
-  |    ||   0x0000a6da      204c4f         jsr 0x4f4c                  ; jump to new location saving return address
-  |    ||   0x0000a6dd      4445           nop 0x45                    ; no operation
-  |    ||   0x0000a6df      00             brk                         ; force break
-  |    ||   0x0000a6e0      08             php                         ; push processor status on stack
-  |    ||   0x0000a6e1      a000           ldy #0x00                   ; load index y with memory
-  |    ||   0x0000a6e3      ff
-            0x0000a6e4      0000                            ; variable
-  |    ||   0x0000a6e6      0301           slo (0x01,x)
-  |    ||   0x0000a6e8      0103           ora (0x03,x)                ; "or" memory with accumulator
-  |    ||   0x0000a6ea      0302           slo (0x02,x)
-  |    ||   0x0000a6ec      02             hlt
-  |    ||   0x0000a6ed      0160           ora (0x60,x)                ; "or" memory with accumulator
-  |    ||   0x0000a6ef      a000           ldy #0x00                   ; load index y with memory
-  |    ||   0x0000a6f1      9080           bcc 0x4b2108                ; branch on carry clear
-  |    ||   0x0000a6f3      60             rts                         ; return from subroutine
-  |    ||   0x0000a6f4      00             brk                         ; force break
-  |    ||   0x0000a6f5      00             brk                         ; force break
-  |    ||   0x0000a6f6      00             brk                         ; force break
-  |    ||   0x0000a6f7      00             brk                         ; force break
-  |    ||   0x0000a6f8      00             brk                         ; force break
-  |    ||   0x0000a6f9      00             brk                         ; force break
-  |    ||   0x0000a6fa      8e0ba7         stx 0xa70b                  ; store index x in memory
-  |    ||   0x0000a6fd      a200           ldx #0x00                   ; load index x with memory
-  |    ||   0x0000a6ff      a1fe           lda (0xfe,x)                ; load accumulator with memory
-       ||   0x0000a701      e6fe           inc 0xfe                    ; increment memory by one
-       `--> 0x0000a703      d002           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a705      e6ff           inc 0xff                    ; increment memory by one
-        |   0x0000a707      ae0ba7         ldx 0xa70b                  ; load index x with memory
-        |   0x0000a70a      60             rts                         ; return from subroutine
-        |   0x0000a70b      00             brk                         ; force break
-        |   0x0000a70c      8e2aa7         stx 0xa72a                  ; store index x in memory
-        |   0x0000a70f      a200           ldx #0x00                   ; load index x with memory
-        |   0x0000a711      81fc           sta (0xfc,x)                ; store accumulator in memory
-        |   0x0000a713      e6fc           inc 0xfc                    ; increment memory by one
-        |   0x0000a715      d002           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a717      e6fd           inc 0xfd                    ; increment memory by one
-        |   0x0000a719      ae2aa7         ldx 0xa72a                  ; load index x with memory
-        |   0x0000a71c      48             pha                         ; push accumulator on stack
-        |   0x0000a71d      adf6a6         lda 0xa6f6                  ; load accumulator with memory
-        |   0x0000a720      d003           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a722      cef7a6         dec 0xa6f7                  ; decrement memory by one
-        |   0x0000a725      cef6a6         dec 0xa6f6                  ; decrement memory by one
-        |   0x0000a728      68             pla                         ; pull accumulator from stack
-        |   0x0000a729      60             rts                         ; return from subroutine
-        |   0x0000a72a      00             brk                         ; force break
-        |   0x0000a72b      a000           ldy #0x00                   ; load index y with memory
-        |   0x0000a72d      8cf8a6         sty 0xa6f8                  ; store index y in memory
-        |   0x0000a730      a900           lda #0x00                   ; load accumulator with memory
-        |   0x0000a732      99007e         sta 0x7e00,y                ; store accumulator in memory
-        |   0x0000a735      c8             iny                         ; increment index y by one
-        |   0x0000a736      c080           cpy #0x80                   ; compare memory and index y
-        |   0x0000a738      d0f8           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a73a      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
-        |   0x0000a73d      48             pha                         ; push accumulator on stack
-        |   0x0000a73e      200ca7         jsr 0xa70c                  ; jump to new location saving return address
-        |   0x0000a741      68             pla                         ; pull accumulator from stack
-        |   0x0000a742      99007e         sta 0x7e00,y                ; store accumulator in memory
-        |   0x0000a745      c8             iny                         ; increment index y by one
-        |   0x0000a746      d0f2           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a748      60             rts                         ; return from subroutine
-        |   0x0000a749      acf8a6         ldy 0xa6f8                  ; load index y with memory
-        |   0x0000a74c      99007e         sta 0x7e00,y                ; store accumulator in memory
-        |   0x0000a74f      c8             iny                         ; increment index y by one
-        |   0x0000a750      8cf8a6         sty 0xa6f8                  ; store index y in memory
-        |   0x0000a753      60             rts                         ; return from subroutine
-        |   0x0000a754      a900           lda #0x00                   ; load accumulator with memory
-        |   0x0000a756      8df9a6         sta 0xa6f9                  ; store accumulator in memory
-        |   0x0000a759      60             rts                         ; return from subroutine
-        |   0x0000a75a      8e6ba7         stx 0xa76b                  ; store index x in memory
-        |   0x0000a75d      aef9a6         ldx 0xa6f9                  ; load index x with memory
-        |   0x0000a760      9d007f         sta 0x7f00,x                ; store accumulator in memory
-        |   0x0000a763      e8             inx                         ; increment index x by one
-        |   0x0000a764      8ef9a6         stx 0xa6f9                  ; store index x in memory
-        |   0x0000a767      ae6ba7         ldx 0xa76b                  ; load index x with memory
-        |   0x0000a76a      60             rts                         ; return from subroutine
-        |   0x0000a76b      00             brk                         ; force break
-        |   0x0000a76c      a200           ldx #0x00                   ; load index x with memory
-        |   0x0000a76e      bd007f         lda 0x7f00,x                ; load accumulator with memory
-        |   0x0000a771      200ca7         jsr 0xa70c                  ; jump to new location saving return address
-        |   0x0000a774      2049a7         jsr 0xa749                  ; jump to new location saving return address
-        |   0x0000a777      e8             inx                         ; increment index x by one
-        |   0x0000a778      ecf9a6         cpx 0xa6f9                  ; compare memory and index x
-        |   0x0000a77b      d0f1           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a77d      a200           ldx #0x00                   ; load index x with memory
-        |   0x0000a77f      8ef9a6         stx 0xa6f9                  ; store index x in memory
-        |   0x0000a782      60             rts                         ; return from subroutine
+  |    ||   0x0000a3be      00             brk
+  |    ||   0x0000a3bf      00             brk
 
-  --------> 0x0000a783      a900           lda #0x00                   ; load accumulator with memory
-        |   0x0000a785      85fc           sta 0xfc                    ; store accumulator in memory
-        |   0x0000a787      84fd           sty 0xfd                    ; store index y in memory
-        |   0x0000a789      20066c         jsr 0x6c06                  ; jump to new location saving return address
-        |   0x0000a78c      a900           lda #0x00                   ; load accumulator with memory
-        |   0x0000a78e      85fe           sta 0xfe                    ; store accumulator in memory
-        |   0x0000a790      a9b0           lda #0xb0                   ; load accumulator with memory
-        |   0x0000a792      85ff           sta 0xff                    ; store accumulator in memory
-        |   0x0000a794      202ba7         jsr 0xa72b                  ; jump to new location saving return address
-        |   0x0000a797      2054a7         jsr 0xa754                  ; jump to new location saving return address
-        |   0x0000a79a      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
-        |   0x0000a79d      aa             tax                         ; transfer accumulator to index x
-        |   0x0000a79e      f011           beq 0x4b2108                ; branch on result zero
-        |   0x0000a7a0      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
-        |   0x0000a7a3      a8             tay                         ; transfer accumulator to index y
-        |   0x0000a7a4      b9007e         lda 0x7e00,y                ; load accumulator with memory
-        |   0x0000a7a7      205aa7         jsr 0xa75a                  ; jump to new location saving return address
-        |   0x0000a7aa      c8             iny                         ; increment index y by one
-        |   0x0000a7ab      ca             dex                         ; decrement index x by one
-        |   0x0000a7ac      d0f6           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a7ae      4cb7a7         jmp 0xa7b7                  ; jump to new location
-        |   0x0000a7b1      20faa6         jsr 0xa6fa                  ; jump to new location saving return address
-        |   0x0000a7b4      205aa7         jsr 0xa75a                  ; jump to new location saving return address
-        |   0x0000a7b7      206ca7         jsr 0xa76c                  ; jump to new location saving return address
-        |   0x0000a7ba      adf7a6         lda 0xa6f7                  ; load accumulator with memory
-        |   0x0000a7bd      3007           bmi 0x4b2108                ; branch on result minus
-        |   0x0000a7bf      d0d9           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a7c1      adf6a6         lda 0xa6f6                  ; load accumulator with memory
-        |   0x0000a7c4      d0d4           bne 0x4b2108                ; branch on result not zero
-        |   0x0000a7c6      4c036c         jmp 0x6c03                  ; jump to new location
-        |   0x0000a7c9      a5c8           lda 0xc8                    ; load accumulator with memory
-        |   0x0000a7cb      10b5           bpl 0x4b2108                ; branch on result plus
-        |   0x0000a7cd      a2fa           ldx #0xfa                   ; load index x with memory
-        |   0x0000a7cf      a0a7           ldy #0xa7                   ; load index y with memory
-        |   0x0000a7d1      a905           lda #0x05                   ; load accumulator with memory
-        |   0x0000a7d3      20bdff         jsr 0xffbd       ; SETNAM. Set file name parameters.
-        |   0x0000a7d6      a90f           lda #0x0f                   ; load accumulator with memory
-        |   0x0000a7d8      ae336c         ldx 0x6c33                  ; load index x with memory
-        |   0x0000a7db      a00f           ldy #0x0f                   ; load index y with memory
-        |   0x0000a7dd      20baff         jsr 0xffba       ; SETLFS. Set file parameters.
-        |   0x0000a7e0      20c0ff         jsr 0xffc0       ; OPEN. Open file. (Must call SETLFS and SETNAM beforehands.)
-        |   0x0000a7e3      a20f           ldx #0x0f                   ; load index x with memory
-        |   0x0000a7e5      20c6ff         jsr 0xffc6       ; CHKIN. Define file as default input. (Must call OPEN beforehands.)
-        |   0x0000a7e8      20cfff         jsr 0xffcf       ; CHRIN. Read byte from default input (for keyboard, read a line from the screen). (If not keyboard, must call OPEN and CHKIN beforehands.)
-        |   0x0000a7eb      c937           cmp #0x37                   ; compare memory and accumulator
-        |   0x0000a7ed      f003           beq 0x4b2108                ; branch on result zero
-        |   0x0000a7ef      cee4a6         dec 0xa6e4                  ; decrement memory by one
-        |   0x0000a7f2      a90f           lda #0x0f                   ; load accumulator with memory
-        |   0x0000a7f4      20c3ff         jsr 0xffc3       ; CLOSE. Close file.
-        |   0x0000a7f7      4ce7ff         jmp 0xffe7       ; CLALL. Clear file table; call CLRCHN.
-        |   0x0000a7fa      4d2d52c6e5                      ; M-R[c6][e5]
+0000a3c0  a7 a7 a7 a7 a7 a7 a7 a7  a7 a7 a7 a7 a7 a8 a8 a8  |................|
+0000a3d0  a8 a8 a8 a8 a8 a8 a8 a8  a8 a8 a9 a9 a9 a9 a9 a9  |................|
+0000a3e0  a9 a9 a9 a9 a9 a9 a9 aa  aa aa aa aa aa aa aa aa  |................|
+0000a3f0  aa aa aa aa ab ab ab ab  ab ab ab ab ab ab ab ab  |................|
+0000a400  ac ac ac ac ac ac ac ac  ac ac ac ac ac ad ad ad  |................|
+0000a410  ad ad ad ad ad ad ad ad  ad ad ae ae ae ae ae ae  |................|
+0000a420  ae ae ae ae ae ae ae af  af af af af af af af af  |................|
+0000a430  af af af af b0 b0 b0 b0  b0 b0 b0 b0 b0 b0 b0 b0  |................|
+0000a440  b1 b1 b1 b1 b1 b1 b1 b1  b1 b1 b1 b1 b1 b2 b2 b2  |................|
+0000a450  00 14 28 3c 50 64 78 8c  a0 b4 c8 dc f0 04 18 2c  |..(<Pdx........,|
+0000a460  40 54 68 7c 90 a4 b8 cc  e0 f4 08 1c 30 44 58 6c  |@Th|........0DXl|
+0000a470  80 94 a8 bc d0 e4 f8 0c  20 34 48 5c 70 84 98 ac  |........ 4H\p...|
+0000a480  c0 d4 e8 fc 10 24 38 4c  60 74 88 9c b0 c4 d8 ec  |.....$8L`t......|
+0000a490  00 14 28 3c 50 64 78 8c  a0 b4 c8 dc f0 04 18 2c  |..(<Pdx........,|
+0000a4a0  40 54 68 7c 90 a4 b8 cc  e0 f4 08 1c 30 44 58 6c  |@Th|........0DXl|
+0000a4b0  80 94 a8 bc d0 e4 f8 0c  20 34 48 5c 70 84 98 ac  |........ 4H\p...|
+0000a4c0  c0 d4 e8 fc 10 24 38 4c  60 74 88 9c b0 c4 d8 ec  |.....$8L`t......|
+0000a4d0  00 14 28 3c 50 64 78 8c  a0 b4 c8 dc f0 04 18 2c  |..(<Pdx........,|
+0000a4e0  00 80 40 c0 20 a0 60 e0  10 90 50 d0 30 b0 70 f0  |..@. .`...P.0.p.|
+0000a4f0  08 88 48 c8 28 a8 68 e8  18 98 58 d8 38 b8 78 f8  |..H.(.h...X.8.x.|
+0000a500  04 84 44 c4 24 a4 64 e4  14 94 54 d4 34 b4 74 f4  |..D.$.d...T.4.t.|
+0000a510  0c 8c 4c cc 2c ac 6c ec  1c 9c 5c dc 3c bc 7c fc  |..L.,.l...\.<.|.|
+0000a520  02 82 42 c2 22 a2 62 e2  12 92 52 d2 32 b2 72 f2  |..B.".b...R.2.r.|
+0000a530  0a 8a 4a ca 2a aa 6a ea  1a 9a 5a da 3a ba 7a fa  |..J.*.j...Z.:.z.|
+0000a540  06 86 46 c6 26 a6 66 e6  16 96 56 d6 36 b6 76 f6  |..F.&.f...V.6.v.|
+0000a550  0e 8e 4e ce 2e ae 6e ee  1e 9e 5e de 3e be 7e fe  |..N...n...^.>.~.|
+0000a560  00 b0 f0 10 a0 50 90 b0  70 40 30 e0 70 10 00 b0  |.....P..p@0.p...|
+0000a570  40 f0 30 50 e0 90 d0 f0  70 80 70 20 70 70 70 b0  |@.0P....p.p ppp.|
+0000a580  0e 6c ff 92 bc e6 ed f4  52 b0 43 d6 00 2a 31 38  |.l......R.C..*18|
+0000a590  a1 0a 5e b2 ce ea f1 f8  61 ca 1e 72 8e aa b1 b8  |..^.....a..r....|
+0000a5a0  21 8a de 32 4e 6a 71 00  00 00 80 00 80 00 c0 c0  |!..2Njq.........|
+0000a5b0  c0 40 88 c0 c1 c3 c5 c5  c7 c9 ca d1 cb cf d0 d1  |.@..............|
+0000a5c0  d7 db dc dd de e1 e2 e2  e4 e6 e7 d1 e8 ec ee d1  |................|
+0000a5d0  d1 d1 ee f0 f1 f1 f2 f2  f2 f2 f2 f4 f5 f6 f6 f7  |................|
+0000a5e0  f7 f7 f7 f7 f8 f8 f8 f8  f8 f8 f8 f9 f9 fa fa fa  |................|
+0000a5f0  fa fa fa fb fb fb fc fc  fc fc 0b 0d 08 0e 0f 0f  |................|
+0000a600  0c 0d 08 0e 0f 0f 01 20  20 20 50 49 54 20 20 20  |.......   PIT   |
+0000a610  20 1f 42 4f 54 54 4f 4d  4c 45 53 53 00 02 20 20  | .BOTTOMLESS..  |
+0000a620  53 4f 55 4c 53 20 20 20  1f 20 20 4f 46 20 4c 4f  |SOULS   .  OF LO|
+0000a630  5f 20 20 1f 20 5b 45 20  4d 41 5a 45 20 20 00 03  |_  . [E MAZE  ..|
+0000a640  a0 00 04 20 20 20 20 57  52 4f 5d 20 20 1f 20 5b  |...    WRO]  . [|
+0000a650  45 20 50 52 49 53 4f 4e  00 05 20 5b 45 20 43 52  |E PRISON.. [E CR|
+0000a660  59 50 54 20 00 20 20 43  52 59 50 54 53 20 20 1f  |YPT .  CRYPTS  .|
+0000a670  20 20 55 50 50 45 52 20  20 20 00 20 20 43 52 59  |  UPPER   .  CRY|
+0000a680  50 54 53 20 20 1f 20 20  4c 4f 57 45 52 20 20 20  |PTS  .  LOWER   |
+0000a690  00 20 20 20 41 4c 4c 45  59 20 20 1f 20 20 44 45  |.   ALLEY  .  DE|
+0000a6a0  42 54 4f 52 53 20 00 06  20 20 20 44 5c 50 20 20  |BTORS ..   D\P  |
+0000a6b0  20 20 00 20 20 44 5c 50  45 52 20 20 20 00 20 20  |  .  D\PER   .  |
+0000a6c0  44 5c 50 45 5f 20 20 20  00 07 20 20 20 4d 41 5a  |D\PE_   ..   MAZ|
+0000a6d0  45 20 20 20 1f 4d 4f 5b  45 52 20 4c 4f 44 45 00  |E   .MO[ER LODE.|
+0000a6e0  08 a0 00 ff 00 00 03 01  01 03 03 02 02 01 60 a0  |..............`.|
+0000a6f0  00 90 80 60 00 00 00 00  00 00 8e 0b a7 a2 00 a1  |...`............|
+0000a700  fe e6 fe d0 02 e6 ff ae  0b a7 60 00 8e 2a a7 a2  |..........`..*..|
+0000a710  00 81 fc e6 fc d0 02 e6  fd ae 2a a7 48 ad f6 a6  |..........*.H...|
+0000a720  d0 03 ce f7 a6 ce f6 a6  68 60 00 a0 00 8c f8 a6  |........h`......|
+0000a730  a9 00 99 00 7e c8 c0 80  d0 f8 20 fa a6 48 20 0c  |....~..... ..H .|
+0000a740  a7 68 99 00 7e c8 d0 f2  60 ac f8 a6 99 00 7e c8  |.h..~...`.....~.|
+0000a750  8c f8 a6 60 a9 00 8d f9  a6 60 8e 6b a7 ae f9 a6  |...`.....`.k....|
+0000a760  9d 00 7f e8 8e f9 a6 ae  6b a7 60 00 a2 00 bd 00  |........k.`.....|
+0000a770  7f 20 0c a7 20 49 a7 e8  ec f9 a6 d0 f1 a2 00 8e  |. .. I..........|
+0000a780  f9 a6 60 a9 00 85 fc 84  fd 20 06 6c a9 00 85 fe  |..`...... .l....|
+0000a790  a9 b0 85 ff 20 2b a7 20  54 a7 20 fa a6 aa f0 11  |.... +. T. .....|
+0000a7a0  20 fa a6 a8 b9 00 7e 20  5a a7 c8 ca d0 f6 4c b7  | .....~ Z.....L.|
+0000a7b0  a7 20 fa a6 20 5a a7 20  6c a7 ad f7 a6 30 07 d0  |. .. Z. l....0..|
+0000a7c0  d9 ad f6 a6 d0 d4 4c 03  6c a5 c8 10 b5 a2 fa a0  |......L.l.......|
+0000a7d0  a7 a9 05 20 bd ff a9 0f  ae 33 6c a0 0f 20 ba ff  |... .....3l.. ..|
+0000a7e0  20 c0 ff a2 0f 20 c6 ff  20 cf ff c9 37 f0 03 ce  | .... .. ...7...|
+0000a7f0  e4 a6 a9 0f 20 c3 ff 4c  e7 ff 4d 2d 52 c6 e5     |.... ..L..M-R..|
  

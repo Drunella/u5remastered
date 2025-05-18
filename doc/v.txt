@@ -1,0 +1,340 @@
+* = $a700
+$A700:  20 1B A8   jsr label_a81b  ; clear screen
+$A703:  20 21 4C   jsr $4c21       ; ?
+$A706:  C9 FF      cmp #$ff
+$A708:  D0 03      bne label_a70d
+$A70A:  4C F3 A7   jmp label_a7f3
+$A70D: 
+$A70D: label_a70d
+$A70D:  A9 00      lda #$00
+$A70F:  8D 3F AA   sta $aa3f
+$A712:  8D 40 AA   sta $aa40
+$A715:  A5 02      lda $02
+$A717:  C9 0B      cmp #$0b
+$A719:  90 0D      bcc label_a728
+$A71B:  A2 0A      ldx #$0a
+$A71D:  C9 15      cmp #$15
+$A71F:  B0 04      bcs label_a725
+$A721:  38         sec
+$A722:  E9 0A      sbc #$0a
+$A724:  AA         tax
+$A725: 
+$A725: label_a725
+$A725:  8E 3F AA   stx $aa3f
+$A728: 
+$A728: label_a728
+$A728:  A5 03      lda $03
+$A72A:  C9 0B      cmp #$0b
+$A72C:  90 0D      bcc label_a73b
+$A72E:  A2 0A      ldx #$0a
+$A730:  C9 15      cmp #$15
+$A732:  B0 04      bcs label_a738
+$A734:  38         sec
+$A735:  E9 0A      sbc #$0a
+$A737:  AA         tax
+$A738: 
+$A738: label_a738
+$A738:  8E 40 AA   stx $aa40
+$A73B: 
+$A73B: label_a73b
+$A73B:  AD 3F AA   lda $aa3f
+$A73E:  85 A9      sta $a9
+$A740:  AD 40 AA   lda $aa40
+$A743:  85 AA      sta $aa
+$A745: 
+$A745: label_a745
+$A745:  20 7C A9   jsr label_a97c
+$A748:  AA         tax
+$A749:  BD 7C A8   lda $a87c, x  ; load index
+$A74C:  48         pha
+$A74D:  0A         asl
+$A74E:  0A         asl
+$A74F:  0A         asl
+$A750:  AA         tax
+$A751:  A5 AA      lda $aa
+$A753:  38         sec
+$A754:  ED 40 AA   sbc $aa40
+$A757:  85 FE      sta $fe
+$A759:  0A         asl
+$A75A:  0A         asl
+$A75B:  18         clc
+$A75C:  65 FE      adc $fe
+$A75E:  0A         asl
+$A75F:  85 FE      sta $fe
+$A761:  A9 00      lda #$00
+$A763:  06 FE      asl $fe
+$A765:  2A         rol
+$A766:  06 FE      asl $fe
+$A768:  2A         rol
+$A769:  06 FE      asl $fe
+$A76B:  2A         rol
+$A76C:  06 FE      asl $fe
+$A76E:  2A         rol
+$A76F:  06 FE      asl $fe
+$A771:  2A         rol
+$A772:  85 FF      sta $ff
+$A774:  A5 FE      lda $fe
+$A776:  18         clc
+$A777:  69 88      adc #$88
+$A779:  85 FE      sta $fe
+$A77B:  A5 FF      lda $ff
+$A77D:  69 22      adc #$22
+$A77F:  85 FF      sta $ff
+$A781:  A5 A9      lda $a9
+$A783:  38         sec
+$A784:  ED 3F AA   sbc $aa3f
+$A787:  0A         asl
+$A788:  0A         asl
+$A789:  0A         asl
+$A78A:  18         clc
+$A78B:  65 FE      adc $fe
+$A78D:  85 FE      sta $fe
+$A78F:  90 02      bcc label_a793
+$A791:  E6 FF      inc $ff
+$A793: 
+$A793: label_a793
+$A793:  A0 07      ldy #$07
+$A795: 
+$A795: label_a795
+$A795:  BD BF A9   lda $a9bf, x  ; load character (always +1?)
+$A798:  91 FE      sta ( $fe ), y
+$A79A:  CA         dex
+$A79B:  88         dey
+$A79C:  10 F7      bpl label_a795
+$A79E:  A5 AA      lda $aa
+$A7A0:  38         sec
+$A7A1:  ED 40 AA   sbc $aa40
+$A7A4:  85 FE      sta $fe
+$A7A6:  0A         asl
+$A7A7:  0A         asl
+$A7A8:  18         clc
+$A7A9:  65 FE      adc $fe
+$A7AB:  0A         asl
+$A7AC:  85 FE      sta $fe
+$A7AE:  A9 00      lda #$00
+$A7B0:  06 FE      asl $fe
+$A7B2:  2A         rol
+$A7B3:  06 FE      asl $fe
+$A7B5:  2A         rol
+$A7B6:  85 FF      sta $ff
+$A7B8:  A5 FE      lda $fe
+$A7BA:  18         clc
+$A7BB:  69 51      adc #$51
+$A7BD:  85 FE      sta $fe
+$A7BF:  A5 FF      lda $ff
+$A7C1:  69 04      adc #$04
+$A7C3:  85 FF      sta $ff
+$A7C5:  A5 A9      lda $a9
+$A7C7:  38         sec
+$A7C8:  ED 3F AA   sbc $aa3f
+$A7CB:  A8         tay
+$A7CC:  68         pla
+$A7CD:  AA         tax
+$A7CE:  BD 30 AA   lda $aa30, x     ; get color
+$A7D1:  91 FE      sta ( $fe ), y
+$A7D3:  E6 AA      inc $aa
+$A7D5:  A5 AA      lda $aa
+$A7D7:  38         sec
+$A7D8:  ED 40 AA   sbc $aa40
+$A7DB:  C9 16      cmp #$16
+$A7DD:  90 11      bcc label_a7f0
+$A7DF:  AD 40 AA   lda $aa40
+$A7E2:  85 AA      sta $aa
+$A7E4:  E6 A9      inc $a9
+$A7E6:  A5 A9      lda $a9
+$A7E8:  38         sec
+$A7E9:  ED 3F AA   sbc $aa3f
+$A7EC:  C9 16      cmp #$16
+$A7EE:  B0 03      bcs label_a7f3
+$A7F0: 
+$A7F0: label_a7f0
+$A7F0:  4C 45 A7   jmp label_a745
+$A7F3: 
+$A7F3: label_a7f3
+$A7F3:  A5 02      lda $02
+$A7F5:  38         sec
+$A7F6:  ED 3F AA   sbc $aa3f
+$A7F9:  85 A9      sta $a9
+$A7FB:  A5 03      lda $03
+$A7FD:  38         sec
+$A7FE:  ED 40 AA   sbc $aa40
+$A801:  85 AA      sta $aa
+$A803: 
+$A803: label_a803
+$A803:  20 3C A8   jsr label_a83c
+$A806:  A2 18      ldx #$18
+$A808:  A0 00      ldy #$00
+$A80A: 
+$A80A: label_a80a
+$A80A:  20 E4 FF   jsr $ffe4
+$A80D:  D0 08      bne label_a817
+$A80F:  88         dey
+$A810:  D0 F8      bne label_a80a
+$A812:  CA         dex
+$A813:  D0 F5      bne label_a80a
+$A815:  F0 EC      beq label_a803
+$A817: 
+$A817: label_a817
+$A817:  20 1B A8   jsr label_a81b
+$A81A:  60         rts
+
+$A81B: 
+$A81B: label_a81b (clear screen)
+$A81B:  A2 08      ldx #$08
+$A81D: 
+$A81D: label_a81d
+$A81D:  BD 00 14   lda $1400, x
+$A820:  85 FE      sta $fe
+$A822:  BD C0 14   lda $14c0, x
+$A825:  85 FF      sta $ff
+$A827:  A0 B7      ldy #$b7
+$A829:  A9 00      lda #$00
+$A82B: 
+$A82B: label_a82b
+$A82B:  91 FE      sta ( $fe ), y
+$A82D:  88         dey
+$A82E:  C0 08      cpy #$08
+$A830:  B0 F9      bcs label_a82b
+$A832:  8A         txa
+$A833:  18         clc
+$A834:  69 08      adc #$08
+$A836:  AA         tax
+$A837:  E0 B8      cpx #$b8
+$A839:  90 E2      bcc label_a81d
+$A83B:  60         rts
+$A83C: 
+$A83C: label_a83c
+$A83C:  A5 03      lda $03
+$A83E:  38         sec
+$A83F:  ED 40 AA   sbc $aa40
+$A842:  85 FE      sta $fe
+$A844:  0A         asl
+$A845:  0A         asl
+$A846:  18         clc
+$A847:  65 FE      adc $fe
+$A849:  0A         asl
+$A84A:  85 FE      sta $fe
+$A84C:  A9 00      lda #$00
+$A84E:  06 FE      asl $fe
+$A850:  2A         rol
+$A851:  06 FE      asl $fe
+$A853:  2A         rol
+$A854:  85 FF      sta $ff
+$A856:  A5 FE      lda $fe
+$A858:  18         clc
+$A859:  69 51      adc #$51
+$A85B:  85 FE      sta $fe
+$A85D:  A5 FF      lda $ff
+$A85F:  69 04      adc #$04
+$A861:  85 FF      sta $ff
+$A863:  A5 02      lda $02
+$A865:  38         sec
+$A866:  ED 3F AA   sbc $aa3f
+$A869:  A8         tay
+$A86A:  B1 FE      lda ( $fe ), y
+$A86C:  C9 77      cmp #$77
+$A86E:  F0 07      beq label_a877
+$A870:  8D 78 A8   sta $a878
+$A873:  A9 77      lda #$77
+$A875:  D0 02      bne label_a879
+$A877: 
+$A877: label_a877
+$A877:  A9 FF      lda #$ff
+$A879: 
+$A879: label_a879
+$A879:  91 FE      sta ( $fe ), y
+$A87B:  60         rts
+
+$A87C:!byte $00,$0C,$0B,$0A,$0D,$01,$09,$03
+$A884:!byte $09,$02,$02,$08,$07,$06,$08,$08
+$A88C:!byte $05,$05,$05,$05,$05,$05,$05,$05
+$A894:!byte $05,$05,$05,$05,$03,$04,$03,$03
+$A89C:!byte $00,$00,$00,$00,$00,$00,$00,$07
+$A8A4:!byte $07,$05,$05,$05,$09,$02,$05,$05
+$A8AC:!byte $01,$01,$01,$01,$01,$01,$01,$01
+$A8B4:!byte $04,$07,$07,$07,$07,$07,$07,$07
+$A8BC:!byte $03,$05,$05,$05,$03,$06,$07,$04
+$A8C4:!byte $03,$03,$06,$06,$05,$07,$07,$07
+$A8CC:!byte $07,$07,$07,$07,$07,$07,$07,$07
+$A8D4:!byte $05,$05,$04,$05,$04,$04,$05,$05
+$A8DC:!byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+$A8E4:!byte $0A,$0A,$00,$00,$0A,$0A,$0A,$0A
+$A8EC:!byte $03,$03,$03,$03,$03,$03,$03,$03
+$A8F4:!byte $03,$03,$03,$03,$03,$03,$03,$03
+$A8FC:!byte $05,$05,$05,$05,$05,$05,$06,$07
+$A904:!byte $05,$05,$05,$05,$0A,$05,$05,$03
+$A90C:!byte $05,$05,$05,$05,$04,$04,$04,$06
+$A914:!byte $06,$06,$04,$04,$04,$05,$05,$05
+$A91C:!byte $05,$05,$05,$05,$05,$05,$05,$05
+$A924:!byte $05,$05,$03,$04,$04,$05,$05,$05
+$A92C:!byte $05,$05,$05,$05,$05,$05,$05,$05
+$A934:!byte $06,$06,$06,$06,$03,$05,$04,$05
+$A93C:!byte $00,$00,$00,$00,$06,$06,$06,$06
+$A944:!byte $05,$05,$05,$05,$00,$00,$00,$00
+$A94C:!byte $07,$07,$07,$07,$0B,$0B,$0B,$0B
+$A954:!byte $05,$05,$05,$05,$03,$03,$05,$05
+$A95C:!byte $0E,$0E,$0E,$0E,$0A,$0A,$0A,$0A
+$A964:!byte $05,$05,$05,$05,$06,$06,$06,$06
+$A96C:!byte $06,$06,$06,$06,$06,$06,$06,$06
+$A974:!byte $06,$06,$05,$05,$05,$05,$07,$00
+
+$A97C: 
+$A97C: label_a97c
+$A97C:  A5 A9      lda $a9
+$A97E:  85 AB      sta $ab
+$A980:  A5 AA      lda $aa
+$A982:  85 82      sta $82
+$A984:  A5 AB      lda $ab
+$A986:  C9 20      cmp #$20
+$A988:  B0 2B      bcs label_a9b5
+$A98A:  A5 82      lda $82
+$A98C:  C9 20      cmp #$20
+$A98E:  B0 25      bcs label_a9b5
+$A990:  A5 82      lda $82
+$A992:  0A         asl
+$A993:  0A         asl
+$A994:  0A         asl
+$A995:  0A         asl
+$A996:  85 FC      sta $fc
+$A998:  A5 AB      lda $ab
+$A99A:  29 0F      and #$0f
+$A99C:  05 FC      ora $fc
+$A99E:  85 FC      sta $fc
+$A9A0:  A5 82      lda $82
+$A9A2:  29 10      and #$10
+$A9A4:  0A         asl
+$A9A5:  05 AB      ora $ab
+$A9A7:  4A         lsr
+$A9A8:  4A         lsr
+$A9A9:  4A         lsr
+$A9AA:  4A         lsr
+$A9AB:  18         clc
+$A9AC:  69 44      adc #$44
+$A9AE:  85 FD      sta $fd
+$A9B0:  A0 00      ldy #$00
+$A9B2:  B1 FC      lda ( $fc ), y
+$A9B4:  60         rts
+$A9B5: 
+$A9B5: label_a9b5
+$A9B5:  A9 05      lda #$05
+$A9B7:  60         rts
+
+$A9B8:!byte $00,$00,$00,$00,$00,$00,$00,$00
+$A9C0:!byte $CC,$33,$CC,$33,$CC,$33,$CC,$33
+$A9C8:!byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+$A9D0:!byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+$A9D8:!byte $FF,$FF,$00,$00,$00,$00,$FF,$FF
+$A9E0:!byte $00,$3C,$3C,$3C,$3C,$3C,$3C,$00
+$A9E8:!byte $FF,$FF,$C3,$C3,$C3,$C3,$FF,$FF
+$A9F0:!byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+$A9F8:!byte $30,$78,$CC,$00,$0C,$1E,$33,$00
+$AA00:!byte $FF,$CC,$FF,$33,$FF,$CC,$FF,$33
+$AA08:!byte $CC,$33,$CC,$33,$CC,$33,$CC,$33
+$AA10:!byte $CC,$00,$33,$00,$CC,$00,$33,$00
+$AA18:!byte $CC,$00,$00,$00,$33,$00,$00,$00
+$AA20:!byte $66,$19,$CC,$33,$66,$19,$CC,$33
+$AA28:!byte $3C,$3C,$3C,$3C,$3C,$3C,$3C,$3C
+
+$AA30:!byte $00,$50,$D0,$20,$90,$10,$F0,$10
+$AA38:!byte $C0,$50,$60,$60,$60,$30,$20,$00
+$AA40:!byte $00

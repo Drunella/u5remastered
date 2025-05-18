@@ -161,7 +161,7 @@ Loading
    loads STARTUP
    jumps to STARTUP
    
-4. loads PRINT.PRG ($c000)
+4. loads PRINT ($c000)
    loads OSI.LOGOS ($c000)
    loads FLIPPER ($1000)
    loads HTXT ($1580)

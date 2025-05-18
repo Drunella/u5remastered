@@ -2,19 +2,39 @@ Main Memory Map
 ===============
 
 0x0000
-0x1000    roster
-   1      roster
-   2      roster
-   3      roster
-   4
-   5
-   6
-   7
+0x0001
+0x002d   x position on map
+0x002e   y position on map
+   1
+   2
+   3
+   4     colors
+   5     colors
+   6     colors
+   7     colors
    8
    9
    A
    B
    C
+   D
+   E
+   F
+0x1000    roster
+   1      roster
+   2      roster
+   3      roster
+   4      
+   50     
+   58     charset
+   6      charset
+   7      charset
+   8      charset
+   9      charset
+   A      charset
+   B      charset
+   C0     charset
+   C8
    D
    E
    F
@@ -93,7 +113,7 @@ Main Memory Map
    4
    5
    6
-   7      all A7 programs 
+   7      all A7 programs, up to 0xAFFF
    8
    9      sell*, talk*
    A      about
@@ -102,9 +122,9 @@ Main Memory Map
    D
    E
    F
-0xB000    colors, dng*
-0xC000    osi, print, s*, u5.logo* / [ram]
-0xD000    [i/o] / [ram]
+0xB000    
+0xC000    osi, print, s*, u5.logo* / [tiles]
+0xD000    [i/o] / [tiles]
    1
    2
    3
@@ -118,10 +138,10 @@ Main Memory Map
    B
    C
    D
-   E      [Cartridge Registers] / [ram]
-   F      [Cartridge RAM: EAPI Jumptable, LIBEFS] / [ram]
-0xE000    [kernel] / [ram] / [banked code on startup]
-0xF000    [kernel] / [ram] / [banked code on startup]
+   E      [Cartridge Registers]
+   F      [Cartridge RAM: EAPI Jumptable, LIBEFS]
+0xE000    [kernel] / [tiles] / [banked code on startup]
+0xF000    [kernel] / [tiles] / [banked code on startup]
 
 
 
