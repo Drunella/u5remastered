@@ -33,7 +33,7 @@ Find the crt and d81 image in the build sub-directory:
 
 ## Maps
 To create Ultima V maps run the following command. You need python pillow
-and PyXAML to create maps.
+and PyYAML to create maps.
 
 ```
 make pngs
