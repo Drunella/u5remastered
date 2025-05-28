@@ -1,0 +1,9 @@
+type = symaddr
+# replace address with address from symbol map
+# 0x81fa
+# _disk_check_type
+filename = "0x41/transfer"
+offset = 3
+address = 0x01fa
+oldtarget = 0x6c00
+newtarget = symbol(_disk_load_block)

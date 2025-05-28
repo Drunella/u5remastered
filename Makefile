@@ -171,6 +171,10 @@ build/d81/exodecrunch.prg: build/common/exodecrunch.o build/d81/io-code.o
 build/d81.f/exodecrunch.prg: build/d81/exodecrunch.prg
 	cp ./build/d81/exodecrunch.prg ./build/d81.f/exodecrunch.prg
 
+# transfer-load
+build/d81/transfer-load.prg build/d81/transfer-load.map: build/d81/transfer-load.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/transfer-load.map -o $@ -C ./src/d81/transfer-load.cfg $^
+
 # editor.prg
 build/d81.f/editor.prg: build/d81/savegame.o
 	$(CC65) $(CC65FLAGS) -DD81 -o build/d81/editor.s src/common/editor.c
@@ -187,8 +191,8 @@ build/d81.f/crunched.done: build/d81.f/patched.done
 	touch build/d81.f/crunched.done
 
 # patch
-build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map build/d81/io-replacement.prg
-	tools/u5patch.py -v -l ./build/d81.f/files.list -f ./build/d81.f -m build/d81/io-replacement.map ./patches/d81/*.patch ./patches/*.patch
+build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map build/d81/io-replacement.prg build/d81/transfer-load.map build/d81/transfer-load.prg
+	tools/u5patch.py -v -l ./build/d81.f/files.list -f ./build/d81.f -m build/d81/io-replacement.map -m build/d81/transfer-load.map ./patches/d81/*.patch ./patches/*.patch
 	touch ./build/d81.f/patched.done
 
 # build disk
