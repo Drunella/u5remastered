@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright 2019 Drunella
+// Copyright 2025 Drunella
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------
 
-#ifndef MENU_INCLUDE_H
-#define MENU_INCLUDE_H
+#ifndef SAVE_UTIL_H
+#define SAVE_UTIL_H
 
 #include <stdint.h>
 
@@ -23,8 +23,15 @@
 void loadsave_device(uint8_t d);
 bool savegame_prtydata();
 bool savegame_roster();
+bool savegame_list();
+bool savegame_slist();
 bool loadgame_prtydata();
 bool loadgame_roster();
+bool loadgame_list();
+bool loadgame_slist();
+bool disk_save_file(uint8_t device, char *filename, uint16_t loadaddr, void *buffer, uint16_t length);
+bool scratch_tlist_britannia();
+bool scratch_tlist_underworld();
 void soft_reset(void);
 
 

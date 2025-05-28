@@ -28,7 +28,7 @@
 #endif
 
 #ifdef D81
-#include "../d81/editor.h"
+#include "../d81/save_util.h"
 #endif
 
 

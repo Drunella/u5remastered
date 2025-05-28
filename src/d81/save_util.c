@@ -32,6 +32,34 @@ void loadsave_device(uint8_t d)
     last_device = d;
 }
 
+bool disk_save_file(uint8_t device, char *filename, uint16_t loadaddr, void *buffer, uint16_t length)
+{
+    char namebuf[32];
+
+    sprintf(namebuf, "s0:%s", filename);
+    cbm_open(1, device, 15, namebuf);
+    cbm_close(1);
+
+    sprintf(namebuf, "%s,w,p", filename);
+    if (cbm_open(1, device, 2, namebuf)) {
+        return false;
+    }
+
+    if (cbm_write(1, &loadaddr, 2) != 2) {
+        cbm_close(1);
+        return false;
+    }
+
+    if (cbm_write(1, buffer, length) != length) {
+        cbm_close(1);
+        return false;
+    }
+
+    cbm_close(1);
+    return true;
+}
+
+
 bool savegame_prtydata()
 {
     uint8_t result;
@@ -56,6 +84,31 @@ bool savegame_roster()
     return false;
 }
 
+bool savegame_list(void* source)
+{
+    uint8_t result;
+
+    cbm_open(1, last_device, 15, "s:blist");
+    cbm_close(1);
+
+    result = cbm_save("blist", last_device, source, 0x0200);
+    if (result == 0) return true;
+    return false;
+}
+
+bool savegame_slist(void* source)
+{
+    uint8_t result;
+
+    cbm_open(1, last_device, 15, "s:bslist");
+    cbm_close(1);
+
+    result = cbm_save("bslist", last_device, source, 0x0200);
+    if (result == 0) return true;
+    return false;
+}
+
+
 bool loadgame_prtydata()
 {
     uint16_t amount = cbm_load("bprty.data", last_device, NULL);
@@ -69,6 +122,38 @@ bool loadgame_roster()
     if (amount == 0) return false;
     return true;
 }
+
+bool loadgame_list()
+{
+    uint16_t amount = cbm_load("blist", last_device, NULL);
+    if (amount == 0) return false;
+    return true;
+}
+
+bool loadgame_slist()
+{
+    uint16_t amount = cbm_load("bslist", last_device, NULL);
+    if (amount == 0) return false;
+    return true;
+}
+
+
+bool scratch_tlist_britannia()
+{
+    uint8_t result;
+
+    cbm_open(1, last_device, 15, "s:btlist");
+    cbm_close(1);
+}
+
+bool scratch_tlist_underworld()
+{
+    uint8_t result;
+
+    cbm_open(1, last_device, 15, "s:htlist");
+    cbm_close(1);
+}
+
 
 void soft_reset()
 {

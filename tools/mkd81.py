@@ -353,6 +353,9 @@ def main(argv):
     sourcefilename = files_list["0x41/meow"] + ".prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "ultima v", verbose=args.verbose)
 
+    sourcefilename = "savegame.prg"
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "savemanager", verbose=args.verbose)
+
     sourcefilename = "editor.prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "editor", verbose=args.verbose)
 

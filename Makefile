@@ -58,7 +58,7 @@ build/%.o: build/%.s
 # ------------------------------------------------------------------------
 # easyflash
 
-EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/ef/menu_utils.o build/ef/music-playsound.o
+EF_MENU_FILES=build/ef/menu.o build/ef/startup.o build/ef/io-code.o build/ef/menu_savegame.o build/ef/menu_util.o build/ef/menu_backup.o build/ef/music-base.o build/ef/music-disassemble.o build/ef/editor.o build/common/utils.o build/ef/music-playsound.o
 EF_MUSIC_FILES=build/ef/music-base.o build/ef/music-disassemble.o build/ef/music-playsound.o
 
 # easyflash config.prg
@@ -176,10 +176,14 @@ build/d81/transfer-load.prg build/d81/transfer-load.map: build/d81/transfer-load
 	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/transfer-load.map -o $@ -C ./src/d81/transfer-load.cfg $^
 
 # editor.prg
-build/d81.f/editor.prg: build/d81/savegame.o
+build/d81.f/editor.prg: build/d81/save_util.o
 	$(CC65) $(CC65FLAGS) -DD81 -o build/d81/editor.s src/common/editor.c
 	$(CA65) $(CA65FLAGS) -o build/d81/editor.o build/d81/editor.s
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/d81/editor.o build/d81/savegame.o
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/d81/editor.o build/d81/save_util.o
+
+# savegame.prg
+build/d81.f/savegame.prg: build/d81/savegame.o build/d81/save_util.o build/common/utils.o 
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
 
 # files with additional items
 build/d81.f/files.list: build/source/files.list
@@ -196,7 +200,7 @@ build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map bu
 	touch ./build/d81.f/patched.done
 
 # build disk
-build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg build/d81.f/editor.prg
+build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg build/d81.f/editor.prg build/d81.f/savegame.prg
 	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
 
 
@@ -220,11 +224,19 @@ build/backbit/exodecrunch.prg: build/common/exodecrunch.o build/backbit/io-code.
 build/backbit.f/exodecrunch.prg: build/backbit/exodecrunch.prg
 	cp ./build/backbit/exodecrunch.prg ./build/backbit.f/exodecrunch.prg
 
+# transfer-load
+build/backbit/transfer-load.prg build/backbit/transfer-load.map: build/d81/transfer-load.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/backbit/transfer-load.map -o $@ -C ./src/d81/transfer-load.cfg $^
+
+# savegame.prg
+build/backbit.f/savegame.prg: build/d81/savegame.o build/d81/save_util.o build/common/utils.o
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
+
 # editor.prg
-build/backbit.f/editor.prg: build/d81/savegame.o
+build/backbit.f/editor.prg: build/d81/save_util.o
 	$(CC65) $(CC65FLAGS) -DD81 -o build/backbit/editor.s src/common/editor.c
 	$(CA65) $(CA65FLAGS) -o build/backbit/editor.o build/backbit/editor.s
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/backbit/editor.o build/d81/savegame.o
+	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/backbit/editor.o build/d81/save_util.o
 
 # files with additional items
 build/backbit.f/files.list: build/source/files.list
@@ -236,12 +248,12 @@ build/backbit.f/crunched.done: build/backbit.f/patched.done
 	touch build/backbit.f/crunched.done
 
 # patch
-build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replacement.map build/backbit/io-replacement.prg
-	tools/u5patch.py -v -l ./build/backbit.f/files.list -f ./build/backbit.f -m build/backbit/io-replacement.map ./patches/backbit/*.patch ./patches/d81/*.patch ./patches/*.patch
+build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replacement.map build/backbit/io-replacement.prg build/backbit/transfer-load.map build/backbit/transfer-load.prg
+	tools/u5patch.py -v -l ./build/backbit.f/files.list -f ./build/backbit.f -m build/backbit/io-replacement.map -m build/backbit/transfer-load.map ./patches/backbit/*.patch ./patches/d81/*.patch ./patches/*.patch
 	touch ./build/backbit.f/patched.done
 
 # build disk
-build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/backbit.f/editor.prg
+build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/backbit.f/editor.prg build/backbit.f/savegame.prg
 	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f
 
 # ------------------------------------------------------------------------
