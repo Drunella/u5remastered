@@ -354,10 +354,10 @@ def main(argv):
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "ultima v", verbose=args.verbose)
 
     sourcefilename = "savegame.prg"
-    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "savemanager", verbose=args.verbose)
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "save64", verbose=args.verbose)
 
     sourcefilename = "editor.prg"
-    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "editor", verbose=args.verbose)
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "edit64", verbose=args.verbose)
 
     sourcefilename = "loader.prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "xyzzy", verbose=args.verbose)
