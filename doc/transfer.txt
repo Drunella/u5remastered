@@ -76,6 +76,7 @@ check if disk 0x41 is inserted
    ||| `==< 0x000080c2      d0f7           bne 0x459108                ; branch on result not zero
    |||  |   0x000080c4      60             rts                         ; return from subroutine
    |||  |   0x000080c5      00             brk                         ; force break
+
    |||  |   0x000080c6      adb814         lda 0x14b8                  ; load accumulator with memory
    |||  |   0x000080c9      8540           sta 0x40                    ; store accumulator in memory
    |||  |   0x000080cb      ad7815         lda 0x1578                  ; load accumulator with memory

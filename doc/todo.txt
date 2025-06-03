@@ -8,7 +8,8 @@ Features
 - show karma with CTRL+K (difficult)
 
 ToDo
-- enhance blockmap (are there rooms missing in dungeons? -> probably not)
+
+- (no) enhance blockmap (are there rooms missing in dungeons? -> probably not)
   7 disks: from track 19 to 35 (17 tracks) with space for max 19 sectors (32)
   every entry has 4 bytes: bank, high, low address
   every disk needs 2176 bytes, alltogether 15232
@@ -20,7 +21,6 @@ ToDo
   look in create.prg
 - sound and effect mixing is not good
 - check Underworld/startup.prg for menu modifications
-- d81 version u4 import
 - quickstart in d81 does not work (c128)
 
 - Save Game
@@ -181,6 +181,18 @@ Loading
    loads ROSTER ($1000)
    (change disk DWELLING)
    loads MAIN.T* ($8000)
+
+6. quick start
+   load QS
+   load HTXT
+   load MAIN.SUBS
+   load S3
+   load S2
+   load S1
+   load UPDATE.HIMEM
+   load COLORS
+   load S0
+   load ENTER.PLAY
 
 
 Internal text encoding

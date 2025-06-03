@@ -5,7 +5,7 @@
   ========< 0x0000770c      4cbb77         jmp 0x77bb            ; called in enter.play.prg
   ========< 0x0000770f      4c2577         jmp 0x7725            ; called in main.dng.prg (2x)
 
-0x7702:
+0x7712:
   |||||||   0x00007712      a228           ldx #0x28                   ; load index x with memory
   --------> 0x00007714      bc000a         ldy 0x0a00,x                ; load index y with memory
   |||||||   0x00007717      bd7979         lda 0x7979,x                ; load accumulator with memory
@@ -144,6 +144,7 @@
   | |||||   0x0000783e      c9cd           cmp #0xcd                   ; compare memory and accumulator
   | `=====< 0x00007840      d0ec           bne 0x508108                ; branch on result not zero
   |  ||||   0x00007842      60             rts                         ; return from subroutine
+  
   |  ||||   0x00007843      a9a7           lda #0xa7                   ; load accumulator with memory
   |  ||||   0x00007845      a23e           ldx #0x3e                   ; load index x with memory
   |  ||||   0x00007847      a000           ldy #0x00                   ; load index y with memory
@@ -287,6 +288,7 @@ local:
        `==< 0x00007973      10fb           bpl 0x508108                ; branch on result plus
         |   0x00007975      8e01d6         stx 0xd601                  ; store index x in memory
         |   0x00007978      60             rts                         ; return from subroutine
+        
         |   0x00007979      ac8da0         ldy 0xa08d                  ; load index y with memory
         |   0x0000797c      e2ed           nop #0xed                   ; no operation
         |   0x0000797e      e9a0           sbc #0xa0                   ; subtract memory from accumulator with borrow
