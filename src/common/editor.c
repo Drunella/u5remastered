@@ -953,6 +953,11 @@ void main()
 {
     loadsave_device(*((uint8_t*)0xba));
     savegameeditor();
+#ifdef __C128__
+    asm("jmp $ff3d");
+#endif
+#ifdef __C64__
     soft_reset();
+#endif
 }
 #endif

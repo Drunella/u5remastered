@@ -84,26 +84,26 @@ bool savegame_roster()
     return false;
 }
 
-bool savegame_list(void* source)
+bool savegame_list()
 {
     uint8_t result;
 
     cbm_open(1, last_device, 15, "s:blist");
     cbm_close(1);
 
-    result = cbm_save("blist", last_device, source, 0x0200);
+    result = cbm_save("blist", last_device, 0x4a00, 0x0200);
     if (result == 0) return true;
     return false;
 }
 
-bool savegame_slist(void* source)
+bool savegame_slist()
 {
     uint8_t result;
 
     cbm_open(1, last_device, 15, "s:bslist");
     cbm_close(1);
 
-    result = cbm_save("bslist", last_device, source, 0x0200);
+    result = cbm_save("bslist", last_device, 0x4a00, 0x0200);
     if (result == 0) return true;
     return false;
 }
@@ -140,18 +140,20 @@ bool loadgame_slist()
 
 bool scratch_tlist_britannia()
 {
-    uint8_t result;
+    //uint8_t result;
 
     cbm_open(1, last_device, 15, "s:btlist");
     cbm_close(1);
+    return true;
 }
 
 bool scratch_tlist_underworld()
 {
-    uint8_t result;
+    //uint8_t result;
 
     cbm_open(1, last_device, 15, "s:htlist");
     cbm_close(1);
+    return true;
 }
 
 

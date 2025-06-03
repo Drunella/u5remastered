@@ -265,6 +265,7 @@
         nop
         nop
 
+        rts             ; unknown call
 
 ; any place
 .segment "MUSIC_CODE"

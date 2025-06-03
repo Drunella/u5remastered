@@ -359,6 +359,12 @@ def main(argv):
     sourcefilename = "editor.prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "edit64", verbose=args.verbose)
 
+    sourcefilename = "savegame128.prg"
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "save128", verbose=args.verbose)
+
+    sourcefilename = "editor128.prg"
+    copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "edit128", verbose=args.verbose)
+
     sourcefilename = "loader.prg"
     copyfile_disk(output_file, os.path.join(files_path, sourcefilename), "xyzzy", verbose=args.verbose)
 

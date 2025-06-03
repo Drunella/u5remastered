@@ -5,4 +5,4 @@ filename = "music_rom.bin"
 offset = -0x7fff
 address = symbol(music_setvolume)
 oldvalue = 0x0f
-newvalue = 0x08
+newvalue = 0x0f

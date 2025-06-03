@@ -179,11 +179,28 @@ build/d81/transfer-load.prg build/d81/transfer-load.map: build/d81/transfer-load
 build/d81.f/editor.prg: build/d81/save_util.o
 	$(CC65) $(CC65FLAGS) -DD81 -o build/d81/editor.s src/common/editor.c
 	$(CA65) $(CA65FLAGS) -o build/d81/editor.o build/d81/editor.s
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/d81/editor.o build/d81/save_util.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/d81/editor.o build/d81/save_util.o
+
+# editor128.prg
+build/d81.f/editor128.prg:
+	$(CC65) -t c128 -DD81 -o build/d81/save_util128.s src/d81/save_util.c
+	$(CC65) -t c128 -DD81 -o build/d81/editor128.s src/common/editor.c
+	$(CA65) -t c128 -I . --debug-info -o build/d81/save_util128.o build/d81/save_util128.s
+	$(CA65) -t c128 -o build/d81/editor128.o build/d81/editor128.s
+	$(LD65) -t c128 -vm -m ./build/d81/editor128.map -o $@ -C src/d81/editor128.cfg c128.lib build/d81/editor128.o build/d81/save_util128.o
 
 # savegame.prg
 build/d81.f/savegame.prg: build/d81/savegame.o build/d81/save_util.o build/common/utils.o 
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/d81/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
+	$(LD65) $(LD65FLAGS) -vm -m ./build/d81/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
+
+# savegame128.prg
+build/d81.f/savegame128.prg:
+	$(CC65) -t c128 -DD81 -o build/d81/save_util128.s src/d81/save_util.c
+	$(CC65) -t c128 -DD81 -o build/d81/savegame128.s src/d81/savegame.c
+	$(CA65) -t c128 -I . --debug-info -o build/common/utils128.o src/common/utils.s
+	$(CA65) -t c128 -I . --debug-info -o build/d81/save_util128.o build/d81/save_util128.s
+	$(CA65) -t c128 -I . --debug-info -o build/d81/savegame128.o build/d81/savegame128.s
+	$(LD65) -t c128 -vm -m ./build/d81/savegame128.map -o $@ -C src/d81/savegame128.cfg c128.lib  build/d81/save_util128.o build/d81/savegame128.o build/common/utils128.o
 
 # files with additional items
 build/d81.f/files.list: build/source/files.list
@@ -200,7 +217,7 @@ build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map bu
 	touch ./build/d81.f/patched.done
 
 # build disk
-build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg build/d81.f/editor.prg build/d81.f/savegame.prg
+build/u5remastered.d81: build/d81.f/crunched.done build/d81.f/loader.prg build/d81.f/exodecrunch.prg build/d81.f/editor.prg build/d81.f/savegame.prg build/d81.f/savegame128.prg build/d81.f/editor128.prg
 	tools/mkd81.py -v -o ./build/u5remastered.d81 -x ./src/d81/exclude.cfg -i ./src/d81/io.i -d ./src/disks.cfg -f ./build/d81.f
 
 
@@ -229,14 +246,14 @@ build/backbit/transfer-load.prg build/backbit/transfer-load.map: build/d81/trans
 	$(LD65) $(LD65FLAGS) -vm -m ./build/backbit/transfer-load.map -o $@ -C ./src/d81/transfer-load.cfg $^
 
 # savegame.prg
-build/backbit.f/savegame.prg: build/d81/savegame.o build/d81/save_util.o build/common/utils.o
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
+#build/backbit.f/savegame.prg: build/d81/savegame.o build/d81/save_util.o build/common/utils.o
+#	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/savegame.map -o $@ -C src/d81/savegame.cfg c64.lib $^
 
 # editor.prg
-build/backbit.f/editor.prg: build/d81/save_util.o
-	$(CC65) $(CC65FLAGS) -DD81 -o build/backbit/editor.s src/common/editor.c
-	$(CA65) $(CA65FLAGS) -o build/backbit/editor.o build/backbit/editor.s
-	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/backbit/editor.o build/d81/save_util.o
+#build/backbit.f/editor.prg: build/d81/save_util.o
+#	$(CC65) $(CC65FLAGS) -DD81 -o build/backbit/editor.s src/common/editor.c
+#	$(CA65) $(CA65FLAGS) -o build/backbit/editor.o build/backbit/editor.s
+#	$(LD65) $(LD65FLAGS) -u __EXEHDR__ -vm -m ./build/backbit/editor.map -o $@ -C src/d81/editor.cfg c64.lib build/backbit/editor.o build/d81/save_util.o
 
 # files with additional items
 build/backbit.f/files.list: build/source/files.list
@@ -253,8 +270,8 @@ build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replac
 	touch ./build/backbit.f/patched.done
 
 # build disk
-build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/backbit.f/editor.prg build/backbit.f/savegame.prg
-	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f
+build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/d81.f/editor.prg build/d81.f/savegame.prg build/d81.f/savegame128.prg build/d81.f/editor128.prg
+	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f -f ./build/d81.f
 
 # ------------------------------------------------------------------------
 # map pngs

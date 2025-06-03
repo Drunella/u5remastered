@@ -243,9 +243,9 @@ void backup_to_disk(uint8_t device)
     cputs("Saving LIST ...\r\n");
     ok = disk_save_file(device, "list", LIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     if (!ok) goto disk_error2;
-    memcpy ((void*)LIST_STORAGE, (void*)SLIST_STORAGE, 0x0200);
 
     cputs("Saving SLIST ...\r\n");
+    memcpy ((void*)LIST_STORAGE, (void*)SLIST_STORAGE, 0x0200);
     ok = disk_save_file(device, "slist", LIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     if (!ok) goto disk_error2;
 
@@ -289,7 +289,6 @@ void restore_from_disk(uint8_t device)
     cputs("Loading SLIST ...\r\n");
     size = cbm_load("slist", device, NULL);
     if (size == 0) goto flash_error1;
-    // $7c00 is a free area to temporary save SLIST
     memcpy((void*)SLIST_STORAGE, (void*)LIST_STORAGE, 0x0200);
     
     cputs("Loading LIST ...\r\n");
@@ -395,6 +394,12 @@ void main(void)
             bgcolor(COLOR_BLUE);
             bordercolor(COLOR_LIGHTBLUE);
             clrscr();
+#ifdef __C128__
+            asm("jmp $ff3d");
+#endif            
+#ifdef __C64__
+            soft_reset();
+#endif
             exit(0);
         }
     }
