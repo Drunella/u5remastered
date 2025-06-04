@@ -1,0 +1,8 @@
+type = hex
+; replace combat end sound: play victory clip and play different song
+; all main.combat are identical
+filename = "0x42/main.combat"
+offset = 2
+address = 0x06f7
+original = 1008
+new      = eaea
