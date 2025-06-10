@@ -3,14 +3,13 @@ Ultima V Remastered
 Mission: Put the complete original game for the C64 on an EasyFlash cartridge
 ==============================================================================
 
-Features
-- show karma with CTRL+K (difficult)
-  britannia: main.out
-  underworld: main.out
-  towne, dwelling, castle, keep: main.twn
-
 ToDo
+- reset rooms does more than reset rooms
 - search for a5c8 (lda $c8), this shows differences between c64 and c128
+- identify the meaning of list, slist and tlist saving
+  look in create.prg
+- sound and effect mixing is not good
+- check Underworld/startup.prg for menu modifications
 
 - (no) enhance blockmap (are there rooms missing in dungeons? -> probably not)
   7 disks: from track 19 to 35 (17 tracks) with space for max 19 sectors (32)
@@ -18,13 +17,6 @@ ToDo
   every disk needs 2176 bytes, alltogether 15232
   the disk start addresses are put at the beginning (32 bytes)
   (32 and 4 are easy to multiply)
-- reset rooms does not get all rooms
-  see covetous
-- identify the meaning of list, slist and tlist saving
-  look in create.prg
-- sound and effect mixing is not good
-- check Underworld/startup.prg for menu modifications
-- quickstart in d81 does not work (c128)
 
 - Save Game
     save S:PRTY.DATA (bc00, 0030)
