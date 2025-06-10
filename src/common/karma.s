@@ -49,7 +49,7 @@
       karma_10:
         .byte $b0
       karma_1:
-        .byte $b0, $a5, $8d, $00
+        .byte $b0, $8d, $00
         
         jmp KEY_CONTINUE
 
