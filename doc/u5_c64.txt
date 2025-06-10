@@ -1,0 +1,278 @@
+Ultima 5 File Formats (C64 version)
+===================================
+
+Last updated on 29-February-2004.
+Please send additions, corrections and feedback to this e-Mail address:
+Remove space + vowels from "marc winterrowd" and append "at yahoo dot com"
+
+
+Tools for reverse-engineering C64 programs
+-------------------------------------------
+
+If you want to play Ultima 5 in a C64 emulator, I suggest you use VICE:
+http://www.viceteam.org/
+
+VICE comes with c1541, a utility for manipulating C64 disk images. You can
+use it to extract the Ultima 5 savegame files.
+
+
+General Information
+-------------------
+
+Ultima 5 saves the game on the Britannia disk.
+More specifically, the game is saved in these files:
+- prty.data
+- roster
+- and probably others
+
+Numbers are usually stored as BCD's.
+The high nibble contains the 10's, the low nibble contains the 1's.
+In 2-byte BCD's, the low byte contains the 1000's and 100's, the high byte
+contains the 10's and 1's.
+The game doesn't store all numbers as BCD's. If a number isn't meant to be
+displayed, the game stores it as a binary number.
+
+
+ROSTER
+------
+
+offset      length  purpose
+0x0         2       ?
+0x2         8       character 1 name (Avatar)
+0xA         8       character 2 name
+0x12        8       character 3 name
+0x1A        8       character 4 name
+0x22        8       character 5 name
+0x2A        8       character 6 name
+0x32        8       character 7 name
+0x3A        8       character 8 name
+0x42        8       character 9 name
+0x4A        8       character 10 name
+0x52        8       character 11 name
+0x5A        8       character 12 name
+0x62        8       character 13 name
+0x6A        8       character 14 name
+0x72        8       character 15 name
+0x7A        8       character 16 name
+0x82        0x10    character 1 stats (Avatar)
+0x92        0x10    character 2 stats
+0xA2        0x10    character 3 stats
+0xB2        0x10    character 4 stats
+0xC2        0x10    character 5 stats
+0xD2        0x10    character 6 stats
+0xE2        0x10    character 7 stats
+0xF2        0x10    character 8 stats
+0x102       0x10    character 9 stats
+0x112       0x10    character 10 stats
+0x122       0x10    character 11 stats
+0x132       0x10    character 12 stats
+0x142       0x10    character 13 stats
+0x152       0x10    character 14 stats
+0x162       0x10    character 15 stats
+0x172       0x10    character 16 stats
+0x182       2       food
+0x184       2       gold
+0x186       1       keys
+0x187       1       gems
+0x188       1       torches
+0x189       1       grapple
+0x18A       1       magic carpets
+0x18B       1       Shadowlord of Falsehood (location)
+                    0 = none
+                    1 = Moonglow
+                    2 = Britain
+                    3 = Jhelom
+                    4 = Yew
+                    5 = Minoc
+                    6 = Trinsic
+                    7 = Skara Brae
+                    8 = New Magincia
+                    0xFF = destroyed
+0x18C       1       Shadowlord of Hatred (location)
+0x18D       1       Shadowlord of Cowardice (location)
+0x18E       1       ordained shrine quests
+                    bit 0 = honesty
+                    bit 1 = compassion
+                    bit 2 = valor
+                    bit 3 = justice
+                    bit 4 = sacrifice
+                    bit 5 = honor
+                    bit 6 = spirituality
+                    bit 7 = humility
+0x18F       1       ?
+0x190       1       completed shrine quests
+                    bits have the same meaning as in 0x18E
+0x191       1       ?
+0x192       6       character 1 slots (Avatar)
+0x198       6       character 2 slots
+0x19E       6       character 3 slots
+0x1A4       6       character 4 slots
+0x1AA       6       character 5 slots
+0x1B0       6       character 6 slots
+0x1B6       6       character 7 slots
+0x1BC       6       character 8 slots
+0x1C2       6       character 9 slots
+0x1C8       6       character 10 slots
+0x1CE       6       character 11 slots
+0x1D4       6       character 12 slots
+0x1DA       6       character 13 slots
+0x1E0       6       character 14 slots
+0x1E6       6       character 15 slots
+0x1EC       6       character 16 slots
+0x1F2       1       Shard of Falsehood
+0x1F3       1       Shard of Hatred
+0x1F4       1       Shard of Cowardice
+0x1F5       1       spy glasses
+0x1F6       1       HMS Cape Plans
+0x1F7       1       sextants
+0x1F8       1       pocket watch (0xFF = present)
+0x1F9       1       skull keys
+0x1FA       1       Amulet of Lord British
+0x1FB       1       Crown of Lord British
+0x1FC       1       Sceptre of Lord British
+0x1FD       1       Black Badge
+0x1FE       1       Sandalwood Box
+0x1FF       1       ?
+0x200       1       ?
+0x201       1       ?
+0x202       0x10    Armor
+0x212       0x1A    Weapons
+0x22C       3       Rings
+0x22F       3       Amulets
+0x232       8       open/sealed flag for each dungeon
+                    0 = sealed
+                    0x80 = open
+0x23A       8       destroyed/ok flag for each shrine
+                    One byte per shrine, only bit 0x80 is used.
+                    bit 0x80 = 0 --> ok
+                    bit 0x80 = 1 --> destroyed
+0x242       0x30    Spells
+0x272       8       Scrolls
+0x27A       8       Potions
+--- Moonstones ---
+0x282       8       x coordinate of each moonstone, only valid if it's
+                    buried (range = 0-0xFF)
+0x28A       8       y coordinate of each moonstone, only valid if it's
+                    buried (range = 0-0xFF)
+0x292       8       flag for each moonstone:
+                    0 = buried
+                    0xFF = in the party's inventory
+0x29A       8       z coordinate of each moonstone, only valid if it's
+                    buried (range = 0,0xFF)
+                    0 = buried in Britannia
+                    0xFF = buried in the Underworld
+--- Reagents ---
+0x2A2       8       Reagents
+0x2AA       ?
+0x3C2       0xE     dungeon room cleared flags (7 dungeons, 2 bytes
+                    per dungeon)
+0x3D0       ?
+
+
+--- Character Names ---
+
+Character names have a maximum length of 8 chars.
+The chars are stored in ASCII format.
+All chars also have bit 0x80 set, except for the last one.
+If the name is shorter than 8 chars, it is padded with zeroes to make it
+8 bytes long.
+
+--- Character Stats ---
+
+0x0         1       inn/party
+0x1         1       gender (0x3E = male, 0x3D = female)
+0x2         1       class (upper-case ASCII char, bit 0x80 set)
+0x3         1       status (upper-case ASCII char, bit 0x80 set)
+0x4         1       strength
+0x5         1       dexterity
+0x6         1       intelligence
+0x7         1       current mp
+0x8         2       current hp
+0xA         2       maximum hp
+0xC         2       exp points
+0xE         1       level
+0xF         1       ?
+
+--- Character Slots ---
+
+Unlike the DOS version, the C64 version doesn't assign a fixed slot to each
+body part.
+If you ready a piece of equipment, the C64 version simply puts it in the
+next free slot. Non-empty slots don't have to be contiguous.
+
+
+PRTY.DATA
+---------
+
+0x0         ?
+0x2         1       x coord of party (relative to upper left corner of the
+                    upper left cached-in chunk)
+0x3         1       y coord of party (relative to upper left corner of the
+                    upper left cached-in chunk)
+0x4         ?
+0x9         1       z coordinate of the party (level)
+0xA         1       party location
+0xB         1       ?
+0xC         1       mode of transportation
+0xD         ?
+0xF         1       dungeon orientation
+                    0 = north
+                    3 = west
+                    2 = south
+                    1 = east
+0x10        1       remaining torch duration (turns, not a BCD)
+0x11        1       remaining light spell duration (turns, not a BCD)
+0x12        ?
+0x17        1       type of ship bought from a shipwright
+0x18        1       x coordinate of purchsed ship
+0x19        1       y coordinate of purchsed ship
+0x1A        2       year
+0x1C        1       month
+0x1D        1       day
+0x1E        1       hour
+0x1F        1       minute
+0x20        1       protective spell type (icon shown between stats and
+                    food/gold window)
+0x21        1       protective spell duration (turns, not a BCD)
+0x22        1       number of hours until the party can get healed by
+                    camping
+                    Set to 0xE when the party gets healed by camping.
+                    Must be 0 when the party starts camping, or the party
+                    won't get healed.
+0x23        1       wind direction
+0x24        ?
+0x28        1       copy of 0x1E?
+0x29        1       ?
+0x2A        1       karma (BCD)
+0x2B        1       number of drunken moves until you can move normally
+                    again
+                    Set to 0x19 when you get drunk.
+0x2C        1       active char (0-5,0xFF)
+0x2D        1       x coordinate of the party
+0x2E        1       y coordinate of the party
+0x2F        1       number of turns since the beginning of the game
+                    (stops counting at 0xFF)
+0x30        1       ?
+0x31        1       copy of 0x1E?
+0x32        1       ?
+
+
+Cheats
+------
+If you hold the Commodore key and press 1, the game will display a 10-digit
+number (doesn't work in combat/dungeons).
+The digits have the following meaning:
+aaBBccDDee
+aa  karma (BCD)
+BB  party location (hex)
+cc  z coordinate/level (hex)
+DD  x coordinate (hex)
+ee  y coordinate (hex)
+
+
+Sources
+-------
+Nytegard <nytegard at yahoo dot com>
+http://martin.brenner.de/ultima/u5save.html
+http://www.cosy.sbg.ac.at/~lendl/ultima/ultima5/
+http://www.wi.leidenuniv.nl/~psimoons/ultima5t.htm

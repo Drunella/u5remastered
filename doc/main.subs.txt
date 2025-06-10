@@ -6,7 +6,7 @@ size=8189
             0x00004c03      4c595a         jmp 0x5a59       ; screen operations
             0x00004c06      4c375a         jmp 0x5a37                  ; jump to new location
             0x00004c09      4c4f5a         jmp 0x5a4f                  ; jump to new location
-            0x00004c0c      4c405a         jmp 0x5a40                  ; jump to new location
+            0x00004c0c      4c405a         jmp 0x5a40       ; print number from bcd format (2 digits)
             0x00004c0f      4c145b         jmp 0x5b14       ; 
             0x00004c12      4caa5b         jmp 0x5baa                  ; jump to new location
             0x00004c15      4cb05b         jmp 0x5bb0       ; wait for key? enter disk?
@@ -2017,7 +2017,7 @@ size=8189
   |||||||   0x00005c20      a985           lda #0x85                   ; load accumulator with memory
   |||`----> 0x00005c22      c920           cmp #0x20                   ; compare memory and accumulator
   |||,====< 0x00005c24      9002           bcc 0x4ed108                ; branch on carry clear
-  |||||||   0x00005c26      0980           ora #0x80                   ; "or" memory with accumulator
+  |||||||   0x00005c26      0980           ora #0x80                   ; add 0x80 for keys
   |||`----> 0x00005c28      c914           cmp #0x14                   ; compare memory and accumulator
   |||,====< 0x00005c2a      d002           bne 0x4ed108                ; branch on result not zero
   |||||||   0x00005c2c      a988           lda #0x88                   ; load accumulator with memory

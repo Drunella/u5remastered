@@ -11,7 +11,7 @@ size=2808
   ========< 0x00006c15      4cac72         jmp 0x72ac                  ; jump to new location
   ========< 0x00006c18      4cf473         jmp 0x73f4                  ; jump to new location
   ========< 0x00006c1b      4c7274         jmp 0x7472                  ; jump to new location
-  ========< 0x00006c1e      4c4575         jmp 0x7545                  ; jump to new location
+  ========< 0x00006c1e      4c4575         jmp 0x7545       ;
   ========< 0x00006c21      4c7b75         jmp 0x757b                  ; jump to new location
   ========< 0x00006c24      4c496c       * jmp 0x6c49       ; load file from disk, filename in memory after calling code
   ========< 0x00006c27      4ce575         jmp 0x75e5                  ; jump to new location
@@ -24,8 +24,8 @@ size=2808
   ========< 0x00006c3a      4c9b76         jmp 0x769b                  ; jump to new location
   ========< 0x00006c3d      4ca776         jmp 0x76a7                  ; jump to new location
   ========< 0x00006c40      4cb876         jmp 0x76b8       ; play music X: music id
-  ========< 0x00006c43      4cc676         jmp 0x76c6       ; music related
-  ========< 0x00006c46      4cbf76         jmp 0x76bf       ; ctrl+v music on/off
+  ========< 0x00006c43      4cc676         jmp 0x76c6       ; ctrl+v music on/off
+  ========< 0x00006c46      4cbf76         jmp 0x76bf       ; music related
 
 - File Operations --------------------------------------------------------
 
@@ -78,16 +78,16 @@ size=2808
 
 0x6c2a: (0x6caa): request_disk: check inserted disk, A is requested disk, return C set disk no inserted; check other drives
             0x00006caa      8dde6c         sta 0x6cde                  ; store accumulator in memory
-            0x00006cad      a5c8           lda 0xc8                    ; load accumulator with memory
-            0x00006caf      2901           and #0x01                   ; "and" memory with accumulator
+            0x00006cad      a5c8           lda 0xc8                    ; load c64/c128 flag
+            0x00006caf      2901           and #0x01                   ; bit 1, probably number of drives
         ,=< 0x00006cb1      f015           beq 0x4ea108                ; branch on result zero
-        |   0x00006cb3      ad336c         lda 0x6c33                  ; load accumulator with memory
-        |   0x00006cb6      4901           eor #0x01                   ; "exclusive-or" memory with accumulator
+        |   0x00006cb3      ad336c         lda 0x6c33                  ; drive
+        |   0x00006cb6      4901           eor #0x01                   ; switch to other drive
         |   0x00006cb8      8d336c         sta 0x6c33                  ; store accumulator in memory
         |   0x00006cbb      20d16c         jsr 0x6cd1       ; check disk
        ,==< 0x00006cbe      f00f           beq 0x4ea108                ; branch on result zero
        ||   0x00006cc0      ad336c         lda 0x6c33                  ; load accumulator with memory
-       ||   0x00006cc3      4901           eor #0x01                   ; "exclusive-or" memory with accumulator
+       ||   0x00006cc3      4901           eor #0x01                   ; switch to other drive
        ||   0x00006cc5      8d336c         sta 0x6c33                  ; store accumulator in memory
        |`-> 0x00006cc8      20d16c         jsr 0x6cd1       ; check disk
        |,=< 0x00006ccb      f002           beq 0x4ea108                ; branch on result zero
@@ -111,7 +111,7 @@ local: (scroll lines up?) only used in request disk
 local: only used in request disk
   --------> 0x00006ce5      20004c         jsr 0x4c00       ; main.subs
   |||||||   0x00006ce8      e4e9f3ebae00
-  |||||||   0x00006ced      204e4c         jsr 0x4c4e
+  |||||||   0x00006ced      204e4c         jsr 0x4c4e       ; get key
   |||||||   0x00006cf1      d049           bne 0x6d3c
   |||||||   0x00006cf3      205a4c         jsr 0x4c5a
   ========< 0x00006cf6      2471           bit 71
@@ -1219,11 +1219,13 @@ local: (0x72f9)
      ||     0x0000756b      ad7a75         lda 0x757a                  ; load accumulator with memory
      || ,=< 0x0000756e      f003           beq 0x4b2108                ; branch on result zero
      || |   0x00007570      a001           ldy #0x01                   ; load index y with memory
-     || |   0x00007572      2ca0ff         bit 0xffa0                  ; test bits in memory with accumulator
-     ||     0x00007575      2ca000         bit 0x00a0                  ; test bits in memory with accumulator
+     || |   0x00007572      2c             bit 0xffa0                  ; test bits in memory with accumulator
+     || |   0x00007572      a0ff           ldy #$ff
+     ||     0x00007575      2c             bit 0x00a0                  ; test bits in memory with accumulator
+     ||     0x00007576      a000           ldy #$00
             0x00007578      98             tya                         ; transfer index y to accumulator
             0x00007579      60             rts                         ; return from subroutine
-            0x0000757a      00             brk                         ; force break
+            0x0000757a      00                                         ; local variable
 
 0x6c21: (0x757b)
             0x0000757b      a905           lda #0x05                   ; load accumulator with memory
@@ -1425,7 +1427,7 @@ local: (0x72f9)
             0x000076ed      ee8d 00 ; "n?"" (On)
             0x000076f0      4c2901         jmp 0x0129            ; music on
 
-local:
+local: multiply by 16
             0x000076f3      0a             asl a                       ; shift left one bit (memory or accumulator)
             0x000076f4      0a             asl a                       ; shift left one bit (memory or accumulator)
             0x000076f5      0a             asl a                       ; shift left one bit (memory or accumulator)
