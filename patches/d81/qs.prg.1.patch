@@ -1,0 +1,8 @@
+type = hex
+; ignore subs.128, its already loaded
+; SUBS.128
+filename = "0x41/qs"
+offset = 2
+address = 0x0093
+original = 20246c
+new      = 4ca180
