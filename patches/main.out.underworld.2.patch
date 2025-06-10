@@ -1,0 +1,9 @@
+type = symaddr
+# add another keychack in underworld main.out
+# 0x826b + 1
+# _KARMA_test_key_underworld
+filename = "0x48/main.out"
+offset = 2
+address = 0x026c
+oldtarget = 0xffff
+newtarget = symbol(_KARMA_test_key_underworld)

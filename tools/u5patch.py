@@ -284,6 +284,7 @@ def apply_patch_prgbin(data):
         t = bytearray(patch_position+len(patch_data))
         t[0:length] = binary_file[0:length]
         binary_file = t
+        #print("resized to " + str(len(t)))
     binary_file[patch_position:patch_position+patch_length] = patch_data[2:2+patch_length]
 
 

@@ -1,0 +1,9 @@
+type = hex
+# add another keychack in main.twn
+# 0x82e1
+# _KARMA_test_karma
+filename = "0x43/main.twn"
+offset = 2
+address  = 0x02e1
+original = 20004c
+new      = 4cffff

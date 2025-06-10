@@ -1,0 +1,9 @@
+type = hex
+# add another keychack in underworld main.out
+# 0x826b
+# _KARMA_test_karma
+filename = "0x48/main.out"
+offset = 2
+address  = 0x026b
+original = 20004c
+new      = 4cffff

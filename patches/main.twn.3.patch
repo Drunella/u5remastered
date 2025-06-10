@@ -1,0 +1,4 @@
+type = prgbin
+; replace io code in main.out britannia
+filename = "0x43/main.twn"
+prg = "./build/common/karma_twn.prg"

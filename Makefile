@@ -30,6 +30,10 @@ export LD65_LIB=/opt/cc65/share/cc65/lib
 .SUFFIXES: .prg .s .c
 .PHONY: clean subdirs all easyflash mrproper pngs
 
+# karma patches
+KARMA_PATCHES=build/common/karma_britannia.map build/common/karma_britannia.prg build/common/karma_underworld.map build/common/karma_underworld.prg build/common/karma_twn.map build/common/karma_twn.prg
+KARMA_MAPS=-m build/common/karma_britannia.map -m build/common/karma_underworld.map -m build/common/karma_twn.map
+
 # all
 all: easyflash d81 backbit
 
@@ -120,8 +124,8 @@ build/ef.f/files.list: build/source/files.list build/ef/music.prg build/ef/menu.
 	echo "0x41/music music" >> build/ef.f/files.list
 	
 # patch
-build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/ef.f/music_rom.bin
-	tools/u5patch.py -v -l ./build/ef.f/files.list -f ./build/ef.f -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map ./patches/ef/*.patch ./patches/*.patch
+build/ef.f/patched.done: build/ef.f/files.list build/ef/io-replacement.map build/ef/transfer-load.map build/ef/music.map build/ef/transfer-load.prg build/ef.f/music_rom.bin $(KARMA_PATCHES)
+	tools/u5patch.py -v -l ./build/ef.f/files.list -f ./build/ef.f -m build/ef/io-replacement.map -m build/ef/transfer-load.map -m build/ef/music.map $(KARMA_MAPS) ./patches/ef/*.patch ./patches/*.patch
 	cp build/ef.f/music_rom.bin build/ef/music_rom.aprg
 	touch ./build/ef.f/patched.done
 
@@ -212,8 +216,8 @@ build/d81.f/crunched.done: build/d81.f/patched.done
 	touch build/d81.f/crunched.done
 
 # patch
-build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map build/d81/io-replacement.prg build/d81/transfer-load.map build/d81/transfer-load.prg
-	tools/u5patch.py -v -l ./build/d81.f/files.list -f ./build/d81.f -m build/d81/io-replacement.map -m build/d81/transfer-load.map ./patches/d81/*.patch ./patches/*.patch
+build/d81.f/patched.done: build/d81.f/files.list build/d81/io-replacement.map build/d81/io-replacement.prg build/d81/transfer-load.map build/d81/transfer-load.prg $(KARMA_PATCHES)
+	tools/u5patch.py -v -l ./build/d81.f/files.list -f ./build/d81.f -m build/d81/io-replacement.map -m build/d81/transfer-load.map $(KARMA_MAPS) ./patches/d81/*.patch ./patches/*.patch
 	touch ./build/d81.f/patched.done
 
 # build disk
@@ -265,13 +269,30 @@ build/backbit.f/crunched.done: build/backbit.f/patched.done
 	touch build/backbit.f/crunched.done
 
 # patch
-build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replacement.map build/backbit/io-replacement.prg build/backbit/transfer-load.map build/backbit/transfer-load.prg
-	tools/u5patch.py -v -l ./build/backbit.f/files.list -f ./build/backbit.f -m build/backbit/io-replacement.map -m build/backbit/transfer-load.map ./patches/backbit/*.patch ./patches/d81/*.patch ./patches/*.patch
+build/backbit.f/patched.done: build/backbit.f/files.list build/backbit/io-replacement.map build/backbit/io-replacement.prg build/backbit/transfer-load.map build/backbit/transfer-load.prg $(KARMA_PATCHES)
+	tools/u5patch.py -v -l ./build/backbit.f/files.list -f ./build/backbit.f -m build/backbit/io-replacement.map -m build/backbit/transfer-load.map $(KARMA_MAPS) ./patches/backbit/*.patch ./patches/d81/*.patch ./patches/*.patch
 	touch ./build/backbit.f/patched.done
 
 # build disk
 build/u5remastered-BackBit.d81: build/backbit.f/crunched.done build/backbit.f/loader.prg build/backbit.f/exodecrunch.prg build/d81.f/editor.prg build/d81.f/savegame.prg build/d81.f/savegame128.prg build/d81.f/editor128.prg
 	tools/mkd81.py -v -o ./build/u5remastered-BackBit.d81 -x ./src/backbit/exclude.cfg -i ./src/backbit/io.i -d ./src/disks.cfg -f ./build/backbit.f -f ./build/d81.f
+
+
+# ------------------------------------------------------------------------
+# common
+
+# karma out britannia
+build/common/karma_britannia.prg build/common/karma_britannia.map: build/common/karma_britannia.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/common/karma_britannia.map -o build/common/karma_britannia.prg -C ./src/common/karma_britannia.cfg $^
+
+# karma out underworld
+build/common/karma_underworld.prg build/common/karma_underworld.map: build/common/karma_underworld.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/common/karma_underworld.map -o build/common/karma_underworld.prg -C ./src/common/karma_underworld.cfg $^
+
+# karma out twn
+build/common/karma_twn.prg build/common/karma_twn.map: build/common/karma_twn.o
+	$(LD65) $(LD65FLAGS) -vm -m ./build/common/karma_twn.map -o build/common/karma_twn.prg -C ./src/common/karma_twn.cfg $^
+
 
 # ------------------------------------------------------------------------
 # map pngs

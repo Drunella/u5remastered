@@ -1,0 +1,9 @@
+type = symaddr
+# add another keychack in main.twn
+# 0x82e1
+# _KARMA_test_karma
+filename = "0x43/main.twn"
+offset = 2
+address = 0x02e2
+oldtarget = 0xffff
+newtarget = symbol(_KARMA_test_key_twn)

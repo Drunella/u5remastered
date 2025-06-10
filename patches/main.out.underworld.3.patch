@@ -1,0 +1,4 @@
+type = prgbin
+; replace io code in main.out underworld
+filename = "0x48/main.out"
+prg = "./build/common/karma_underworld.prg"
