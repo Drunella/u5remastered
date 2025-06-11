@@ -1,6 +1,6 @@
 type = hex
 ; loading without decrunch
-; STORY1.TXT
+; STORY3.TXT
 filename = "0x44/story"
 offset = 2
 address = 0x02df
