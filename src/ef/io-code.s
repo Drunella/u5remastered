@@ -259,9 +259,9 @@ music_lastconfig := $0122  ; see music-base.s for more information
 ;        sei
 
         ; bank in block map
+        sei
         lda #BLOCKMAP_BANK
         jsr EAPISetBank
-        sei
         jsr bank_in
         cli
 
@@ -292,8 +292,10 @@ music_lastconfig := $0122  ; see music-base.s for more information
         jsr EAPISetPtr
 
         ; go to block bank
+        sei
         lda block_bank
         jsr EAPISetBank
+        cli
 
         ; set length to 256
         lda #$00
