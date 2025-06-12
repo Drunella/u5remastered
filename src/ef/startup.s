@@ -110,7 +110,7 @@
         ; now bank out and set memory
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
-        lda #$06
+        lda #$36
         sta $01
 
         ; load temp.subs
@@ -146,7 +146,7 @@
 
     _initialize_game:
         ; bank in 16k mode
-        lda #$07
+        lda #$37
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL ; jsr SetMemConfiguration
@@ -157,7 +157,7 @@
         ; now bank out but do not set memory
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
-        lda #$07
+        lda #$37
         sta $01
 
         ; set music return calls

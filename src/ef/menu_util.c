@@ -72,7 +72,7 @@ void cart_kill()
 
 void cart_bankin()
 {
-    __asm__("lda #$07");
+    __asm__("lda #$37");
     __asm__("sta $01");
     __asm__("lda #$87"); // led & 16k
     __asm__("sta $DE02");
@@ -81,7 +81,7 @@ void cart_bankin()
 
 void cart_bankout()
 {
-    __asm__("lda #$06");
+    __asm__("lda #$36");
     __asm__("sta $01");
     __asm__("lda #$04"); // none
     __asm__("sta $DE02");

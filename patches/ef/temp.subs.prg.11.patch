@@ -1,0 +1,8 @@
+type = hex
+; at 0x7684: replace lda 0x06 with lda #0x36:
+: keep tape motor off all the time
+filename = "0x41/temp.subs"
+offset = 2
+address  = 0x0a84
+original = a906
+new      = a936

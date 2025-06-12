@@ -103,7 +103,7 @@
         lda $01
         pha
         cld        ; clear decimal mode
-        lda #$06
+        lda #$36
         sta $01
 
         ; check if timer has generated an interrupt interrupt
@@ -205,7 +205,7 @@
         ; save current bank setting
         lda $01
         pha
-        lda #$06
+        lda #$36
         sta $01
         lda #EASYFLASH_KILL  ; init default config
         sta music_lastconfig
@@ -318,7 +318,7 @@
         ; save current bank setting
         lda $01
         pha
-        lda #$06
+        lda #$36
         sta $01
 
         ; bank in music bank
@@ -339,7 +339,7 @@
         ; save current bank setting
         lda $01
         pha
-        lda #$06
+        lda #$36
         sta $01
 
         ; bank in music bank
@@ -362,7 +362,7 @@
         sta music_lastbank
 
         ; bank in music bank
-        lda #$07
+        lda #$37
         sta $01
         lda #MUSIC_BANK
         jsr EAPISetBank
@@ -373,7 +373,7 @@
 
     music_bankout:
         ; bank out
-        lda #$06
+        lda #$36
         sta $01
         lda music_lastbank
         jsr EAPISetBank

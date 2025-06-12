@@ -402,7 +402,7 @@ music_lastconfig := $0122  ; see music-base.s for more information
     ; --------------------------------------------------------------------
     ; bankin and bankout
     bank_in:
-        lda #$07
+        lda #$37
         sta $01
         lda #EASYFLASH_LED | EASYFLASH_16K
         sta EASYFLASH_CONTROL
@@ -413,7 +413,7 @@ music_lastconfig := $0122  ; see music-base.s for more information
         lda #EASYFLASH_KILL
         sta EASYFLASH_CONTROL
         sta music_lastconfig
-        lda #$06
+        lda #$36
         sta $01
         rts
 
