@@ -210,33 +210,18 @@
 
         ; copy filename
         jsr copy_filename
-        sta $ff    ; length of filename now in ff
+        ; set name "@0:" + name: replace the file in one step
         clc
-        adc #$02
-        ldx #<requested_deletename
-        ldy #>requested_deletename
+        adc #$03
+        ldx #<requested_savename
+        ldy #>requested_savename
         jsr kernal_SETNAM
 
-        ; delete
-        lda #$0f  
-        ldx drive_id
-        ldy #$0f  
-        jsr kernal_SETLFS
-        jsr kernal_OPEN
-        lda #$0f  
-        jsr kernal_CLOSE
-        
         ; prepare saving
         lda #$08  
         ldx drive_id
         ldy #$00  
         jsr kernal_SETLFS
-
-        ; set name
-        lda $ff
-        ldx #<requested_fullname
-        ldy #>requested_fullname
-        jsr kernal_SETNAM
 
         ; save parameter
         ; copy address and size
@@ -487,8 +472,8 @@
     decrunch_buffer:
         .res decrunch_buffer_size, $00
 
-    requested_deletename:
-        .byte $53, $3a  ; "S:"
+    requested_savename:
+        .byte $40, $30, $3a  ; "@0:"
     requested_fullname:
     requested_disk:
         .byte $41

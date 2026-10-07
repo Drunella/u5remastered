@@ -255,18 +255,12 @@ def disk_makeentry(filename, original, protected):
     return data
 
     
-def disk_makeadditionaldirentry(originalfile, newfile, verbose=False):
+def disk_placedirentry(entry):
     global disk_image
-    
-    # find original entry
-    original = disk_finddirentry(disk_image, originalfile)
-    if original is None:
-        raise Exception("could not find file " + originalfile + " on disk")
-    newentry = disk_makeentry(newfile, original, False)
     position = disk_findemptyentry(disk_image)
     if position is None:
         raise Exception("could not find empty directory entry on disk")
-    disk_image[position[2]:position[2]+32] = newentry
+    disk_image[position[2]:position[2]+32] = entry
 
     # first entry in sector
     if position[1] == 0:
@@ -278,10 +272,36 @@ def disk_makeadditionaldirentry(originalfile, newfile, verbose=False):
         disk_image[offset - 256 + 1] = position[0]
         bam_marksectorused(40, position[0])
 
+
+def disk_makeadditionaldirentry(originalfile, newfile, verbose=False):
+    global disk_image
+    
+    # find original entry
+    original = disk_finddirentry(disk_image, originalfile)
+    if original is None:
+        raise Exception("could not find file " + originalfile + " on disk")
+    disk_placedirentry(disk_makeentry(newfile, original, False))
+
     if verbose:
         print("additional directory entry: " + newfile + " on disk")
     return
 
+
+def disk_reservedirentries(count):
+    # frees the entries after the first one in the first directory sector by moving
+    # them to the end. The dos puts new files (game saves) in the first free entry,
+    # and finds them there faster.
+    global disk_image
+    base = (39 * 40 + 3) * 256
+    moved = [bytearray(disk_image[base + i * 32:base + i * 32 + 32]) for i in range(1, count + 1)]
+    for entry in moved:
+        if entry[2] == 0:
+            raise Exception("directory too short to reserve entries")
+        entry[0] = 0
+        entry[1] = 0
+        disk_placedirentry(entry)
+    for i in range(1, count + 1):
+        disk_image[base + i * 32:base + i * 32 + 32] = bytearray(32)
 
 
 def main(argv):
@@ -411,6 +431,9 @@ def main(argv):
     disk_image = load_file(output_file)
     for e in additional_entry:
         disk_makeadditionaldirentry(additional_entry[e], e, verbose=args.verbose)
+
+    # free entries at the start of the directory for the game saves
+    disk_reservedirentries(6)
         
     # create boot sector
     # ###
